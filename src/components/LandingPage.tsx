@@ -1,16 +1,17 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Mountain, Play } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Mountain, Play } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
+import { pathwayContent } from "@/lib/pathway-data";
 
 export const LandingPage: React.FC = () => {
   const { setCurrentStep, createNewEntry } = useStore();
-  
+
   const handleBeginJourney = () => {
     createNewEntry();
     setCurrentStep(0);
   };
-  
+
   return (
     <div className="w-full max-w-2xl mx-auto text-center">
       <motion.div
@@ -25,21 +26,20 @@ export const LandingPage: React.FC = () => {
             <Mountain className="w-16 h-16 text-amber-400" />
           </div>
         </div>
-        
+
         {/* Main Content */}
         <div className="space-y-6">
           <h1 className="text-5xl font-bold text-white leading-tight">
-            The Mountain Pathway
+            {pathwayContent.landingPage.heroTitle}
           </h1>
           <p className="text-xl text-slate-300 font-light">
-            Climb inward. Look upward.
+            {pathwayContent.landingPage.heroSubtitle}
           </p>
           <p className="text-lg text-slate-400 max-w-lg mx-auto leading-relaxed">
-            A guided journey inward — and upward. Where quiet leads to clarity through 
-            scripture, stillness, and structured reflection.
+            {pathwayContent.landingPage.heroDescription}
           </p>
         </div>
-        
+
         {/* Call to Action */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -52,10 +52,10 @@ export const LandingPage: React.FC = () => {
             className="group flex items-center space-x-3 mx-auto px-8 py-4 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             <Play className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
-            <span>Begin Your Pathway</span>
+            <span>{pathwayContent.landingPage.buttonText}</span>
           </button>
         </motion.div>
-        
+
         {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0 }}
@@ -63,7 +63,7 @@ export const LandingPage: React.FC = () => {
           transition={{ delay: 0.8, duration: 0.6 }}
           className="text-sm text-slate-500 italic"
         >
-          Follow the path. Find perspective.
+          {pathwayContent.landingPage.footerText}
         </motion.p>
       </motion.div>
     </div>

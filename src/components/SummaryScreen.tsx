@@ -2,7 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Download, Copy, RotateCcw, CheckCircle } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
-import { steps } from "@/lib/data/steps";
+import { pathwayData, pathwayContent } from "@/lib/pathway-data";
 
 export const SummaryScreen: React.FC = () => {
   const { currentEntry, startNewJourney } = useStore();
@@ -32,10 +32,10 @@ export const SummaryScreen: React.FC = () => {
       day: "numeric",
     });
 
-    let summary = `The Mountain Pathway - Spiritual Journey\n`;
+    let summary = `${pathwayContent.summaryPage.completionMessage}\n`;
     summary += `Date: ${date}\n\n`;
 
-    steps.forEach((step) => {
+    pathwayData.forEach((step) => {
       if (
         step.isInput &&
         currentEntry.responses[step.key as keyof typeof currentEntry.responses]
@@ -62,7 +62,7 @@ export const SummaryScreen: React.FC = () => {
 
       // Set up the PDF with text content
       pdf.setFontSize(20);
-      pdf.text("The Mountain Pathway", 20, 30);
+      pdf.text(pathwayContent.appTitle, 20, 30);
 
       const date = new Date(currentEntry.createdAt).toLocaleDateString(
         "en-US",
@@ -79,7 +79,7 @@ export const SummaryScreen: React.FC = () => {
 
       let yPosition = 60;
 
-      steps.forEach((step) => {
+      pathwayData.forEach((step) => {
         const response =
           currentEntry.responses[
             step.key as keyof typeof currentEntry.responses
@@ -134,9 +134,11 @@ export const SummaryScreen: React.FC = () => {
               <CheckCircle className="w-8 h-8 text-green-400" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold text-white">Journey Complete</h2>
+          <h2 className="text-3xl font-bold text-white">
+            {pathwayContent.summaryPage.title}
+          </h2>
           <p className="text-slate-300 text-lg">
-            Your spiritual pathway has been recorded
+            {pathwayContent.summaryPage.subtitle}
           </p>
         </div>
 
@@ -148,7 +150,7 @@ export const SummaryScreen: React.FC = () => {
           <div className="space-y-6">
             <div className="text-center border-b border-slate-600 pb-4">
               <h3 className="text-xl font-semibold text-amber-400">
-                The Mountain Pathway
+                {pathwayContent.appTitle}
               </h3>
               <p className="text-sm text-slate-400">
                 {new Date(currentEntry.createdAt).toLocaleDateString("en-US", {
@@ -160,7 +162,7 @@ export const SummaryScreen: React.FC = () => {
               </p>
             </div>
 
-            {steps.map((step) => {
+            {pathwayData.map((step) => {
               const response =
                 currentEntry.responses[
                   step.key as keyof typeof currentEntry.responses
@@ -168,7 +170,7 @@ export const SummaryScreen: React.FC = () => {
               if (!step.isInput || !response) return null;
 
               return (
-                <div key={step.id} className="space-y-2">
+                <div key={step.stepIndex} className="space-y-2">
                   <h4 className="font-semibold text-amber-300 uppercase tracking-wide text-sm">
                     {step.title}
                   </h4>
@@ -189,7 +191,11 @@ export const SummaryScreen: React.FC = () => {
             className="flex items-center space-x-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-800 text-white rounded-lg transition-all duration-200 font-medium"
           >
             <Download className="w-4 h-4" />
-            <span>{downloading ? "Generating..." : "Download PDF"}</span>
+            <span>
+              {downloading
+                ? pathwayContent.summaryPage.generatingText
+                : pathwayContent.summaryPage.downloadButtonText}
+            </span>
           </button>
 
           <button
@@ -201,15 +207,19 @@ export const SummaryScreen: React.FC = () => {
             ) : (
               <Copy className="w-4 h-4" />
             )}
-            <span>{copied ? "Copied!" : "Copy Text"}</span>
+            <span>
+              {copied
+                ? pathwayContent.summaryPage.copiedText
+                : pathwayContent.summaryPage.copyButtonText}
+            </span>
           </button>
 
           <button
             onClick={handleStartNew}
-            className="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-all duration-200 font-medium"
+            className="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:blue-700 text-white rounded-lg transition-all duration-200 font-medium"
           >
             <RotateCcw className="w-4 h-4" />
-            <span>Start New Journey</span>
+            <span>{pathwayContent.summaryPage.newJourneyButtonText}</span>
           </button>
         </div>
       </motion.div>

@@ -1,11 +1,10 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { BookOpen } from 'lucide-react';
-import { Step } from "@/types";
-import { psalm139 } from "@/lib/data/steps";
+import React from "react";
+import { motion } from "framer-motion";
+import { BookOpen } from "lucide-react";
+import { PathwayStep } from "@/lib/pathway-data";
 
 interface ReflectionScreenProps {
-  step: Step;
+  step: PathwayStep;
 }
 
 export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
@@ -22,29 +21,33 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
               <BookOpen className="w-8 h-8 text-amber-400" />
             </div>
           </div>
-          
+
           <div>
             <h2 className="text-3xl font-bold text-white mb-2">{step.title}</h2>
             <p className="text-slate-300 text-lg">{step.subtitle}</p>
           </div>
-          
-          <p className="text-slate-400 leading-relaxed">
-            {step.prompt}
-          </p>
-          
-          {/* Psalm Text */}
-          <div className="bg-slate-900/50 rounded-xl p-6 max-h-96 overflow-y-auto">
-            <h3 className="text-xl font-semibold text-amber-400 mb-4">Psalm 139</h3>
-            <div className="text-slate-300 leading-relaxed whitespace-pre-line text-left">
-              {psalm139}
+
+          <p className="text-slate-400 leading-relaxed">{step.prompt}</p>
+
+          {/* Scripture Text */}
+          {step.content?.scripture && (
+            <div className="bg-slate-900/50 rounded-xl p-6 max-h-96 overflow-y-auto">
+              <h3 className="text-xl font-semibold text-amber-400 mb-4">
+                Psalm 139
+              </h3>
+              <div className="text-slate-300 leading-relaxed whitespace-pre-line text-left">
+                {step.content.scripture}
+              </div>
             </div>
-          </div>
-          
-          <div className="pt-4">
-            <p className="text-sm text-slate-500 italic">
-              Take your time. Let the words settle in your heart.
-            </p>
-          </div>
+          )}
+
+          {step.content?.instructions && (
+            <div className="pt-4">
+              <p className="text-sm text-slate-500 italic">
+                {step.content.instructions}
+              </p>
+            </div>
+          )}
         </div>
       </motion.div>
     </div>

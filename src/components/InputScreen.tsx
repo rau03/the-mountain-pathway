@@ -1,20 +1,22 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React from "react";
+import { motion } from "framer-motion";
 import { useStore } from "@/lib/store/useStore";
-import { Step } from "@/types";
+import { PathwayStep, pathwayContent } from "@/lib/pathway-data";
 
 interface InputScreenProps {
-  step: Step;
+  step: PathwayStep;
 }
 
 export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
   const { currentEntry, updateResponse } = useStore();
-  const currentValue = currentEntry.responses[step.key as keyof typeof currentEntry.responses] || '';
-  
+  const currentValue =
+    currentEntry.responses[step.key as keyof typeof currentEntry.responses] ||
+    "";
+
   const handleInputChange = (value: string) => {
     updateResponse(step.key, value);
   };
-  
+
   return (
     <div className="w-full max-w-2xl mx-auto">
       <motion.div
@@ -27,31 +29,34 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
             <h2 className="text-3xl font-bold text-white mb-2">{step.title}</h2>
             <p className="text-slate-300 text-lg">{step.subtitle}</p>
           </div>
-          
+
           <p className="text-slate-400 leading-relaxed text-center">
             {step.prompt}
           </p>
-          
+
           <div className="space-y-4">
             <textarea
               value={currentValue}
               onChange={(e) => handleInputChange(e.target.value)}
-              placeholder="Share your thoughts here..."
+              placeholder={pathwayContent.general.textareaPlaceholder}
               className="w-full h-48 p-4 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent resize-none leading-relaxed"
               autoFocus
             />
-            
+
             <div className="text-right">
               <p className="text-xs text-slate-500">
-                {currentValue.length} characters
+                {pathwayContent.general.characterCountText.replace(
+                  "{count}",
+                  currentValue.length.toString()
+                )}
               </p>
             </div>
           </div>
-          
-          {step.isSummary && (
+
+          {step.isSummary && step.content?.specialMessage && (
             <div className="bg-amber-400/10 border border-amber-400/30 rounded-lg p-4">
               <p className="text-amber-300 text-sm text-center">
-                This is your final reflection. Take time to offer everything to God in prayer.
+                {step.content.specialMessage}
               </p>
             </div>
           )}
