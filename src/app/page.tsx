@@ -7,7 +7,7 @@ import { JourneyScreen } from "@/components/JourneyScreen";
 import { SummaryScreen } from "@/components/SummaryScreen";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { AudioPlayer } from "@/components/AudioPlayer";
+import { AudioToggle } from "@/components/AudioToggle";
 import { getBackgroundForStep } from "@/lib/pathway-data";
 
 export default function Home() {
@@ -79,7 +79,7 @@ export default function Home() {
         <Footer />
       </div>
 
-      <AudioPlayer />
+      <AudioToggle />
     </div>
   );
 }
