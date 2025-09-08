@@ -281,7 +281,7 @@ export const pathwayContent: PathwayContent = {
 
 // Visual mapping for stage backgrounds
 export const stageVisuals = {
-  Trailhead: "/stage-1-trailhead.jpg",
+  Trailhead: "/homepage-background.jpg",
   Ascent: "/stage-2-ascent.jpg",
   Overlook: "/stage-3-overlook.jpeg",
   "Summit Path": "/stage-4-summit-path.jpg",
