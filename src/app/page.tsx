@@ -63,10 +63,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
-      {/* Blurry Background Layer - Subtle and Soft */}
+      {/* Subtle Blurred Background - Fill empty space */}
       <div
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat blur-md transition-opacity duration-700 ease-in-out ${
-          isTransitioning ? "opacity-10" : "opacity-20"
+        className={`absolute inset-0 bg-cover bg-center bg-no-repeat blur-sm transition-opacity duration-700 ease-in-out ${
+          isTransitioning ? "opacity-15" : "opacity-25"
         }`}
         style={{
           backgroundImage: currentBackground
@@ -75,7 +75,7 @@ export default function Home() {
         }}
       />
 
-      {/* Crisp Contained Image Layer - Shows Full Image */}
+      {/* Full Image Background - Show as much as possible */}
       <div
         className={`absolute inset-0 bg-contain bg-center bg-no-repeat transition-opacity duration-700 ease-in-out ${
           isTransitioning ? "opacity-60" : "opacity-90"
@@ -87,11 +87,8 @@ export default function Home() {
         }}
       />
 
-      {/* Subtle overlay for seamless blending */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/30 via-transparent to-slate-900/30" />
-
       {/* Text readability overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/20 via-slate-800/10 to-slate-900/40" />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-slate-800/20 to-slate-900/60" />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col min-h-screen">
