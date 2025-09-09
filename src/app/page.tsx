@@ -11,7 +11,7 @@ import { AudioToggle } from "@/components/AudioToggle";
 import { getBackgroundForStep } from "@/lib/pathway-data";
 
 export default function Home() {
-  const { currentStep } = useStore();
+  const { currentStep, setCurrentStep } = useStore();
   const [currentBackground, setCurrentBackground] = useState("");
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -41,6 +41,14 @@ export default function Home() {
     }
   }, [currentStep, currentBackground]);
 
+  // Reset invalid step to landing page
+  useEffect(() => {
+    if (currentStep > 8) {
+      console.log("Invalid step detected, resetting to landing page");
+      setCurrentStep(-1);
+    }
+  }, [currentStep, setCurrentStep]);
+
   const renderCurrentScreen = () => {
     if (currentStep === -1) {
       return <LandingPage />;
@@ -55,10 +63,10 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
-      {/* Dynamic Background Image with Transition */}
+      {/* Blurry Background Layer - Subtle and Soft */}
       <div
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-700 ease-in-out ${
-          isTransitioning ? "opacity-20" : "opacity-30"
+        className={`absolute inset-0 bg-cover bg-center bg-no-repeat blur-md transition-opacity duration-700 ease-in-out ${
+          isTransitioning ? "opacity-10" : "opacity-20"
         }`}
         style={{
           backgroundImage: currentBackground
@@ -67,8 +75,23 @@ export default function Home() {
         }}
       />
 
-      {/* Overlay gradient for better text readability */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-slate-800/20 to-slate-900/60" />
+      {/* Crisp Contained Image Layer - Shows Full Image */}
+      <div
+        className={`absolute inset-0 bg-contain bg-center bg-no-repeat transition-opacity duration-700 ease-in-out ${
+          isTransitioning ? "opacity-60" : "opacity-90"
+        }`}
+        style={{
+          backgroundImage: currentBackground
+            ? `url('${currentBackground}')`
+            : "none",
+        }}
+      />
+
+      {/* Subtle overlay for seamless blending */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/30 via-transparent to-slate-900/30" />
+
+      {/* Text readability overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/20 via-slate-800/10 to-slate-900/40" />
 
       {/* Content */}
       <div className="relative z-10 flex flex-col min-h-screen">
