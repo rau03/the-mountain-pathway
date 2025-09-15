@@ -43,7 +43,7 @@ export default function Home() {
 
   // Reset invalid step to landing page
   useEffect(() => {
-    if (currentStep > 8) {
+    if (currentStep > 9) {
       console.log("Invalid step detected, resetting to landing page");
       setCurrentStep(-1);
     }
