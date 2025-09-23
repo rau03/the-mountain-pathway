@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, VolumeX, Music, Waves, Settings } from 'lucide-react';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Volume2, VolumeX, Music, Waves, Settings } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 
 export const AudioPlayer: React.FC = () => {
-  const { audioEnabled, currentAudioTrack, toggleAudio, setAudioTrack } = useStore();
+  const { audioEnabled, currentAudioTrack, toggleAudio, setAudioTrack } =
+    useStore();
   const [showSettings, setShowSettings] = useState(false);
-  
+
   return (
     <div className="fixed bottom-6 right-6 z-30">
       <div className="flex flex-col items-end space-y-2">
@@ -20,25 +21,27 @@ export const AudioPlayer: React.FC = () => {
               className="bg-slate-800/90 backdrop-blur-sm rounded-lg p-4 shadow-xl border border-slate-600 mb-2"
             >
               <div className="space-y-3">
-                <p className="text-sm text-slate-300 font-medium">Audio Track</p>
+                <p className="text-sm text-slate-300 font-medium">
+                  Audio Track
+                </p>
                 <div className="flex space-x-2">
                   <button
-                    onClick={() => setAudioTrack('music')}
+                    onClick={() => setAudioTrack("music")}
                     className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
-                      currentAudioTrack === 'music'
-                        ? 'bg-amber-600 text-white'
-                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                      currentAudioTrack === "music"
+                        ? "bg-brand-forest text-white"
+                        : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                     }`}
                   >
                     <Music className="w-4 h-4" />
                     <span>Music</span>
                   </button>
                   <button
-                    onClick={() => setAudioTrack('nature')}
+                    onClick={() => setAudioTrack("nature")}
                     className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
-                      currentAudioTrack === 'nature'
-                        ? 'bg-amber-600 text-white'
-                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                      currentAudioTrack === "nature"
+                        ? "bg-brand-forest text-white"
+                        : "bg-slate-700 text-slate-300 hover:bg-slate-600"
                     }`}
                   >
                     <Waves className="w-4 h-4" />
@@ -49,7 +52,7 @@ export const AudioPlayer: React.FC = () => {
             </motion.div>
           )}
         </AnimatePresence>
-        
+
         {/* Main Controls */}
         <div className="flex items-center space-x-2">
           <button
@@ -58,13 +61,13 @@ export const AudioPlayer: React.FC = () => {
           >
             <Settings className="w-4 h-4" />
           </button>
-          
+
           <button
             onClick={toggleAudio}
             className={`p-3 rounded-full transition-all duration-200 backdrop-blur-sm border ${
               audioEnabled
-                ? 'bg-amber-600/80 hover:bg-amber-700/80 text-white border-amber-500'
-                : 'bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border-slate-600'
+                ? "bg-brand-forest/80 hover:bg-brand-forest/90 text-white border-brand-forest"
+                : "bg-slate-800/80 hover:bg-slate-700/80 text-slate-300 hover:text-white border-slate-600"
             }`}
           >
             {audioEnabled ? (
@@ -75,7 +78,7 @@ export const AudioPlayer: React.FC = () => {
           </button>
         </div>
       </div>
-      
+
       {/* Audio Elements */}
       {audioEnabled && (
         <>
@@ -83,17 +86,27 @@ export const AudioPlayer: React.FC = () => {
             loop
             autoPlay
             className="hidden"
-            style={{ display: currentAudioTrack === 'music' ? 'block' : 'none' }}
+            style={{
+              display: currentAudioTrack === "music" ? "block" : "none",
+            }}
           >
-            <source src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav" type="audio/wav" />
+            <source
+              src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav"
+              type="audio/wav"
+            />
           </audio>
           <audio
             loop
             autoPlay
             className="hidden"
-            style={{ display: currentAudioTrack === 'nature' ? 'block' : 'none' }}
+            style={{
+              display: currentAudioTrack === "nature" ? "block" : "none",
+            }}
           >
-            <source src="https://www.soundjay.com/nature/sounds/forest-with-small-river.wav" type="audio/wav" />
+            <source
+              src="https://www.soundjay.com/nature/sounds/forest-with-small-river.wav"
+              type="audio/wav"
+            />
           </audio>
         </>
       )}

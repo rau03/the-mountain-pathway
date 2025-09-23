@@ -4,7 +4,7 @@ export interface PathwayStep {
   stepIndex: number;
   stageName: string;
   title: string;
-  subtitle?: string;
+  subtitle: string;
   type: "landing" | "timer" | "reflection" | "input" | "summary";
   prompt: string;
   content?: {
@@ -68,11 +68,11 @@ export const pathwayData: PathwayStep[] = [
   {
     stepIndex: 0,
     stageName: "Trailhead",
-    title: "Begin",
-    subtitle: "A moment of stillness",
+    title: "Center Your Heart",
+    subtitle: "A Moment of Stillness",
     type: "timer",
     prompt:
-      "Take a few moments of silence to rest in God's presence. When you're ready, begin your journey.",
+      "Let's begin with a few moments of quiet. Find a comfortable stillness, and for the next few moments, simply rest in God's care, allowing your heart to find its center in Him.",
     isInput: false,
     isTimer: true,
     key: "begin",
@@ -80,11 +80,11 @@ export const pathwayData: PathwayStep[] = [
   {
     stepIndex: 1,
     stageName: "Ascent",
-    title: "Reflect",
-    subtitle: "Read and meditate",
+    title: "Ground Yourself In Scripture",
+    subtitle: "Listen to His Word",
     type: "reflection",
     prompt:
-      "Read through Psalm 139 slowly and thoughtfully. Let the words settle in your heart.",
+      "Let's ground this time in His Word. As you slowly read through Psalm 139, listen for any word or phrase that resonates with your heart today.",
     content: {
       scripture: `O Lord, you have searched me and known me!
 You know when I sit down and when I rise up;
@@ -144,77 +144,77 @@ and lead me in the way everlasting!
   {
     stepIndex: 2,
     stageName: "Ascent",
-    title: "Respond",
-    subtitle: "Name your focus",
+    title: "Name the Issue",
+    subtitle: "Define Your Focus",
     type: "input",
     prompt:
-      "What specific issue, situation, or topic would you like to bring before God today?",
+      "Now, let's gently name what you've brought to this time. What specific situation, relationship, or question would you like to walk through with God?",
     isInput: true,
     key: "respond",
   },
   {
     stepIndex: 3,
     stageName: "Overlook",
-    title: "Thoughts",
-    subtitle: "Unpack your mind",
+    title: "Unpack Your Thoughts",
+    subtitle: "Truths and Misperceptions",
     type: "input",
     prompt:
-      "What thoughts are present? What truths do you know? What lies might you be believing?",
+      "Let's explore the thoughts surrounding this issue. What stories are you telling yourself about it? What is undeniably true, and what might be a misperception you've held onto?",
     isInput: true,
     key: "thoughts",
   },
   {
     stepIndex: 4,
     stageName: "Overlook",
-    title: "Emotions",
-    subtitle: "Honor your heart",
+    title: "Acknowledge Your Feelings",
+    subtitle: "From Head to Heart",
     type: "input",
     prompt:
-      "What emotions are you experiencing? Name the feelings present in your heart and body.",
+      "Now, let's turn our attention from the head to the heart. As you consider this situation, what emotions are present? Name them here without judgment.",
     isInput: true,
     key: "emotions",
   },
   {
     stepIndex: 5,
     stageName: "Summit Path",
-    title: "Desire",
-    subtitle: "Voice your longings",
+    title: "Articulate Your Hope",
+    subtitle: "Uncover the Deep Longing",
     type: "input",
     prompt:
-      "What are your deep longings in this situation? What God-given hopes do you carry?",
+      "Beneath the struggle, there is often a deep longing. What is it you truly hope for in this? How might this desire point to the way God has made you and the good things He has for you?",
     isInput: true,
     key: "desire",
   },
   {
     stepIndex: 6,
     stageName: "Summit Path",
-    title: "Pause",
-    subtitle: "Invite Jesus in",
+    title: "Pause and Invite",
+    subtitle: "Welcome the Guide",
     type: "input",
     prompt:
-      "Take a moment to consciously invite Jesus into this situation. What do you sense Him saying?",
+      "Let's create a space for the Guide. Take a quiet moment to consciously invite Jesus into this very situation, just as it is.",
     isInput: true,
     key: "pause",
   },
   {
     stepIndex: 7,
     stageName: "Summit Path",
-    title: "Choices",
-    subtitle: "Discern your path",
+    title: "Discern the Next Step",
+    subtitle: "Choose Your Path Forward",
     type: "input",
     prompt:
-      "What would be a wise, loving, and faithful next step in this situation?",
+      "Having sat with your thoughts, feelings, and hopes, what does a wise and loving next step look like? What is one small, faithful action you can take?",
     isInput: true,
     key: "choices",
   },
   {
     stepIndex: 8,
     stageName: "Summit",
-    title: "Prayer",
-    subtitle: "Offer it all to God",
+    title: "Commit in Prayer",
+    subtitle: "Offer It All to Him",
     type: "input",
     prompt:
-      "Summarize your entire journey in a prayer to God. Offer Him your thoughts, emotions, desires, and next steps.",
+      "Finally, let's bring everything you've discovered back to God. Use this space to write a prayer that gathers your thoughts, surrenders your feelings, and commits your next step to Him.",
     content: {
       specialMessage:
         "This is your final reflection. Take time to offer everything to God in prayer.",
@@ -283,7 +283,7 @@ export const pathwayContent: PathwayContent = {
 export const stageVisuals = {
   Trailhead: "/homepage-background.v2.jpg",
   Ascent: "/stage-2-ascent.jpg",
-  Overlook: "/stage-3-overlook.jpeg",
+  Overlook: "/stage-3-overlook.jpg",
   "Summit Path": "/stage-4-summit-path.jpg",
   Summit: "/stage-5-summit.jpg",
 } as const;

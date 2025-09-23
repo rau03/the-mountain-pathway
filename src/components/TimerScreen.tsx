@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Play, Pause, RotateCcw } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { PathwayStep, pathwayContent } from "@/lib/pathway-data";
+import { Button } from "@/components/ui/button";
 
 interface TimerScreenProps {
   step: PathwayStep;
@@ -94,17 +95,14 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
               </label>
               <div className="flex justify-center space-x-3">
                 {[1, 3, 5, 10].map((minutes) => (
-                  <button
+                  <Button
                     key={minutes}
                     onClick={() => setSilenceTimer(minutes)}
-                    className={`px-4 py-2 rounded-lg transition-all duration-200 backdrop-blur-sm border ${
-                      silenceTimer === minutes
-                        ? "bg-amber-600/90 text-white border-amber-500 shadow-lg"
-                        : "bg-white/10 text-white/90 border-white/20 hover:bg-white/20 hover:border-white/30"
-                    }`}
+                    variant={silenceTimer === minutes ? "default" : "ghost"}
+                    size="sm"
                   >
                     {minutes}m
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -153,9 +151,10 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
 
             {/* Timer Controls */}
             <div className="flex justify-center space-x-4">
-              <button
+              <Button
                 onClick={isTimerActive ? handlePause : handleStart}
-                className="flex items-center space-x-2 px-6 py-3 bg-amber-600/90 hover:bg-amber-700/90 text-white rounded-lg transition-all duration-200 backdrop-blur-sm border border-amber-500/50 shadow-lg drop-shadow-md"
+                variant="default"
+                size="lg"
               >
                 {isTimerActive ? (
                   <Pause className="w-4 h-4" />
@@ -167,27 +166,26 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
                     ? pathwayContent.timerScreen.pauseText
                     : pathwayContent.timerScreen.resumeText}
                 </span>
-              </button>
+              </Button>
 
-              <button
-                onClick={handleReset}
-                className="flex items-center space-x-2 px-4 py-3 bg-white/10 hover:bg-white/20 text-white rounded-lg transition-all duration-200 backdrop-blur-sm border border-white/20 hover:border-white/30 drop-shadow-md"
-              >
+              <Button onClick={handleReset} variant="ghost" size="lg">
                 <RotateCcw className="w-4 h-4" />
                 <span>{pathwayContent.timerScreen.resetText}</span>
-              </button>
+              </Button>
             </div>
           </div>
         )}
 
         {!hasStarted && (
-          <button
+          <Button
             onClick={handleStart}
-            className="flex items-center space-x-2 mx-auto px-8 py-4 bg-amber-600/90 hover:bg-amber-700/90 text-white rounded-xl font-semibold transition-all duration-300 transform hover:scale-105 backdrop-blur-sm border border-amber-500/50 shadow-lg drop-shadow-md"
+            variant="default"
+            size="lg"
+            className="mx-auto px-8 py-4 rounded-xl font-semibold transition-all duration-300 transform hover:scale-105"
           >
             <Play className="w-5 h-5" />
             <span>{pathwayContent.timerScreen.beginButtonText}</span>
-          </button>
+          </Button>
         )}
 
         {timeLeft === 0 && (

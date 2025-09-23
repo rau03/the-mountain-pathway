@@ -39,7 +39,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
               value={currentValue}
               onChange={(e) => handleInputChange(e.target.value)}
               placeholder={pathwayContent.general.textareaPlaceholder}
-              className="w-full h-48 p-4 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-400 focus:border-transparent resize-none leading-relaxed"
+              className="w-full h-48 p-4 bg-slate-900/50 border border-slate-600 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed"
               autoFocus
             />
 
@@ -54,8 +54,8 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
           </div>
 
           {step.isSummary && step.content?.specialMessage && (
-            <div className="bg-amber-400/10 border border-amber-400/30 rounded-lg p-4">
-              <p className="text-amber-300 text-sm text-center">
+            <div className="bg-brand-gold/10 border border-brand-gold/30 rounded-lg p-4">
+              <p className="text-brand-gold text-sm text-center">
                 {step.content.specialMessage}
               </p>
             </div>

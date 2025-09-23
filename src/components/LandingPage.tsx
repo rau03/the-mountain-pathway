@@ -1,8 +1,8 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { Mountain, Play } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayContent } from "@/lib/pathway-data";
+import { Button } from "@/components/ui/button";
 
 export const LandingPage: React.FC = () => {
   const { setCurrentStep, createNewEntry } = useStore();
@@ -17,8 +17,8 @@ export const LandingPage: React.FC = () => {
       <div className="space-y-8">
         {/* Hero Icon */}
         <div className="flex justify-center">
-          <div className="p-6 bg-amber-400/20 rounded-full">
-            <Mountain className="w-16 h-16 text-amber-400" />
+          <div className="p-6 bg-brand-gold/20 rounded-full">
+            <Mountain className="w-16 h-16 text-brand-gold" />
           </div>
         </div>
 
@@ -37,13 +37,15 @@ export const LandingPage: React.FC = () => {
 
         {/* Call to Action */}
         <div className="pt-8">
-          <button
+          <Button
             onClick={handleBeginJourney}
-            className="group flex items-center space-x-3 mx-auto px-8 py-4 bg-amber-600 hover:bg-amber-700 text-white rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            variant="default"
+            size="lg"
+            className="group mx-auto px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             <Play className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-200" />
             <span>{pathwayContent.landingPage.buttonText}</span>
-          </button>
+          </Button>
         </div>
 
         {/* Subtitle */}

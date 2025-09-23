@@ -2,6 +2,7 @@ import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData, pathwayContent } from "@/lib/pathway-data";
+import { Button } from "@/components/ui/button";
 
 export const Footer: React.FC = () => {
   const { currentStep, setCurrentStep, completeEntry } = useStore();
@@ -31,18 +32,14 @@ export const Footer: React.FC = () => {
     <footer className="relative z-20 px-6 py-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center">
-          <button
+          <Button
             onClick={handleBack}
             disabled={!canGoBack}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all duration-200 ${
-              canGoBack
-                ? "bg-slate-700 hover:bg-slate-600 text-white"
-                : "bg-slate-800 text-slate-500 cursor-not-allowed"
-            }`}
+            variant="secondary"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>{pathwayContent.navigation.backButtonText}</span>
-          </button>
+          </Button>
 
           <div className="text-center">
             <p className="text-sm text-slate-400">
@@ -54,9 +51,10 @@ export const Footer: React.FC = () => {
             </p>
           </div>
 
-          <button
+          <Button
             onClick={handleNext}
-            className="flex items-center space-x-2 px-6 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg transition-all duration-200 font-medium"
+            variant="default"
+            className="px-6 font-medium"
           >
             <span>
               {isLastStep
@@ -64,7 +62,7 @@ export const Footer: React.FC = () => {
                 : pathwayContent.navigation.continueButtonText}
             </span>
             <ChevronRight className="w-4 h-4" />
-          </button>
+          </Button>
         </div>
       </div>
     </footer>

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Download, Copy, RotateCcw, CheckCircle } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData, pathwayContent } from "@/lib/pathway-data";
+import { Button } from "@/components/ui/button";
 
 export const SummaryScreen: React.FC = () => {
   const { currentEntry, startNewJourney } = useStore();
@@ -94,13 +95,13 @@ export const SummaryScreen: React.FC = () => {
 
         // Add step title
         pdf.setFontSize(14);
-        pdf.setFont(undefined, "bold");
+        pdf.setFont("helvetica", "bold");
         pdf.text(step.title.toUpperCase(), 20, yPosition);
         yPosition += 10;
 
         // Add response text (split into lines if too long)
         pdf.setFontSize(10);
-        pdf.setFont(undefined, "normal");
+        pdf.setFont("helvetica", "normal");
         const lines = pdf.splitTextToSize(response, 170);
         pdf.text(lines, 20, yPosition);
         yPosition += lines.length * 4 + 15; // 4mm per line + 15mm spacing
@@ -114,7 +115,11 @@ export const SummaryScreen: React.FC = () => {
       console.log("Text-based PDF saved successfully");
     } catch (err) {
       console.error("Failed to generate text PDF:", err);
-      alert(`Failed to generate PDF: ${err.message}`);
+      alert(
+        `Failed to generate PDF: ${
+          err instanceof Error ? err.message : "Unknown error"
+        }`
+      );
     } finally {
       setDownloading(false);
     }
@@ -130,8 +135,8 @@ export const SummaryScreen: React.FC = () => {
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="flex justify-center">
-            <div className="p-4 bg-green-400/20 rounded-full">
-              <CheckCircle className="w-8 h-8 text-green-400" />
+            <div className="p-4 bg-brand-gold/20 rounded-full">
+              <CheckCircle className="w-8 h-8 text-brand-gold" />
             </div>
           </div>
           <h2 className="text-3xl font-bold text-white">
@@ -185,10 +190,12 @@ export const SummaryScreen: React.FC = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <button
+          <Button
             onClick={handleDownloadPDF}
             disabled={downloading}
-            className="flex items-center space-x-2 px-6 py-3 bg-amber-600 hover:bg-amber-700 disabled:bg-amber-800 text-white rounded-lg transition-all duration-200 font-medium"
+            variant="default"
+            size="lg"
+            className="font-medium"
           >
             <Download className="w-4 h-4" />
             <span>
@@ -196,14 +203,16 @@ export const SummaryScreen: React.FC = () => {
                 ? pathwayContent.summaryPage.generatingText
                 : pathwayContent.summaryPage.downloadButtonText}
             </span>
-          </button>
+          </Button>
 
-          <button
+          <Button
             onClick={handleCopyToClipboard}
-            className="flex items-center space-x-2 px-6 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-all duration-200 font-medium"
+            variant="secondary"
+            size="lg"
+            className="font-medium"
           >
             {copied ? (
-              <CheckCircle className="w-4 h-4 text-green-400" />
+              <CheckCircle className="w-4 h-4 text-brand-gold" />
             ) : (
               <Copy className="w-4 h-4" />
             )}
@@ -212,15 +221,17 @@ export const SummaryScreen: React.FC = () => {
                 ? pathwayContent.summaryPage.copiedText
                 : pathwayContent.summaryPage.copyButtonText}
             </span>
-          </button>
+          </Button>
 
-          <button
+          <Button
             onClick={handleStartNew}
-            className="flex items-center space-x-2 px-6 py-3 bg-blue-600 hover:blue-700 text-white rounded-lg transition-all duration-200 font-medium"
+            variant="default"
+            size="lg"
+            className="font-medium"
           >
             <RotateCcw className="w-4 h-4" />
             <span>{pathwayContent.summaryPage.newJourneyButtonText}</span>
-          </button>
+          </Button>
         </div>
       </motion.div>
     </div>

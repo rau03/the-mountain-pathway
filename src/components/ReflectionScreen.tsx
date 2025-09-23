@@ -17,8 +17,8 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
       >
         <div className="text-center space-y-6">
           <div className="flex justify-center">
-            <div className="p-4 bg-amber-400/20 rounded-full">
-              <BookOpen className="w-8 h-8 text-amber-400" />
+            <div className="p-4 bg-brand-gold/20 rounded-full">
+              <BookOpen className="w-8 h-8 text-brand-gold" />
             </div>
           </div>
 
@@ -32,7 +32,7 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
           {/* Scripture Text */}
           {step.content?.scripture && (
             <div className="bg-slate-900/50 rounded-xl p-6 max-h-96 overflow-y-auto">
-              <h3 className="text-xl font-semibold text-amber-400 mb-4">
+              <h3 className="text-xl font-semibold text-brand-gold mb-4">
                 Psalm 139
               </h3>
               <div className="text-slate-300 leading-relaxed whitespace-pre-line text-left">
