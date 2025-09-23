@@ -61,45 +61,77 @@ export default function Home() {
     return <JourneyScreen />;
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white relative overflow-hidden">
-      {/* Subtle Blurred Background - Fill empty space */}
-      <div
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat blur-sm transition-opacity duration-700 ease-in-out ${
-          isTransitioning ? "opacity-15" : "opacity-25"
-        }`}
-        style={{
-          backgroundImage: currentBackground
-            ? `url('${currentBackground}')`
-            : "none",
-        }}
-      />
+  // Landing Page - Full Screen Layout
+  if (currentStep === -1) {
+    return (
+      <div className="min-h-screen overflow-hidden">
+        {/* Full Background for Landing Page */}
+        <div
+          className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ${
+            isTransitioning ? "opacity-60" : "opacity-100"
+          }`}
+          style={{
+            backgroundImage: currentBackground
+              ? `url('${currentBackground}')`
+              : "none",
+          }}
+        />
 
-      {/* Full Image Background - Show as much as possible */}
-      <div
-        className={`absolute inset-0 bg-contain bg-center bg-no-repeat transition-opacity duration-700 ease-in-out ${
-          isTransitioning ? "opacity-60" : "opacity-90"
-        }`}
-        style={{
-          backgroundImage: currentBackground
-            ? `url('${currentBackground}')`
-            : "none",
-        }}
-      />
+        {/* Landing Page Content - Centered */}
+        <div className="relative z-10 min-h-screen flex items-center justify-center p-8">
+          <div className="w-full max-w-2xl mx-auto bg-slate-50/95 backdrop-blur-sm rounded-3xl p-12 text-slate-900">
+            <LandingPage />
+          </div>
+        </div>
 
-      {/* Text readability overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-slate-900/40 via-slate-800/20 to-slate-900/60" />
-
-      {/* Content */}
-      <div className="relative z-10 flex flex-col min-h-screen">
-        <Header />
-        <main className="flex-1 flex items-center justify-center px-4 py-8">
-          {renderCurrentScreen()}
-        </main>
-        <Footer />
+        {/* AudioToggle for Landing Page */}
+        <div className="absolute top-4 right-4 z-20">
+          <AudioToggle />
+        </div>
       </div>
+    );
+  }
 
-      <AudioToggle />
+  // Journey Mode - Split-Screen Layout
+  return (
+    <div className="min-h-screen overflow-hidden">
+      {/* Split-Screen Layout */}
+      <main className="flex flex-col md:flex-row h-screen">
+        {/* Visual Pane - Left Side */}
+        <div
+          className={`w-full md:w-3/5 h-1/3 md:h-full bg-cover bg-center transition-all duration-1000 ${
+            isTransitioning ? "opacity-60" : "opacity-100"
+          }`}
+          style={{
+            backgroundImage: currentBackground
+              ? `url('${currentBackground}')`
+              : "none",
+          }}
+        />
+
+        {/* Content Pane - Right Side */}
+        <div className="w-full md:w-2/5 h-2/3 md:h-full bg-slate-50 text-slate-900 flex flex-col relative">
+          {/* AudioToggle positioned in top-right of Content Pane */}
+          <div className="absolute top-4 right-4 z-10">
+            <AudioToggle />
+          </div>
+
+          {/* Header with Progress Path */}
+          <div className="flex-shrink-0 p-8 pb-4">
+            <Header />
+          </div>
+
+          {/* Main Content Area - Takes available space */}
+          <div className="flex-grow flex items-center justify-center px-8 py-4 overflow-y-auto">
+            {renderCurrentScreen()}
+          </div>
+
+          {/* Footer with Back/Next buttons - Always visible */}
+          <div className="flex-shrink-0 p-8 pt-4">
+            <Footer />
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

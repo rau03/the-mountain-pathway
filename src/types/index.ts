@@ -26,6 +26,7 @@ export interface AppState {
   updateResponse: (step: string, value: string) => void;
   createNewEntry: () => void;
   completeEntry: () => void;
+  startJourney: () => void;
   startNewJourney: () => void;
   toggleAudio: () => void;
   setAudioTrack: (track: "music" | "nature") => void;

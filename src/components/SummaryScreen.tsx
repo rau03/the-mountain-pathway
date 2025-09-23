@@ -126,114 +126,110 @@ export const SummaryScreen: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="space-y-6"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="flex flex-col gap-6 w-full"
+    >
+      {/* Header */}
+      <div className="text-center">
+        <div className="flex justify-center mb-4">
+          <div className="p-4 bg-amber-100 rounded-full">
+            <CheckCircle className="w-8 h-8 text-brand-gold" />
+          </div>
+        </div>
+        <h2 className="text-3xl font-bold mb-2">
+          {pathwayContent.summaryPage.title}
+        </h2>
+        <p className="text-lg">{pathwayContent.summaryPage.subtitle}</p>
+      </div>
+
+      {/* Summary Content */}
+      <div
+        id="summary-content"
+        className="bg-slate-100 rounded-xl p-6 border border-slate-200"
       >
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="flex justify-center">
-            <div className="p-4 bg-brand-gold/20 rounded-full">
-              <CheckCircle className="w-8 h-8 text-brand-gold" />
-            </div>
+        <div className="space-y-6">
+          <div className="text-center border-b border-slate-300 pb-4">
+            <h3 className="text-xl font-semibold text-brand-gold">
+              {pathwayContent.appTitle}
+            </h3>
+            <p className="text-sm text-slate-600">
+              {new Date(currentEntry.createdAt).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
           </div>
-          <h2 className="text-3xl font-bold text-white">
-            {pathwayContent.summaryPage.title}
-          </h2>
-          <p className="text-slate-300 text-lg">
-            {pathwayContent.summaryPage.subtitle}
-          </p>
-        </div>
 
-        {/* Summary Content */}
-        <div
-          id="summary-content"
-          className="bg-slate-800/80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-slate-700"
+          {pathwayData.map((step) => {
+            const response =
+              currentEntry.responses[
+                step.key as keyof typeof currentEntry.responses
+              ];
+            if (!step.isInput || !response) return null;
+
+            return (
+              <div key={step.stepIndex} className="space-y-2">
+                <h4 className="font-semibold text-brand-gold uppercase tracking-wide text-sm">
+                  {step.title}
+                </h4>
+                <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">
+                  {response}
+                </p>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <Button
+          onClick={handleDownloadPDF}
+          disabled={downloading}
+          variant="default"
+          size="lg"
+          className="font-medium"
         >
-          <div className="space-y-6">
-            <div className="text-center border-b border-slate-600 pb-4">
-              <h3 className="text-xl font-semibold text-amber-400">
-                {pathwayContent.appTitle}
-              </h3>
-              <p className="text-sm text-slate-400">
-                {new Date(currentEntry.createdAt).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
+          <Download className="w-4 h-4" />
+          <span>
+            {downloading
+              ? pathwayContent.summaryPage.generatingText
+              : pathwayContent.summaryPage.downloadButtonText}
+          </span>
+        </Button>
 
-            {pathwayData.map((step) => {
-              const response =
-                currentEntry.responses[
-                  step.key as keyof typeof currentEntry.responses
-                ];
-              if (!step.isInput || !response) return null;
+        <Button
+          onClick={handleCopyToClipboard}
+          variant="secondary"
+          size="lg"
+          className="font-medium"
+        >
+          {copied ? (
+            <CheckCircle className="w-4 h-4 text-brand-gold" />
+          ) : (
+            <Copy className="w-4 h-4" />
+          )}
+          <span>
+            {copied
+              ? pathwayContent.summaryPage.copiedText
+              : pathwayContent.summaryPage.copyButtonText}
+          </span>
+        </Button>
 
-              return (
-                <div key={step.stepIndex} className="space-y-2">
-                  <h4 className="font-semibold text-amber-300 uppercase tracking-wide text-sm">
-                    {step.title}
-                  </h4>
-                  <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">
-                    {response}
-                  </p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            onClick={handleDownloadPDF}
-            disabled={downloading}
-            variant="default"
-            size="lg"
-            className="font-medium"
-          >
-            <Download className="w-4 h-4" />
-            <span>
-              {downloading
-                ? pathwayContent.summaryPage.generatingText
-                : pathwayContent.summaryPage.downloadButtonText}
-            </span>
-          </Button>
-
-          <Button
-            onClick={handleCopyToClipboard}
-            variant="secondary"
-            size="lg"
-            className="font-medium"
-          >
-            {copied ? (
-              <CheckCircle className="w-4 h-4 text-brand-gold" />
-            ) : (
-              <Copy className="w-4 h-4" />
-            )}
-            <span>
-              {copied
-                ? pathwayContent.summaryPage.copiedText
-                : pathwayContent.summaryPage.copyButtonText}
-            </span>
-          </Button>
-
-          <Button
-            onClick={handleStartNew}
-            variant="default"
-            size="lg"
-            className="font-medium"
-          >
-            <RotateCcw className="w-4 h-4" />
-            <span>{pathwayContent.summaryPage.newJourneyButtonText}</span>
-          </Button>
-        </div>
-      </motion.div>
-    </div>
+        <Button
+          onClick={handleStartNew}
+          variant="default"
+          size="lg"
+          className="font-medium"
+        >
+          <RotateCcw className="w-4 h-4" />
+          <span>{pathwayContent.summaryPage.newJourneyButtonText}</span>
+        </Button>
+      </div>
+    </motion.div>
   );
 };

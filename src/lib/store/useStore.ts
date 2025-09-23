@@ -65,6 +65,9 @@ export const useStore = create<AppState>()(
 
       stopTimer: () => set({ isTimerActive: false }),
 
+      // Start the journey from landing page (move to first step)
+      startJourney: () => set({ currentStep: 0 }),
+
       // Add a new function to start a fresh journey
       startNewJourney: () =>
         set({
