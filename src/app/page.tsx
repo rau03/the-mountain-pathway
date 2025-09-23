@@ -77,11 +77,9 @@ export default function Home() {
           }}
         />
 
-        {/* Landing Page Content - Centered */}
-        <div className="relative z-10 min-h-screen flex items-center justify-center p-8">
-          <div className="w-full max-w-2xl mx-auto bg-slate-50/95 backdrop-blur-sm rounded-3xl p-12 text-slate-900">
-            <LandingPage />
-          </div>
+        {/* Landing Page Content - Full Screen Floating */}
+        <div className="relative z-10">
+          <LandingPage />
         </div>
 
         {/* AudioToggle for Landing Page */}
@@ -110,25 +108,41 @@ export default function Home() {
         />
 
         {/* Content Pane - Right Side */}
-        <div className="w-full md:w-3/5 h-2/3 md:h-full bg-slate-50 text-slate-900 flex flex-col relative">
-          {/* AudioToggle positioned in top-right of Content Pane */}
-          <div className="absolute top-4 right-4 z-10">
-            <AudioToggle />
-          </div>
+        <div className="w-full md:w-3/5 h-2/3 md:h-full text-slate-900 flex flex-col relative overflow-hidden">
+          {/* Ghosted Background Image Layer */}
+          <div
+            className="absolute inset-0 bg-cover bg-center blur-2xl brightness-150"
+            style={{
+              backgroundImage: currentBackground
+                ? `url('${currentBackground}')`
+                : "none",
+            }}
+          />
 
-          {/* Header with Progress Path */}
-          <div className="flex-shrink-0 p-8 pb-4">
-            <Header />
-          </div>
+          {/* Color Wash Layer */}
+          <div className="absolute inset-0 bg-slate-50/80" />
 
-          {/* Main Content Area - Takes available space */}
-          <div className="flex-grow flex items-center justify-center px-8 py-4 overflow-y-auto">
-            {renderCurrentScreen()}
-          </div>
+          {/* Content Layer */}
+          <div className="relative z-10 flex flex-col h-full">
+            {/* AudioToggle positioned in top-right of Content Pane */}
+            <div className="absolute top-4 right-4 z-10">
+              <AudioToggle />
+            </div>
 
-          {/* Footer with Back/Next buttons - Always visible */}
-          <div className="flex-shrink-0 p-8 pt-4">
-            <Footer />
+            {/* Header with Progress Path */}
+            <div className="flex-shrink-0 p-8 pb-4">
+              <Header />
+            </div>
+
+            {/* Main Content Area - Takes available space */}
+            <div className="flex-grow flex items-center justify-center px-8 py-4 overflow-y-auto">
+              {renderCurrentScreen()}
+            </div>
+
+            {/* Footer with Back/Next buttons - Always visible */}
+            <div className="flex-shrink-0 p-8 pt-4">
+              <Footer />
+            </div>
           </div>
         </div>
       </main>
