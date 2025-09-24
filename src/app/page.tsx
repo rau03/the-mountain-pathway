@@ -97,7 +97,7 @@ export default function Home() {
       <main className="flex flex-col md:flex-row h-screen">
         {/* Visual Pane - Left Side */}
         <div
-          className={`w-full md:w-2/5 h-1/3 md:h-full bg-cover bg-center transition-all duration-1000 ${
+          className={`w-full md:w-[45%] h-1/3 md:h-full bg-cover bg-center transition-all duration-1000 ${
             isTransitioning ? "opacity-60" : "opacity-100"
           }`}
           style={{
@@ -108,7 +108,7 @@ export default function Home() {
         />
 
         {/* Content Pane - Right Side */}
-        <div className="w-full md:w-3/5 h-2/3 md:h-full text-slate-900 flex flex-col relative overflow-hidden">
+        <div className="w-full md:w-[55%] h-2/3 md:h-full text-slate-900 flex flex-col relative overflow-hidden">
           {/* Background Image Layer */}
           <div
             className="absolute inset-0 bg-cover bg-center blur-xl brightness-110"
