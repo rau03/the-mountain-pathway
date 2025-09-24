@@ -33,7 +33,7 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
 
       {/* Scripture Text */}
       {step.content?.scripture && (
-        <div className="bg-slate-100 rounded-xl p-6 max-h-96 overflow-y-auto">
+        <div className="bg-brand-stone rounded-xl p-6 max-h-96 overflow-y-auto">
           <h3 className="text-xl font-semibold text-brand-gold mb-4">
             Psalm 139
           </h3>
