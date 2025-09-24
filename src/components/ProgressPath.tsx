@@ -39,9 +39,9 @@ export const ProgressPath: React.FC = () => {
         {pathwayData.map((step, index) => (
           <div key={step.key} className="text-center">
             <p
-              className={`text-xs transition-colors duration-300 ${
+              className={`text-xs transition-all duration-300 ${
                 index === currentStep
-                  ? "text-brand-gold font-medium"
+                  ? "bg-brand-slate/50 text-brand-gold px-2 py-1 rounded-md font-medium"
                   : "text-brand-slate"
               }`}
             >
