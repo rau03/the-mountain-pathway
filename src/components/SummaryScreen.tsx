@@ -129,7 +129,7 @@ export const SummaryScreen: React.FC = () => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col gap-6 w-full"
+      className="flex flex-col gap-4 w-full"
     >
       {/* Header */}
       <div className="text-center">
@@ -149,9 +149,9 @@ export const SummaryScreen: React.FC = () => {
       {/* Summary Content */}
       <div
         id="summary-content"
-        className="bg-brand-stone rounded-xl p-6 border border-slate-200"
+        className="bg-brand-stone rounded-xl p-4 border border-slate-200"
       >
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="text-center border-b border-slate-300 pb-4">
             <h3 className="text-xl font-semibold text-brand-gold">
               {pathwayContent.appTitle}

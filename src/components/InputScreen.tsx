@@ -2,6 +2,12 @@ import React from "react";
 import { motion } from "framer-motion";
 import { useStore } from "@/lib/store/useStore";
 import { PathwayStep, pathwayContent } from "@/lib/pathway-data";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 interface InputScreenProps {
   step: PathwayStep;
@@ -16,6 +22,35 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
   const handleInputChange = (value: string) => {
     updateResponse(step.key, value);
   };
+
+  // Prayer guidance points for Step 9
+  const prayerGuidance = [
+    {
+      title: "Adoration",
+      content:
+        "Begin by acknowledging who God is. Praise Him for His character, His love, and His faithfulness in your life.",
+    },
+    {
+      title: "Confession",
+      content:
+        "Honestly bring before God any areas where you've fallen short. Ask for His forgiveness and cleansing.",
+    },
+    {
+      title: "Thanksgiving",
+      content:
+        "Thank God for His blessings, His provision, and the ways He has worked in your situation.",
+    },
+    {
+      title: "Supplication",
+      content:
+        "Present your requests, concerns, and needs to God. Ask for His guidance and intervention.",
+    },
+    {
+      title: "Surrender",
+      content:
+        "Release control of your situation to God. Trust Him with the outcome and commit to following His lead.",
+    },
+  ];
 
   return (
     <motion.div
@@ -52,6 +87,37 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
           </p>
         </div>
       </div>
+
+      {/* Step 9 Prayer Guidance Accordion */}
+      {step.stepIndex === 8 && (
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="prayer-guide">
+            <AccordionTrigger className="text-brand-slate hover:text-brand-gold">
+              <span className="text-sm">[ Need a guide for prayer? ]</span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-4 pt-2">
+                <p className="text-sm text-brand-slate/80 mb-4">
+                  Here&apos;s a simple framework to help structure your prayer:
+                </p>
+                {prayerGuidance.map((guide, index) => (
+                  <div
+                    key={index}
+                    className="border-l-2 border-brand-gold/30 pl-4"
+                  >
+                    <h4 className="font-semibold text-brand-gold text-sm mb-1">
+                      {guide.title}
+                    </h4>
+                    <p className="text-sm text-brand-slate/80 leading-relaxed">
+                      {guide.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      )}
 
       {step.isSummary && step.content?.specialMessage && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">

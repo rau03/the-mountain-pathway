@@ -128,7 +128,7 @@ export default function Home() {
           {/* Content Layer */}
           <div className="relative z-10 flex flex-col h-full">
             {/* AudioToggle positioned in top-right of Content Pane */}
-            <div className="absolute top-4 right-4 z-10">
+            <div className="absolute top-4 right-4 z-50">
               <AudioToggle />
             </div>
 
@@ -138,7 +138,7 @@ export default function Home() {
             </div>
 
             {/* Main Content Area - Takes available space */}
-            <div className="flex-grow flex items-center justify-center px-8 py-4 overflow-y-auto">
+            <div className="flex-grow flex items-start justify-center px-8 py-4 overflow-y-auto">
               {renderCurrentScreen()}
             </div>
 

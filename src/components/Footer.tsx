@@ -42,7 +42,7 @@ export const Footer: React.FC = () => {
           </Button>
 
           <div className="text-center">
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-brand-slate/70">
               {currentStep < 9
                 ? pathwayContent.navigation.stepCounterText
                     .replace("{current}", (currentStep + 1).toString())
