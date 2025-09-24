@@ -9,7 +9,7 @@ export const ProgressPath: React.FC = () => {
     <div className="w-full">
       <div className="flex items-center justify-between relative">
         {/* Progress Line */}
-        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-600 -translate-y-1/2" />
+        <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-slate-400 -translate-y-1/2" />
         <div
           className="absolute top-1/2 left-0 h-0.5 bg-brand-gold -translate-y-1/2 transition-all duration-500"
           style={{
@@ -24,7 +24,7 @@ export const ProgressPath: React.FC = () => {
             className={`relative z-10 w-4 h-4 rounded-full border-2 transition-all duration-300 ${
               index <= currentStep
                 ? "bg-brand-gold border-brand-gold"
-                : "bg-slate-700 border-slate-600"
+                : "bg-slate-300 border-slate-400"
             }`}
           >
             {index === currentStep && (
@@ -42,7 +42,7 @@ export const ProgressPath: React.FC = () => {
               className={`text-xs transition-colors duration-300 ${
                 index === currentStep
                   ? "text-brand-gold font-medium"
-                  : "text-slate-400"
+                  : "text-brand-slate"
               }`}
             >
               {step.title}

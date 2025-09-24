@@ -14,10 +14,10 @@ export const Header: React.FC = () => {
           <div className="flex items-center space-x-3">
             <Mountain className="w-8 h-8 text-amber-400" />
             <div>
-              <h1 className="text-2xl font-bold text-white">
+              <h1 className="text-2xl font-bold text-brand-slate">
                 {pathwayContent.appTitle}
               </h1>
-              <p className="text-sm text-slate-300">
+              <p className="text-sm text-brand-slate/80">
                 {pathwayContent.appSubtitle}
               </p>
             </div>

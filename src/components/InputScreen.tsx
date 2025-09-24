@@ -24,11 +24,15 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
       className="flex flex-col gap-6 w-full"
     >
       <div className="text-center">
-        <h2 className="text-3xl font-bold mb-2">{step.title}</h2>
-        <p className="text-lg">{step.subtitle}</p>
+        <h2 className="text-3xl font-bold mb-2 text-brand-slate">
+          {step.title}
+        </h2>
+        <p className="text-lg text-brand-slate/90">{step.subtitle}</p>
       </div>
 
-      <p className="leading-relaxed text-center">{step.prompt}</p>
+      <p className="leading-relaxed text-center text-brand-slate/80">
+        {step.prompt}
+      </p>
 
       <div className="space-y-4">
         <textarea

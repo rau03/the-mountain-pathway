@@ -138,10 +138,12 @@ export const SummaryScreen: React.FC = () => {
             <CheckCircle className="w-8 h-8 text-brand-gold" />
           </div>
         </div>
-        <h2 className="text-3xl font-bold mb-2">
+        <h2 className="text-3xl font-bold mb-2 text-brand-slate">
           {pathwayContent.summaryPage.title}
         </h2>
-        <p className="text-lg">{pathwayContent.summaryPage.subtitle}</p>
+        <p className="text-lg text-brand-slate/90">
+          {pathwayContent.summaryPage.subtitle}
+        </p>
       </div>
 
       {/* Summary Content */}
@@ -154,7 +156,7 @@ export const SummaryScreen: React.FC = () => {
             <h3 className="text-xl font-semibold text-brand-gold">
               {pathwayContent.appTitle}
             </h3>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-brand-slate/70">
               {new Date(currentEntry.createdAt).toLocaleDateString("en-US", {
                 weekday: "long",
                 year: "numeric",

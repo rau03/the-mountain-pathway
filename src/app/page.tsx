@@ -109,9 +109,9 @@ export default function Home() {
 
         {/* Content Pane - Right Side */}
         <div className="w-full md:w-3/5 h-2/3 md:h-full text-slate-900 flex flex-col relative overflow-hidden">
-          {/* Ghosted Background Image Layer */}
+          {/* Background Image Layer */}
           <div
-            className="absolute inset-0 bg-cover bg-center blur-2xl brightness-150"
+            className="absolute inset-0 bg-cover bg-center blur-xl brightness-110"
             style={{
               backgroundImage: currentBackground
                 ? `url('${currentBackground}')`
@@ -119,8 +119,11 @@ export default function Home() {
             }}
           />
 
+          {/* Readability Layer */}
+          <div className="absolute inset-0 bg-black/10" />
+
           {/* Color Wash Layer */}
-          <div className="absolute inset-0 bg-slate-50/80" />
+          <div className="absolute inset-0 bg-slate-50/40" />
 
           {/* Content Layer */}
           <div className="relative z-10 flex flex-col h-full">

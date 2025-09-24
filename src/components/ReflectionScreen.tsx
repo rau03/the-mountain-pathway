@@ -21,11 +21,15 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
           </div>
         </div>
 
-        <h2 className="text-3xl font-bold mb-2">{step.title}</h2>
-        <p className="text-lg">{step.subtitle}</p>
+        <h2 className="text-3xl font-bold mb-2 text-brand-slate">
+          {step.title}
+        </h2>
+        <p className="text-lg text-brand-slate/90">{step.subtitle}</p>
       </div>
 
-      <p className="leading-relaxed text-center">{step.prompt}</p>
+      <p className="leading-relaxed text-center text-brand-slate/80">
+        {step.prompt}
+      </p>
 
       {/* Scripture Text */}
       {step.content?.scripture && (
@@ -41,7 +45,7 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
 
       {step.content?.instructions && (
         <div className="pt-4">
-          <p className="text-sm text-slate-600 italic">
+          <p className="text-sm text-brand-slate/70 italic">
             {step.content.instructions}
           </p>
         </div>

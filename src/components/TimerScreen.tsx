@@ -74,15 +74,13 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
       >
         <div className="text-center space-y-4">
           <div>
-            <h2 className="text-3xl font-bold text-white drop-shadow-md mb-2">
+            <h2 className="text-3xl font-bold text-brand-slate mb-2">
               {step.title}
             </h2>
-            <p className="text-white/90 text-lg drop-shadow-md">
-              {step.subtitle}
-            </p>
+            <p className="text-brand-slate/90 text-lg">{step.subtitle}</p>
           </div>
 
-          <p className="text-white/80 leading-relaxed drop-shadow-md max-w-md mx-auto">
+          <p className="text-brand-slate/80 leading-relaxed max-w-md mx-auto">
             {step.prompt}
           </p>
         </div>
@@ -90,7 +88,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
         {!hasStarted && (
           <div className="space-y-6">
             <div>
-              <label className="block text-sm text-white/80 drop-shadow-md mb-4 font-medium">
+              <label className="block text-sm text-brand-slate/80 mb-4 font-medium text-center">
                 {pathwayContent.timerScreen.durationLabel}
               </label>
               <div className="flex justify-center space-x-3">
@@ -125,7 +123,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
                     stroke="currentColor"
                     strokeWidth="6"
                     fill="none"
-                    className="text-white/20"
+                    className="text-brand-slate/20"
                   />
                   <circle
                     cx="50"
@@ -142,7 +140,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
                   />
                 </svg>
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-3xl font-mono font-bold text-white drop-shadow-md">
+                  <span className="text-3xl font-mono font-bold text-brand-slate">
                     {formatTime(timeLeft)}
                   </span>
                 </div>
@@ -197,7 +195,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
             <p className="text-amber-400 font-medium drop-shadow-md">
               {pathwayContent.timerScreen.completionMessage}
             </p>
-            <p className="text-white/80 text-sm drop-shadow-md">
+            <p className="text-brand-slate/80 text-sm">
               {pathwayContent.timerScreen.completionSubtext}
             </p>
           </motion.div>
