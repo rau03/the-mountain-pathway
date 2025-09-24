@@ -1,11 +1,16 @@
 import React, { useState } from "react";
 import { useAudioPlayer, AudioTrack } from "../hooks/useAudioPlayer";
+import { Button } from "@/components/ui/button";
 
 interface AudioToggleProps {
   className?: string;
+  context?: "landing" | "journey";
 }
 
-export const AudioToggle: React.FC<AudioToggleProps> = ({ className = "" }) => {
+export const AudioToggle: React.FC<AudioToggleProps> = ({
+  className = "",
+  context = "journey",
+}) => {
   const { isPlaying, currentTrack, togglePlayPause, switchTrack } =
     useAudioPlayer();
   const [showTrackSelector, setShowTrackSelector] = useState(false);
@@ -103,9 +108,15 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({ className = "" }) => {
       {/* Main Controls */}
       <div className="flex items-center space-x-2">
         {/* Track Selector Button */}
-        <button
+        <Button
           onClick={() => setShowTrackSelector(!showTrackSelector)}
-          className="w-10 h-10 bg-brand-slate/20 hover:bg-brand-slate/30 backdrop-blur-sm rounded-full border border-brand-slate/30 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+          variant={context === "landing" ? "icon" : "ghost"}
+          size="icon"
+          className={
+            context === "landing"
+              ? "bg-brand-gold text-brand-slate hover:bg-brand-gold/90 w-10 h-10 rounded-full"
+              : "w-10 h-10 bg-brand-slate/20 hover:bg-brand-slate/30 backdrop-blur-sm rounded-full border border-brand-slate/30 transition-all duration-200 ease-in-out hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+          }
           aria-label="Select audio track"
           title="Select audio track"
         >
@@ -124,12 +135,18 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({ className = "" }) => {
               strokeLinejoin="round"
             />
           </svg>
-        </button>
+        </Button>
 
         {/* Play/Pause Button */}
-        <button
+        <Button
           onClick={togglePlayPause}
-          className="w-12 h-12 bg-brand-slate/20 hover:bg-brand-slate/30 backdrop-blur-sm rounded-full border border-brand-slate/30 flex items-center justify-center transition-all duration-200 ease-in-out hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+          variant={context === "landing" ? "icon" : "ghost"}
+          size="icon"
+          className={
+            context === "landing"
+              ? "bg-brand-gold text-brand-slate hover:bg-brand-gold/90 w-12 h-12 rounded-full"
+              : "w-12 h-12 bg-brand-slate/20 hover:bg-brand-slate/30 backdrop-blur-sm rounded-full border border-brand-slate/30 transition-all duration-200 ease-in-out hover:scale-105 active:scale-95 shadow-lg hover:shadow-xl"
+          }
           aria-label={
             isPlaying
               ? `Pause ${currentTrack} audio`
@@ -179,7 +196,7 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({ className = "" }) => {
               <polygon points="5,3 19,12 5,21" fill="currentColor" />
             </svg>
           )}
-        </button>
+        </Button>
       </div>
 
       {/* Current Track Indicator */}

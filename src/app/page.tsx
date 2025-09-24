@@ -84,7 +84,7 @@ export default function Home() {
 
         {/* AudioToggle for Landing Page */}
         <div className="absolute top-4 right-4 z-20">
-          <AudioToggle />
+          <AudioToggle context="landing" />
         </div>
       </div>
     );
@@ -129,7 +129,7 @@ export default function Home() {
           <div className="relative z-10 flex flex-col h-full">
             {/* AudioToggle positioned in top-right of Content Pane */}
             <div className="absolute top-4 right-4 z-50">
-              <AudioToggle />
+              <AudioToggle context="journey" />
             </div>
 
             {/* Header with Progress Path */}

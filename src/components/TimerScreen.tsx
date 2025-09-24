@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import { Play, Pause, RotateCcw } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
@@ -24,6 +24,13 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
     setTimeLeft(silenceTimer * 60);
   }, [silenceTimer]);
 
+  // Separate effect to handle timer completion
+  useEffect(() => {
+    if (timeLeft === 0 && isTimerActive) {
+      stopTimer();
+    }
+  }, [timeLeft, isTimerActive, stopTimer]);
+
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
@@ -31,7 +38,6 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
       interval = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
-            stopTimer();
             return 0;
           }
           return prev - 1;
@@ -39,8 +45,12 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
       }, 1000);
     }
 
-    return () => clearInterval(interval);
-  }, [isTimerActive, timeLeft, stopTimer]);
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [isTimerActive, timeLeft]);
 
   const handleStart = () => {
     setHasStarted(true);
