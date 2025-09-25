@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useAudioPlayer, AudioTrack } from "../hooks/useAudioPlayer";
+import { useAudioPlayer } from "../hooks/useAudioPlayer";
 import { Button } from "@/components/ui/button";
 
 interface AudioToggleProps {
@@ -110,7 +110,7 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({
         {/* Track Selector Button */}
         <Button
           onClick={() => setShowTrackSelector(!showTrackSelector)}
-          variant={context === "landing" ? "icon" : "ghost"}
+          variant={context === "landing" ? "default" : "ghost"}
           size="icon"
           className={
             context === "landing"
@@ -140,7 +140,7 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({
         {/* Play/Pause Button */}
         <Button
           onClick={togglePlayPause}
-          variant={context === "landing" ? "icon" : "ghost"}
+          variant={context === "landing" ? "default" : "ghost"}
           size="icon"
           className={
             context === "landing"

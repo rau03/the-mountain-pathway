@@ -1,7 +1,7 @@
 import React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
-import { pathwayData, pathwayContent } from "@/lib/pathway-data";
+import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
 
 export const Footer: React.FC = () => {
@@ -10,7 +10,6 @@ export const Footer: React.FC = () => {
   if (currentStep === -1) return null;
 
   const canGoBack = currentStep > 0;
-  const canGoNext = currentStep < 8;
   const isLastStep = currentStep === 8;
 
   const handleNext = () => {

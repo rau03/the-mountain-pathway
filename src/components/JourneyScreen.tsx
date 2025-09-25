@@ -1,5 +1,4 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
 import { TimerScreen } from "./TimerScreen";

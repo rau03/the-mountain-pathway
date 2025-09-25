@@ -11,7 +11,7 @@ const createNewEntry = (): JournalEntry => ({
 
 export const useStore = create<AppState>()(
   persist(
-    (set, get) => ({
+    (set) => ({
       currentStep: -1, // Start at landing page
       currentEntry: createNewEntry(),
       entries: [],
