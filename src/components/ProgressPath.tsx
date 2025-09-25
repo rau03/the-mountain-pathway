@@ -41,7 +41,7 @@ export const ProgressPath: React.FC = () => {
             <p
               className={`text-xs transition-all duration-300 ${
                 index === currentStep
-                  ? "bg-brand-slate/50 text-brand-gold px-2 py-1 rounded-md font-medium"
+                  ? "bg-brand-slate/50 text-brand-gold px-2.5 py-1 rounded-full font-medium"
                   : "text-brand-slate"
               }`}
             >

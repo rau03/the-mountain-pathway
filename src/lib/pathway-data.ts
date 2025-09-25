@@ -281,7 +281,7 @@ export const pathwayContent: PathwayContent = {
 
 // Visual mapping for stage backgrounds
 export const stageVisuals = {
-  Trailhead: "/homepage-background.v2.jpg",
+  Trailhead: "/stage-1-trailhead.jpg",
   Ascent: "/stage-2-ascent.jpg",
   Overlook: "/stage-3-overlook.jpg",
   "Summit Path": "/stage-4-summit-path.jpg",
@@ -291,8 +291,8 @@ export const stageVisuals = {
 // Helper function to get background image for current step
 export const getBackgroundForStep = (stepIndex: number): string => {
   if (stepIndex === -1) {
-    // Landing page uses Trailhead
-    return stageVisuals["Trailhead"];
+    // Landing page uses its own unique background
+    return "/homepage-background.v2.jpg";
   }
 
   if (stepIndex === 9) {

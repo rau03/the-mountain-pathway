@@ -64,12 +64,33 @@ export default function Home() {
   // Landing Page - Full Screen Layout
   if (currentStep === -1) {
     return (
-      <div className="min-h-screen overflow-hidden">
-        {/* Full Background for Landing Page */}
+      <div
+        className={`min-h-screen grid place-items-center transition-all duration-1000 ${
+          isTransitioning ? "opacity-60" : "opacity-100"
+        }`}
+      >
+        {/* Layer 1: The Ghosted Background (Full Screen) */}
+        <div className="absolute inset-0 w-full h-full">
+          {/* Ghosted Background Layer - Blurred Image */}
+          <div
+            className="absolute inset-0 bg-cover bg-center blur-xl brightness-125"
+            style={{
+              backgroundImage: currentBackground
+                ? `url('${currentBackground}')`
+                : "none",
+            }}
+          />
+
+          {/* Ghosted Background Layer - Readability */}
+          <div className="absolute inset-0 bg-black/10" />
+
+          {/* Ghosted Background Layer - Color Wash */}
+          <div className="absolute inset-0 bg-slate-50/20" />
+        </div>
+
+        {/* Layer 2: The Crisp Contained Image (Full Screen) */}
         <div
-          className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ${
-            isTransitioning ? "opacity-60" : "opacity-100"
-          }`}
+          className="absolute inset-0 w-full h-full bg-contain bg-no-repeat bg-center"
           style={{
             backgroundImage: currentBackground
               ? `url('${currentBackground}')`
@@ -77,12 +98,15 @@ export default function Home() {
           }}
         />
 
-        {/* Landing Page Content - Full Screen Floating */}
+        {/* Layer 3: The Edge Blend Vignette */}
+        <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_center,transparent_60%,#E7E5E4_100%)]" />
+
+        {/* Layer 4: The Content (Centered by the Grid) */}
         <div className="relative z-10">
           <LandingPage />
         </div>
 
-        {/* AudioToggle for Landing Page */}
+        {/* Layer 5: The Audio Toggle (Top Right) */}
         <div className="absolute top-4 right-4 z-20">
           <AudioToggle context="landing" />
         </div>
@@ -111,7 +135,7 @@ export default function Home() {
         <div className="w-full md:w-[55%] h-2/3 md:h-full text-slate-900 flex flex-col relative overflow-hidden">
           {/* Background Image Layer */}
           <div
-            className="absolute inset-0 bg-cover bg-center blur-xl brightness-110"
+            className="absolute inset-0 bg-cover bg-center blur-xl brightness-125"
             style={{
               backgroundImage: currentBackground
                 ? `url('${currentBackground}')`
@@ -123,7 +147,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/10" />
 
           {/* Color Wash Layer */}
-          <div className="absolute inset-0 bg-slate-50/40" />
+          <div className="absolute inset-0 bg-slate-50/20" />
 
           {/* Content Layer */}
           <div className="relative z-10 flex flex-col h-full">
