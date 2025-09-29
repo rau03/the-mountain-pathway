@@ -134,9 +134,9 @@ export default function Home() {
 
         {/* Content Pane - Right Side */}
         <div className="w-full md:w-[55%] h-2/3 md:h-full text-slate-900 flex flex-col relative overflow-hidden">
-          {/* Background Image Layer */}
+          {/* Ghosted Image Layer (div #1) */}
           <div
-            className="absolute inset-0 bg-cover bg-center blur-xl brightness-125"
+            className="absolute inset-0 blur-2xl brightness-125"
             style={{
               backgroundImage: currentBackground
                 ? `url('${currentBackground}')`
@@ -144,33 +144,30 @@ export default function Home() {
             }}
           />
 
-          {/* Readability Layer */}
-          <div className="absolute inset-0 bg-black/10" />
+          {/* Vellum Readability Layer (div #2) */}
+          <div className="absolute inset-0 bg-brand-stone/80" />
 
-          {/* Color Wash Layer */}
-          <div className="absolute inset-0 bg-slate-50/20" />
-
-          {/* Content Layer */}
+          {/* Content Layer (div #3) */}
           <div className="relative z-10 flex flex-col h-full">
-            {/* AudioToggle positioned in top-right of Content Pane */}
-            <div className="absolute top-4 right-4 z-50">
-              <AudioToggle context="journey" />
-            </div>
-
-            {/* Header with Progress Path */}
+            {/* Header */}
             <div className="flex-shrink-0 p-8 pb-4">
               <Header />
             </div>
 
-            {/* Main Content Area - Takes available space */}
-            <div className="flex-grow flex items-start justify-center px-8 py-4 overflow-y-auto">
+            {/* Main Content */}
+            <div className="flex-grow flex items-center justify-center px-8 py-4 overflow-y-auto">
               {renderCurrentScreen()}
             </div>
 
-            {/* Footer with Back/Next buttons - Always visible */}
+            {/* Footer */}
             <div className="flex-shrink-0 p-8 pt-4">
               <Footer />
             </div>
+          </div>
+
+          {/* Audio Toggle */}
+          <div className="absolute top-4 right-4 z-20">
+            <AudioToggle context="journey" />
           </div>
         </div>
       </main>

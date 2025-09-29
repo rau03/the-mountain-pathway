@@ -30,7 +30,7 @@ export const Footer: React.FC = () => {
   return (
     <footer className="relative z-20 px-6 py-4">
       <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center bg-black/10 backdrop-blur-sm rounded-lg p-4">
           <Button
             onClick={handleBack}
             disabled={!canGoBack}
@@ -41,7 +41,7 @@ export const Footer: React.FC = () => {
           </Button>
 
           <div className="text-center">
-            <p className="text-sm text-brand-slate/70">
+            <p className="text-sm text-white font-medium drop-shadow-sm">
               {currentStep < 9
                 ? pathwayContent.navigation.stepCounterText
                     .replace("{current}", (currentStep + 1).toString())
