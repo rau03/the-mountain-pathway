@@ -90,11 +90,12 @@ export default function Home() {
 
         {/* Layer 2: The Crisp Contained Image (Full Screen) */}
         <div
-          className="absolute inset-0 w-full h-full bg-contain bg-no-repeat bg-center"
+          className="absolute inset-0 w-full h-full bg-no-repeat bg-center"
           style={{
             backgroundImage: currentBackground
               ? `url('${currentBackground}')`
               : "none",
+            backgroundSize: "72vw auto",
           }}
         />
 
