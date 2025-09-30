@@ -82,10 +82,10 @@ export default function Home() {
           />
 
           {/* Ghosted Background Layer - Readability */}
-          <div className="absolute inset-0 bg-black/10" />
+          <div className="absolute inset-0 bg-black/1" />
 
           {/* Ghosted Background Layer - Color Wash */}
-          <div className="absolute inset-0 bg-slate-50/20" />
+          <div className="absolute inset-0 bg-slate-50/2" />
         </div>
 
         {/* Layer 2: The Crisp Contained Image (Full Screen) */}
