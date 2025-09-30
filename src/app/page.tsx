@@ -95,7 +95,7 @@ export default function Home() {
             backgroundImage: currentBackground
               ? `url('${currentBackground}')`
               : "none",
-            backgroundSize: "72vw auto",
+            backgroundSize: "50vw auto",
           }}
         />
 

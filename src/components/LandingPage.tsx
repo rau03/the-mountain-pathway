@@ -15,14 +15,14 @@ export const LandingPage: React.FC = () => {
       </div>
 
       {/* Main Content */}
-      <div className="space-y-6 max-w-2xl text-center">
-        <h1 className="text-5xl font-bold leading-tight text-white drop-shadow-md">
+      <div className="space-y-6 max-w-2xl text-center p-8">
+        <h1 className="text-5xl font-bold leading-tight text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] [text-shadow:_2px_2px_4px_rgb(0_0_0_/_80%)]">
           {pathwayContent.landingPage.heroTitle}
         </h1>
-        <p className="text-xl font-light text-white drop-shadow-md">
+        <p className="text-xl font-light text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] [text-shadow:_2px_2px_4px_rgb(0_0_0_/_80%)]">
           {pathwayContent.landingPage.heroSubtitle}
         </p>
-        <p className="text-lg leading-relaxed text-white/90 drop-shadow-md">
+        <p className="text-lg leading-relaxed text-white drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] [text-shadow:_2px_2px_4px_rgb(0_0_0_/_80%)]">
           {pathwayContent.landingPage.heroDescription}
         </p>
       </div>
@@ -40,7 +40,7 @@ export const LandingPage: React.FC = () => {
       </div>
 
       {/* Subtitle */}
-      <p className="text-sm text-white/80 italic drop-shadow-md">
+      <p className="text-sm text-white/90 italic drop-shadow-lg font-medium">
         {pathwayContent.landingPage.footerText}
       </p>
     </div>

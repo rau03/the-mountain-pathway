@@ -292,7 +292,7 @@ export const stageVisuals = {
 export const getBackgroundForStep = (stepIndex: number): string => {
   if (stepIndex === -1) {
     // Landing page uses its own unique background
-    return "/homepage-background.v2.jpg";
+    return "/homepage-background.v3.jpg";
   }
 
   if (stepIndex === 9) {
