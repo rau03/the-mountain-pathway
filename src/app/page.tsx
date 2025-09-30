@@ -155,7 +155,7 @@ export default function Home() {
             </div>
 
             {/* Main Content */}
-            <div className="flex-grow flex items-center justify-center px-8 py-4 overflow-y-auto">
+            <div className="flex-grow flex items-start justify-center px-8 py-4 overflow-y-auto">
               {renderCurrentScreen()}
             </div>
 

@@ -189,10 +189,10 @@ and lead me in the way everlasting!
     stepIndex: 6,
     stageName: "Summit Path",
     title: "Pause and Invite",
-    subtitle: "Welcome the Guide",
+    subtitle: "Welcome Jesus",
     type: "input",
     prompt:
-      "Let's create a space for the Guide. Take a quiet moment to consciously invite Jesus into this very situation, just as it is.",
+      "Let's create a space and take a quiet moment to consciously invite Jesus into this very situation, just as it is.",
     isInput: true,
     key: "pause",
   },
@@ -283,8 +283,8 @@ export const pathwayContent: PathwayContent = {
 export const stageVisuals = {
   Trailhead: "/stage-1-trailhead.jpg",
   Ascent: "/stage-2-ascent.jpg",
-  Overlook: "/stage-3-overlook.jpg",
-  "Summit Path": "/stage-4-summit-path.jpg",
+  Overlook: "/stage-3-overlook.v2.jpg",
+  "Summit Path": "/stage-4-summit-path.v2.jpg",
   Summit: "/stage-5-summit.jpg",
 } as const;
 
