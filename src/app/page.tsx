@@ -81,11 +81,8 @@ export default function Home() {
             }}
           />
 
-          {/* Ghosted Background Layer - Readability */}
-          <div className="absolute inset-0 bg-black/1" />
-
-          {/* Ghosted Background Layer - Color Wash */}
-          <div className="absolute inset-0 bg-slate-50/2" />
+          {/* Vellum Readability Layer - Brand Stone */}
+          <div className="absolute inset-0 bg-brand-stone/80" />
         </div>
 
         {/* Layer 2: The Crisp Contained Image (Full Screen) */}
@@ -100,7 +97,7 @@ export default function Home() {
         />
 
         {/* Layer 3: The Edge Blend Vignette */}
-        <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_center,transparent_60%,#E7E5E4_100%)]" />
+        <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(231,229,228,0.4)_85%,#E7E5E4_100%)]" />
 
         {/* Layer 4: The Content (Centered by the Grid) */}
         <div className="relative z-10">
