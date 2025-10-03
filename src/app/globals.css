@@ -3,11 +3,21 @@
 
 /* Prevent flash of blank page on initial load */
 body {
-  background-image: url("/homepage-background.v3.jpg");
-  background-size: 50vw auto;
-  background-position: center;
+  background-color: #e7e5e4; /* brand-stone shows immediately */
+  /* Add multiple background layers for complete homepage effect */
+  background-image: radial-gradient(
+      ellipse at center,
+      transparent 55%,
+      rgba(231, 229, 228, 0.4) 85%,
+      #e7e5e4 100%
+    ),
+    url("/homepage-background.v3.jpg"), url("/homepage-background.v3.jpg");
+  background-size: 100% 100%, 50vw auto, cover;
+  background-position: center, center, center;
   background-repeat: no-repeat;
-  background-color: #e7e5e4; /* brand-stone fallback */
+  background-blend-mode: normal, normal, normal;
+  /* Smooth transition when image loads */
+  transition: background-image 0.2s ease-in-out;
 }
 
 /* Override body background when in journey mode */

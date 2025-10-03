@@ -25,7 +25,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <link rel="preload" href="/homepage-background.v3.jpg" as="image" />
+        <link
+          rel="preload"
+          href="/homepage-background.v3.jpg"
+          as="image"
+          fetchPriority="high"
+        />
+        <link rel="prefetch" href="/homepage-background.v3.jpg" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
