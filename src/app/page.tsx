@@ -51,6 +51,15 @@ export default function Home() {
     }
   }, [currentStep, setCurrentStep]);
 
+  // Toggle body class based on current step
+  useEffect(() => {
+    if (currentStep === -1) {
+      document.body.classList.remove("journey-mode");
+    } else {
+      document.body.classList.add("journey-mode");
+    }
+  }, [currentStep]);
+
   const renderCurrentScreen = () => {
     if (currentStep === -1) {
       return <LandingPage />;

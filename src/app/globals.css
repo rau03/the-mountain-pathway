@@ -1,6 +1,21 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+/* Prevent flash of blank page on initial load */
+body {
+  background-image: url("/homepage-background.v3.jpg");
+  background-size: 50vw auto;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #e7e5e4; /* brand-stone fallback */
+}
+
+/* Override body background when in journey mode */
+body.journey-mode {
+  background-image: none;
+  background-color: transparent;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
