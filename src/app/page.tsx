@@ -12,7 +12,9 @@ import { getBackgroundForStep } from "@/lib/pathway-data";
 
 export default function Home() {
   const { currentStep, setCurrentStep } = useStore();
-  const [currentBackground, setCurrentBackground] = useState("");
+  const [currentBackground, setCurrentBackground] = useState(
+    "/homepage-background.v3.jpg"
+  );
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   // Update background when step changes
