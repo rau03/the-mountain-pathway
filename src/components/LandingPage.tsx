@@ -8,7 +8,7 @@ export const LandingPage: React.FC = () => {
   const { startJourney } = useStore();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-8 p-8">
+    <div className="min-h-[100dvh] flex flex-col items-center justify-center gap-8 p-8">
       {/* Hero Icon */}
       <div className="p-6 bg-brand-gold/20 backdrop-blur-sm rounded-full border border-brand-gold/30">
         <Mountain className="w-16 h-16 text-brand-gold drop-shadow-lg" />
