@@ -194,17 +194,17 @@ export default function Home() {
             </main>
           </div>
 
+          {/* Mobile: Header positioned outside sheet */}
+          <div className="md:hidden">
+            <Header />
+          </div>
+
           {/* Mobile: Bottom Sheet Content */}
           <div className="md:hidden">
             {/* Bottom Sheet Container */}
             <div className="absolute bottom-0 left-0 right-0 bg-brand-stone/80 backdrop-blur-md rounded-t-3xl shadow-2xl h-[50dvh] overflow-y-auto">
               {/* Content */}
               <div className="flex flex-col h-full">
-                {/* Header */}
-                <div className="flex-shrink-0 p-6 pb-3">
-                  <Header />
-                </div>
-
                 {/* Main Content */}
                 <div className="flex-grow px-6 py-4 overflow-y-auto">
                   {renderCurrentScreen()}

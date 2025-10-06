@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ArrowRight } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
@@ -37,14 +37,10 @@ export const Footer: React.FC = () => {
   return (
     <footer className="relative z-20 px-4 py-2 md:p-8">
       <div className="max-w-4xl mx-auto w-full">
-        {/* Mobile: Ultra-compact layout */}
+        {/* Mobile: Icon-only buttons with centered text */}
         <div className="md:hidden bg-black/10 backdrop-blur-sm rounded-lg p-2">
-          <div className="text-center mb-1">
-            <p className="text-xs text-white font-medium drop-shadow-sm">
-              {stepText}
-            </p>
-          </div>
-          <div className="flex items-center justify-between gap-1">
+          <div className="flex items-center justify-between">
+            {/* Back Button */}
             <Button
               onClick={handleBack}
               disabled={!canGoBack}
@@ -53,23 +49,23 @@ export const Footer: React.FC = () => {
               className="px-1 py-1 text-xs h-7"
             >
               <ChevronLeft className="w-3 h-3" />
-              <span className="hidden sm:inline ml-1">
-                {pathwayContent.navigation.backButtonText}
-              </span>
             </Button>
 
+            {/* Step Text - Centered */}
+            <div className="text-center">
+              <p className="text-xs text-white font-medium drop-shadow-sm">
+                {stepText}
+              </p>
+            </div>
+
+            {/* Continue Button - Icon Only */}
             <Button
               onClick={handleNext}
               variant="default"
               size="sm"
               className="px-1 py-1 text-xs h-7"
             >
-              <span className="text-xs">
-                {isLastStep
-                  ? pathwayContent.navigation.completeButtonText
-                  : pathwayContent.navigation.continueButtonText}
-              </span>
-              <ChevronRight className="w-3 h-3 ml-1" />
+              <ArrowRight className="w-3 h-3" />
             </Button>
           </div>
         </div>
