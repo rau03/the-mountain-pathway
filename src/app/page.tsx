@@ -128,28 +128,29 @@ export default function Home() {
             <AudioToggle context="landing" />
           </div>
         </div>
-      ) : (
-        // Journey Mode - Split-Screen Layout
-        <div className="min-h-screen overflow-hidden">
-          {/* Split-Screen Layout */}
-          <main className="flex flex-col md:flex-row h-screen">
-            {/* Visual Pane - Left Side */}
-            <div
-              className={`w-full md:w-[45%] h-1/3 md:h-full bg-cover bg-center transition-all duration-1000 ${
-                isTransitioning ? "opacity-60" : "opacity-100"
-              }`}
-              style={{
-                backgroundImage: currentBackground
-                  ? `url('${currentBackground}')`
-                  : "none",
-              }}
-            />
+            ) : (
+        // Journey Mode - Mobile-first with full-screen background
+        <div className="relative min-h-screen">
+          {/* Mobile: Full-screen background */}
+          <div
+            className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ${
+              isTransitioning ? "opacity-60" : "opacity-100"
+            }`}
+            style={{
+              backgroundImage: currentBackground
+                ? `url('${currentBackground}')`
+                : "none",
+            }}
+          />
 
-            {/* Content Pane - Right Side */}
-            <div className="w-full md:w-[55%] h-2/3 md:h-full text-slate-900 flex flex-col relative overflow-hidden">
-              {/* Ghosted Image Layer (div #1) */}
+          {/* Desktop: Split-screen layout (hidden on mobile) */}
+          <div className="hidden md:block min-h-screen overflow-hidden">
+            <main className="flex flex-row h-screen">
+              {/* Visual Pane - Left Side */}
               <div
-                className="absolute inset-0 blur-2xl brightness-125"
+                className={`w-[45%] h-full bg-cover bg-center transition-all duration-1000 ${
+                  isTransitioning ? "opacity-60" : "opacity-100"
+                }`}
                 style={{
                   backgroundImage: currentBackground
                     ? `url('${currentBackground}')`
@@ -157,30 +158,69 @@ export default function Home() {
                 }}
               />
 
-              {/* Vellum Readability Layer (div #2) */}
-              <div className="absolute inset-0 bg-brand-stone/80" />
+              {/* Content Pane - Right Side */}
+              <div className="w-[55%] h-full text-slate-900 flex flex-col relative overflow-hidden">
+                {/* Ghosted Image Layer */}
+                <div
+                  className="absolute inset-0 blur-2xl brightness-125"
+                  style={{
+                    backgroundImage: currentBackground
+                      ? `url('${currentBackground}')`
+                      : "none",
+                  }}
+                />
 
-              {/* Content Layer (div #3) */}
-              <div className="relative z-10 flex flex-col h-full">
-                {/* Header */}
-                <div className="flex-shrink-0 p-8 pb-4">
-                  <Header />
-                </div>
+                {/* Vellum Readability Layer */}
+                <div className="absolute inset-0 bg-brand-stone/80" />
 
-                {/* Main Content */}
-                <div className="flex-grow flex items-start justify-center px-8 py-4 overflow-y-auto">
-                  {renderCurrentScreen()}
-                </div>
+                {/* Content Layer */}
+                <div className="relative z-10 flex flex-col h-full">
+                  {/* Header */}
+                  <div className="flex-shrink-0 p-8 pb-4">
+                    <Header />
+                  </div>
 
-                {/* Footer */}
-                <div className="flex-shrink-0 p-8 pt-4">
-                  <Footer />
+                  {/* Main Content */}
+                  <div className="flex-grow flex items-start justify-center px-8 py-4 overflow-y-auto">
+                    {renderCurrentScreen()}
+                  </div>
+
+                  {/* Footer */}
+                  <div className="flex-shrink-0 p-8 pt-4">
+                    <Footer />
+                  </div>
                 </div>
               </div>
-            </div>
-          </main>
+            </main>
+          </div>
+
+          {/* Mobile: Bottom Sheet Content */}
+<div className="md:hidden">
+  {/* Bottom Sheet Container */}
+  <div className="absolute bottom-0 left-0 right-0 bg-brand-stone/80 backdrop-blur-md rounded-t-3xl shadow-2xl">
+    {/* Content */}
+    <div className="flex flex-col min-h-[55vh] max-h-[80vh]">
+      {/* Header */}
+      <div className="flex-shrink-0 p-6 pb-3">
+        <Header />
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-grow px-6 py-4 overflow-y-auto">
+        {renderCurrentScreen()}
+      </div>
+
+      {/* Footer */}
+      <div className="flex-shrink-0 p-4 pt-3">
+        <Footer />
+      </div>
+    </div>
+  </div>
+</div>
+
+          {/* Audio Toggle */}
+          <div className="absolute top-4 right-4 z-50">
+            <AudioToggle context="journey" />
+          </div>
         </div>
       )}
-    </div>
-  );
-}

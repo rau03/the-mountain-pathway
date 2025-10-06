@@ -27,10 +27,55 @@ export const Footer: React.FC = () => {
     }
   };
 
+  const stepText =
+    currentStep < 9
+      ? pathwayContent.navigation.stepCounterText
+          .replace("{current}", (currentStep + 1).toString())
+          .replace("{total}", "9")
+      : pathwayContent.navigation.journeyCompleteText;
+
   return (
-    <footer className="relative z-20 px-6 py-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="flex justify-between items-center bg-black/10 backdrop-blur-sm rounded-lg p-4">
+    <footer className="relative z-20">
+      <div className="max-w-4xl mx-auto w-full">
+        {/* Mobile: Step text above smaller buttons */}
+        <div className="md:hidden bg-black/10 backdrop-blur-sm rounded-xl p-4">
+          <div className="text-center mb-3">
+            <p className="text-sm text-white font-medium drop-shadow-sm">
+              {stepText}
+            </p>
+          </div>
+          <div className="flex items-center justify-between gap-3">
+            <Button
+              onClick={handleBack}
+              disabled={!canGoBack}
+              variant="secondary"
+              size="sm"
+              className="px-3"
+            >
+              <ChevronLeft className="w-4 h-4" />
+              <span className="text-sm">
+                {pathwayContent.navigation.backButtonText}
+              </span>
+            </Button>
+
+            <Button
+              onClick={handleNext}
+              variant="default"
+              size="sm"
+              className="px-3"
+            >
+              <span className="text-sm">
+                {isLastStep
+                  ? pathwayContent.navigation.completeButtonText
+                  : pathwayContent.navigation.continueButtonText}
+              </span>
+              <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Desktop: Unchanged layout */}
+        <div className="hidden md:flex justify-between items-center bg-black/10 backdrop-blur-sm rounded-lg p-4">
           <Button
             onClick={handleBack}
             disabled={!canGoBack}
@@ -42,11 +87,7 @@ export const Footer: React.FC = () => {
 
           <div className="text-center">
             <p className="text-sm text-white font-medium drop-shadow-sm">
-              {currentStep < 9
-                ? pathwayContent.navigation.stepCounterText
-                    .replace("{current}", (currentStep + 1).toString())
-                    .replace("{total}", "9")
-                : pathwayContent.navigation.journeyCompleteText}
+              {stepText}
             </p>
           </div>
 
