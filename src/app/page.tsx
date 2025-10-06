@@ -74,52 +74,58 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen">
-      {/* The SINGLE, PERSISTENT AudioToggle */}
-      <div className="absolute top-4 right-4 z-50">
-        <AudioToggle context={currentStep === -1 ? "landing" : "journey"} />
-      </div>
-
       {/* The Conditional Rendering Block */}
       {currentStep === -1 ? (
-        // Landing Page - Full Screen Layout
+        // Landing Page - Mobile-first container; desktop gets layered "Framed Ghost"
         <div
-          className={`min-h-screen grid place-items-center transition-all duration-1000 ${
+          className={`relative min-h-screen transition-all duration-1000 ${
             isTransitioning ? "opacity-60" : "opacity-100"
-          }`}
+          } bg-no-repeat bg-cover bg-center`}
+          style={{
+            backgroundImage: currentBackground
+              ? `url('${currentBackground}')`
+              : "none",
+          }}
         >
-          {/* Layer 1: The Ghosted Background (Full Screen) */}
-          <div className="absolute inset-0 w-full h-full">
-            {/* Ghosted Background Layer - Blurred Image */}
+          {/* Desktop-only layered effects */}
+          <div className="hidden md:block">
+            {/* Layer 1: Ghosted Background (blurred) */}
+            <div className="md:absolute md:inset-0 md:w-full md:h-full">
+              <div
+                className="md:absolute md:inset-0 md:bg-cover md:bg-center md:blur-xl md:brightness-125"
+                style={{
+                  backgroundImage: currentBackground
+                    ? `url('${currentBackground}')`
+                    : "none",
+                }}
+              />
+              {/* Layer 2: Vellum readability overlay */}
+              <div className="md:absolute md:inset-0 md:bg-brand-stone/80" />
+            </div>
+
+            {/* Layer 3: Crisp contained image */}
             <div
-              className="absolute inset-0 bg-cover bg-center blur-xl brightness-125"
+              className="md:absolute md:inset-0 md:w-full md:h-full md:bg-no-repeat md:bg-center"
               style={{
                 backgroundImage: currentBackground
                   ? `url('${currentBackground}')`
                   : "none",
+                backgroundSize: "50vw auto",
               }}
             />
 
-            {/* Vellum Readability Layer - Brand Stone */}
-            <div className="absolute inset-0 bg-brand-stone/80" />
+            {/* Layer 4: Edge blend vignette */}
+            <div className="md:absolute md:inset-0 md:w-full md:h-full md:bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(231,229,228,0.4)_85%,#E7E5E4_100%)]" />
           </div>
 
-          {/* Layer 2: The Crisp Contained Image (Full Screen) */}
-          <div
-            className="absolute inset-0 w-full h-full bg-no-repeat bg-center"
-            style={{
-              backgroundImage: currentBackground
-                ? `url('${currentBackground}')`
-                : "none",
-              backgroundSize: "50vw auto",
-            }}
-          />
-
-          {/* Layer 3: The Edge Blend Vignette */}
-          <div className="absolute inset-0 w-full h-full bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(231,229,228,0.4)_85%,#E7E5E4_100%)]" />
-
-          {/* Layer 4: The Content (Centered by the Grid) */}
-          <div className="relative z-10">
+          {/* Content floating above background (mobile and desktop) */}
+          <div className="relative z-10 min-h-screen grid place-items-center">
             <LandingPage />
+          </div>
+
+          {/* Audio toggle within the same container */}
+          <div className="absolute top-4 right-4 z-50">
+            <AudioToggle context="landing" />
           </div>
         </div>
       ) : (
