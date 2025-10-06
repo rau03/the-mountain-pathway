@@ -128,7 +128,7 @@ export default function Home() {
             <AudioToggle context="landing" />
           </div>
         </div>
-            ) : (
+      ) : (
         // Journey Mode - Mobile-first with full-screen background
         <div className="relative min-h-screen">
           {/* Mobile: Full-screen background */}
@@ -195,28 +195,28 @@ export default function Home() {
           </div>
 
           {/* Mobile: Bottom Sheet Content */}
-<div className="md:hidden">
-  {/* Bottom Sheet Container */}
-  <div className="absolute bottom-0 left-0 right-0 bg-brand-stone/80 backdrop-blur-md rounded-t-3xl shadow-2xl">
-    {/* Content */}
-    <div className="flex flex-col min-h-[55vh] max-h-[80vh]">
-      {/* Header */}
-      <div className="flex-shrink-0 p-6 pb-3">
-        <Header />
-      </div>
+          <div className="md:hidden">
+            {/* Bottom Sheet Container */}
+            <div className="absolute bottom-0 left-0 right-0 bg-brand-stone/80 backdrop-blur-md rounded-t-3xl shadow-2xl">
+              {/* Content */}
+              <div className="flex flex-col min-h-[55vh] max-h-[80vh]">
+                {/* Header */}
+                <div className="flex-shrink-0 p-6 pb-3">
+                  <Header />
+                </div>
 
-      {/* Main Content */}
-      <div className="flex-grow px-6 py-4 overflow-y-auto">
-        {renderCurrentScreen()}
-      </div>
+                {/* Main Content */}
+                <div className="flex-grow px-6 py-4 overflow-y-auto">
+                  {renderCurrentScreen()}
+                </div>
 
-      {/* Footer */}
-      <div className="flex-shrink-0 p-4 pt-3">
-        <Footer />
-      </div>
-    </div>
-  </div>
-</div>
+                {/* Footer */}
+                <div className="flex-shrink-0 p-4 pt-3">
+                  <Footer />
+                </div>
+              </div>
+            </div>
+          </div>
 
           {/* Audio Toggle */}
           <div className="absolute top-4 right-4 z-50">
@@ -224,3 +224,6 @@ export default function Home() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
