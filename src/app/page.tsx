@@ -197,9 +197,9 @@ export default function Home() {
           {/* Mobile: Bottom Sheet Content */}
           <div className="md:hidden">
             {/* Bottom Sheet Container */}
-            <div className="absolute bottom-0 left-0 right-0 bg-brand-stone/80 backdrop-blur-md rounded-t-3xl shadow-2xl">
+            <div className="absolute bottom-0 left-0 right-0 bg-brand-stone/80 backdrop-blur-md rounded-t-3xl shadow-2xl h-[50dvh] overflow-y-auto">
               {/* Content */}
-              <div className="flex flex-col min-h-[55vh] max-h-[80vh]">
+              <div className="flex flex-col h-full">
                 {/* Header */}
                 <div className="flex-shrink-0 p-6 pb-3">
                   <Header />
