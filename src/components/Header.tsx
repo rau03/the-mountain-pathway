@@ -11,7 +11,7 @@ export const Header: React.FC = () => {
   return (
     <header className="relative z-20">
       {/* Mobile: Minimalist header with icon, dots, and audio toggle */}
-      <div className="flex md:hidden items-center justify-between px-4 py-3">
+      <div className="flex md:hidden items-center justify-between px-4 py-2">
         {/* Left: Mountain Icon */}
         <div className="flex items-center">
           <Mountain className="w-7 h-7 text-amber-400" />

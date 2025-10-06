@@ -35,25 +35,25 @@ export const Footer: React.FC = () => {
       : pathwayContent.navigation.journeyCompleteText;
 
   return (
-    <footer className="relative z-20">
+    <footer className="relative z-20 px-4 py-2 md:p-8">
       <div className="max-w-4xl mx-auto w-full">
-        {/* Mobile: Step text above smaller buttons */}
-        <div className="md:hidden bg-black/10 backdrop-blur-sm rounded-xl p-4">
-          <div className="text-center mb-3">
-            <p className="text-sm text-white font-medium drop-shadow-sm">
+        {/* Mobile: Ultra-compact layout */}
+        <div className="md:hidden bg-black/10 backdrop-blur-sm rounded-lg p-2">
+          <div className="text-center mb-1">
+            <p className="text-xs text-white font-medium drop-shadow-sm">
               {stepText}
             </p>
           </div>
-          <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-1">
             <Button
               onClick={handleBack}
               disabled={!canGoBack}
               variant="secondary"
               size="sm"
-              className="px-3"
+              className="px-1 py-1 text-xs h-7"
             >
-              <ChevronLeft className="w-4 h-4" />
-              <span className="text-sm">
+              <ChevronLeft className="w-3 h-3" />
+              <span className="hidden sm:inline ml-1">
                 {pathwayContent.navigation.backButtonText}
               </span>
             </Button>
@@ -62,20 +62,20 @@ export const Footer: React.FC = () => {
               onClick={handleNext}
               variant="default"
               size="sm"
-              className="px-3"
+              className="px-1 py-1 text-xs h-7"
             >
-              <span className="text-sm">
+              <span className="text-xs">
                 {isLastStep
                   ? pathwayContent.navigation.completeButtonText
                   : pathwayContent.navigation.continueButtonText}
               </span>
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3 h-3 ml-1" />
             </Button>
           </div>
         </div>
 
-        {/* Desktop: Unchanged layout */}
-        <div className="hidden md:flex justify-between items-center bg-black/10 backdrop-blur-sm rounded-lg p-4">
+        {/* Desktop: Unchanged layout with generous padding */}
+        <div className="hidden md:flex justify-between items-center bg-black/10 backdrop-blur-sm rounded-lg p-8">
           <Button
             onClick={handleBack}
             disabled={!canGoBack}
