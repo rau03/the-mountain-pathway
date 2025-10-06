@@ -1,5 +1,5 @@
 import React from "react";
-import { ChevronLeft, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
