@@ -22,6 +22,11 @@ export const useStore = create<AppState>()(
 
       setCurrentStep: (step: number) => set({ currentStep: step }),
 
+      nextStep: () => set((state) => ({ currentStep: state.currentStep + 1 })),
+
+      prevStep: () =>
+        set((state) => ({ currentStep: Math.max(0, state.currentStep - 1) })),
+
       updateResponse: (stepKey: string, value: string) =>
         set((state) => ({
           currentEntry: {

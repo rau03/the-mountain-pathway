@@ -23,11 +23,14 @@ export interface AppState {
   silenceTimer: number;
   isTimerActive: boolean;
   setCurrentStep: (step: number) => void;
+  nextStep: () => void;
+  prevStep: () => void;
   updateResponse: (step: string, value: string) => void;
   createNewEntry: () => void;
   completeEntry: () => void;
   startJourney: () => void;
   startNewJourney: () => void;
+  resetToHomepage: () => void;
   toggleAudio: () => void;
   setAudioTrack: (track: "music" | "nature") => void;
   setSilenceTimer: (minutes: number) => void;

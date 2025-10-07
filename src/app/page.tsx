@@ -15,7 +15,6 @@ export default function Home() {
   const [currentBackground, setCurrentBackground] = useState(
     "/homepage-background.v3.jpg"
   );
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
 
   // Update background when step changes
@@ -23,15 +22,10 @@ export default function Home() {
     const newBackground = getBackgroundForStep(currentStep);
 
     if (newBackground !== currentBackground) {
-      setIsTransitioning(true);
-
       // Preload the new image
       const img = new Image();
       img.onload = () => {
         setCurrentBackground(newBackground);
-        setTimeout(() => {
-          setIsTransitioning(false);
-        }, 150); // Short delay to ensure smooth transition
       };
       img.src = newBackground;
     }
@@ -94,11 +88,6 @@ export default function Home() {
       {currentStep === -1 ? (
         // --- START OF FINAL HOMEPAGE CODE ---
         <div className="relative min-h-screen bg-brand-stone">
-          {/* The single, persistent AudioToggle */}
-          <div className="absolute top-4 right-4 z-50">
-            <AudioToggle context="landing" />
-          </div>
-
           {/* The Crisp Contained Image & Content */}
           <div
             className="relative z-10 min-h-screen"
@@ -109,7 +98,18 @@ export default function Home() {
               backgroundPosition: "center",
             }}
           >
-            <LandingPage />
+            {/* Edge Blend Overlay */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_70%,#D6D3D1_100%)]" />
+
+            {/* Content Layer */}
+            <div className="relative z-10">
+              {/* The single, persistent AudioToggle */}
+              <div className="absolute top-4 right-4 z-50">
+                <AudioToggle context="landing" />
+              </div>
+
+              <LandingPage />
+            </div>
           </div>
         </div>
       ) : (
