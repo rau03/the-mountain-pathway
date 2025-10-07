@@ -79,37 +79,23 @@ export const AudioPlayer: React.FC = () => {
         </div>
       </div>
 
-      {/* Audio Elements */}
-      {audioEnabled && (
-        <>
-          <audio
-            loop
-            autoPlay
-            className="hidden"
-            style={{
-              display: currentAudioTrack === "music" ? "block" : "none",
-            }}
-          >
+      {/* Corrected Audio Elements Section */}
+      {audioEnabled &&
+        (currentAudioTrack === "music" ? (
+          <audio loop autoPlay className="hidden">
             <source
               src="https://www.soundjay.com/misc/sounds/bell-ringing-05.wav"
               type="audio/wav"
             />
           </audio>
-          <audio
-            loop
-            autoPlay
-            className="hidden"
-            style={{
-              display: currentAudioTrack === "nature" ? "block" : "none",
-            }}
-          >
+        ) : (
+          <audio loop autoPlay className="hidden">
             <source
               src="https://www.soundjay.com/nature/sounds/forest-with-small-river.wav"
               type="audio/wav"
             />
           </audio>
-        </>
-      )}
+        ))}
     </div>
   );
 };

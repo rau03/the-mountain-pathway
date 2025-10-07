@@ -4,7 +4,7 @@ export type AudioTrack = "music" | "nature";
 
 export const useAudioPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTrack, setCurrentTrack] = useState<AudioTrack>("music");
+  const [activeTrack, setActiveTrackState] = useState<AudioTrack>("music");
 
   // Use refs to hold Audio instances and prevent recreation on renders
   const musicAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -38,6 +38,52 @@ export const useAudioPlayer = () => {
     };
   }, []);
 
+  // Smart setActiveTrack function that handles track switching
+  const setActiveTrack = useCallback(
+    async (newTrack: AudioTrack) => {
+      const musicAudio = musicAudioRef.current;
+      const natureAudio = natureAudioRef.current;
+
+      if (!musicAudio || !natureAudio) return;
+
+      // Don't do anything if we're already on this track
+      if (newTrack === activeTrack) return;
+
+      const wasPlaying = isPlaying;
+
+      // Pause and reset the non-active track
+      if (newTrack === "music") {
+        // Switching to music, so pause and reset nature
+        natureAudio.pause();
+        natureAudio.currentTime = 0;
+      } else {
+        // Switching to nature, so pause and reset music
+        musicAudio.pause();
+        musicAudio.currentTime = 0;
+      }
+
+      // Update the active track state
+      setActiveTrackState(newTrack);
+
+      // If we were playing, immediately start playing the new track
+      if (wasPlaying) {
+        try {
+          if (newTrack === "music") {
+            await musicAudio.play();
+          } else {
+            await natureAudio.play();
+          }
+          setIsPlaying(true);
+        } catch (error) {
+          console.error("Error playing new track:", error);
+          setIsPlaying(false);
+        }
+      }
+    },
+    [activeTrack, isPlaying]
+  );
+
+  // togglePlayPause function that plays or pauses the active track
   const togglePlayPause = useCallback(async () => {
     const musicAudio = musicAudioRef.current;
     const natureAudio = natureAudioRef.current;
@@ -46,17 +92,16 @@ export const useAudioPlayer = () => {
 
     try {
       if (isPlaying) {
-        // Pause currently playing track
-        musicAudio.pause();
-        natureAudio.pause();
+        // Pause the currently active track
+        if (activeTrack === "music") {
+          musicAudio.pause();
+        } else {
+          natureAudio.pause();
+        }
         setIsPlaying(false);
       } else {
-        // Stop both tracks first
-        musicAudio.pause();
-        natureAudio.pause();
-
-        // Play only the selected track
-        if (currentTrack === "music") {
+        // Play the currently active track
+        if (activeTrack === "music") {
           await musicAudio.play();
         } else {
           await natureAudio.play();
@@ -65,50 +110,14 @@ export const useAudioPlayer = () => {
       }
     } catch (error) {
       console.error("Error toggling audio playback:", error);
-      // Reset state if there's an error
       setIsPlaying(false);
     }
-  }, [isPlaying, currentTrack]);
-
-  const switchTrack = useCallback(
-    (track: AudioTrack) => {
-      const musicAudio = musicAudioRef.current;
-      const natureAudio = natureAudioRef.current;
-
-      if (!musicAudio || !natureAudio) return;
-
-      // If currently playing, stop current track and play new one
-      if (isPlaying) {
-        musicAudio.pause();
-        natureAudio.pause();
-
-        setCurrentTrack(track);
-
-        // Play the new track
-        setTimeout(async () => {
-          try {
-            if (track === "music") {
-              await musicAudio.play();
-            } else {
-              await natureAudio.play();
-            }
-          } catch (error) {
-            console.error("Error switching audio track:", error);
-            setIsPlaying(false);
-          }
-        }, 100);
-      } else {
-        // Just change the track selection
-        setCurrentTrack(track);
-      }
-    },
-    [isPlaying]
-  );
+  }, [isPlaying, activeTrack]);
 
   return {
     isPlaying,
-    currentTrack,
+    currentTrack: activeTrack,
     togglePlayPause,
-    switchTrack,
+    switchTrack: setActiveTrack,
   };
 };

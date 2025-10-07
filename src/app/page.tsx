@@ -7,7 +7,7 @@ import { JourneyScreen } from "@/components/JourneyScreen";
 import { SummaryScreen } from "@/components/SummaryScreen";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { AudioToggle } from "@/components/AudioToggle";
+import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
 import { getBackgroundForStep } from "@/lib/pathway-data";
 
 export default function Home() {
@@ -80,9 +80,11 @@ export default function Home() {
 
   return (
     <div className="relative min-h-screen">
-      {/* The single, persistent AudioToggle */}
+      {/* The single, persistent SimpleAudioPlayer */}
       <div className="absolute top-4 right-4 z-50">
-        <AudioToggle context={currentStep === -1 ? "landing" : "journey"} />
+        <SimpleAudioPlayer
+          context={currentStep === -1 ? "landing" : "journey"}
+        />
       </div>
 
       {currentStep === -1 ? (
@@ -103,9 +105,9 @@ export default function Home() {
 
             {/* Content Layer */}
             <div className="relative z-10">
-              {/* The single, persistent AudioToggle */}
+              {/* The single, persistent SimpleAudioPlayer */}
               <div className="absolute top-4 right-4 z-50">
-                <AudioToggle context="landing" />
+                <SimpleAudioPlayer context="landing" />
               </div>
 
               <LandingPage />

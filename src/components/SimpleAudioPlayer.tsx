@@ -1,29 +1,23 @@
 import React from "react";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { Play, Pause, Settings, Music, Waves } from "lucide-react";
+import { Play, Pause, Music, Waves } from "lucide-react";
 import { useAudioPlayer } from "@/hooks/useAudioPlayer";
 
-interface AudioToggleProps {
-  className?: string;
-  context?: "landing" | "journey";
+interface SimpleAudioPlayerProps {
+  context: "landing" | "journey";
 }
 
-export const AudioToggle: React.FC<AudioToggleProps> = ({
-  className = "",
-  context = "journey",
+export const SimpleAudioPlayer: React.FC<SimpleAudioPlayerProps> = ({
+  context,
 }) => {
-  const {
-    isPlaying,
-    currentTrack: activeTrack,
-    togglePlayPause,
-    switchTrack: setActiveTrack,
-  } = useAudioPlayer();
+  const { isPlaying, currentTrack, togglePlayPause, switchTrack } =
+    useAudioPlayer();
 
   const buttonStyle =
     context === "landing"
@@ -31,8 +25,8 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({
       : "bg-black/10 backdrop-blur-sm w-10 h-10 rounded-full border border-brand-slate/20";
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      {/* 1. THE PLAY/PAUSE BUTTON */}
+    <div className="flex items-center gap-2">
+      {/* 1. PLAY/PAUSE BUTTON */}
       <Button
         onClick={togglePlayPause}
         variant="ghost"
@@ -47,7 +41,7 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({
         )}
       </Button>
 
-      {/* 2. THE TRACK SELECTION DROPDOWN */}
+      {/* 2. TRACK SELECTION DROPDOWN */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -56,14 +50,18 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({
             className={buttonStyle}
             aria-label="Select audio track"
           >
-            <Settings className="h-5 w-5" />
+            {currentTrack === "music" ? (
+              <Music className="h-5 w-5" />
+            ) : (
+              <Waves className="h-5 w-5" />
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="bg-brand-stone text-brand-slate border-black/10 rounded-lg p-2">
           <DropdownMenuItem
             onSelect={(e) => {
               e.preventDefault();
-              setActiveTrack("music");
+              switchTrack("music");
             }}
             className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer hover:bg-brand-slate/10"
           >
@@ -73,7 +71,7 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({
           <DropdownMenuItem
             onSelect={(e) => {
               e.preventDefault();
-              setActiveTrack("nature");
+              switchTrack("nature");
             }}
             className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer hover:bg-brand-slate/10"
           >
@@ -82,19 +80,6 @@ export const AudioToggle: React.FC<AudioToggleProps> = ({
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
-
-      {/* 3. THE STATUS INDICATOR (ONLY SHOWS WHEN PLAYING) */}
-      {isPlaying && (
-        <div
-          className={`px-3 py-2 rounded-lg text-sm ${
-            context === "landing"
-              ? "bg-brand-gold/20 text-brand-slate"
-              : "bg-black/10 backdrop-blur-sm text-brand-slate/70"
-          }`}
-        >
-          {activeTrack === "music" ? "Ambient" : "Nature"}
-        </div>
-      )}
     </div>
   );
 };
