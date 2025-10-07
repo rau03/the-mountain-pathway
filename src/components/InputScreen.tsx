@@ -100,7 +100,40 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
         <p className="text-lg text-brand-slate/90">{step.subtitle}</p>
       </div>
 
-      <p className="leading-relaxed text-center text-brand-slate/80">
+      {/* Step 9 Prayer Guidance Accordion - Moved above textarea */}
+      {step.stepIndex === 8 && (
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="prayer-guide" className="border-none">
+            <AccordionTrigger className="hover:no-underline [&>svg]:hidden">
+              <span className="px-4 py-2 bg-white/50 hover:bg-white/70 border border-slate-300 rounded-lg text-sm text-brand-slate font-medium transition-colors shadow-sm">
+                Need a guide for prayer?
+              </span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-4 pt-2">
+                <p className="text-sm text-brand-slate/80 mb-4">
+                  Here&apos;s a simple framework to help structure your prayer:
+                </p>
+                {prayerGuidance.map((guide, index) => (
+                  <div
+                    key={index}
+                    className="border-l-2 border-brand-gold/30 pl-4"
+                  >
+                    <h4 className="font-semibold text-brand-slate text-sm mb-1">
+                      {guide.title}
+                    </h4>
+                    <p className="text-sm text-brand-slate/80 leading-relaxed">
+                      {guide.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      )}
+
+      <p className="leading-relaxed text-center text-brand-slate/80 pr-2">
         {step.prompt}
       </p>
 
@@ -123,42 +156,13 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
         </div>
       </div>
 
-      {/* Step 9 Prayer Guidance Accordion */}
-      {step.stepIndex === 8 && (
-        <Accordion type="single" collapsible className="w-full">
-          <AccordionItem value="prayer-guide">
-            <AccordionTrigger className="text-brand-slate hover:text-brand-gold">
-              <span className="text-sm">[ Need a guide for prayer? ]</span>
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-4 pt-2">
-                <p className="text-sm text-brand-slate/80 mb-4">
-                  Here&apos;s a simple framework to help structure your prayer:
-                </p>
-                {prayerGuidance.map((guide, index) => (
-                  <div
-                    key={index}
-                    className="border-l-2 border-brand-gold/30 pl-4"
-                  >
-                    <h4 className="font-semibold text-brand-gold text-sm mb-1">
-                      {guide.title}
-                    </h4>
-                    <p className="text-sm text-brand-slate/80 leading-relaxed">
-                      {guide.content}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
-      )}
-
       {step.isSummary && step.content?.specialMessage && (
-        <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
-          <p className="text-amber-800 text-sm text-center">
-            {step.content.specialMessage}
-          </p>
+        <div className="pr-2">
+          <div className="bg-white/50 border border-slate-300 rounded-lg p-4 shadow-sm">
+            <p className="text-brand-slate text-sm text-center">
+              {step.content.specialMessage}
+            </p>
+          </div>
         </div>
       )}
     </motion.div>
