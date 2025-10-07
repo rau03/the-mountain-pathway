@@ -61,6 +61,9 @@ export const SummaryScreen: React.FC = () => {
       const jsPDF = (await import("jspdf")).jsPDF;
       const pdf = new jsPDF("p", "mm", "a4");
 
+      // Set text color to black for better readability
+      pdf.setTextColor(0, 0, 0);
+
       // Set up the PDF with text content
       pdf.setFontSize(20);
       pdf.text(pathwayContent.appTitle, 20, 30);
@@ -153,7 +156,7 @@ export const SummaryScreen: React.FC = () => {
       >
         <div className="space-y-4">
           <div className="text-center border-b border-slate-300 pb-4">
-            <h3 className="text-xl font-semibold text-brand-gold">
+            <h3 className="text-xl font-semibold text-slate-800">
               {pathwayContent.appTitle}
             </h3>
             <p className="text-sm text-brand-slate/70">
@@ -175,7 +178,7 @@ export const SummaryScreen: React.FC = () => {
 
             return (
               <div key={step.stepIndex} className="space-y-2">
-                <h4 className="font-semibold text-brand-gold uppercase tracking-wide text-sm">
+                <h4 className="font-semibold text-slate-800 uppercase tracking-wide text-sm">
                   {step.title}
                 </h4>
                 <p className="text-slate-700 leading-relaxed whitespace-pre-wrap">
