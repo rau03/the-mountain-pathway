@@ -136,7 +136,7 @@ export default function Home() {
             )}
 
             {/* 2. The Main Content (Middle Section that grows) */}
-            <div className="flex-grow flex flex-col py-6 overflow-y-auto">
+            <div className="flex-grow flex flex-col py-6 pr-2 overflow-y-auto scrollbar-thin">
               {renderCurrentScreen()}
             </div>
 

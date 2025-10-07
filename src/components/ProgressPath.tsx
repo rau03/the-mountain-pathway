@@ -36,7 +36,7 @@ export const ProgressPath: React.FC = () => {
   const { currentStep } = useStore();
 
   return (
-    <nav className="relative">
+    <nav className="relative pr-4">
       <TooltipProvider delayDuration={200}>
         <div className="flex items-center justify-between">
           {/* Connecting Line */}
