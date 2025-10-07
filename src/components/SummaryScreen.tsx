@@ -232,6 +232,19 @@ export const SummaryScreen: React.FC = () => {
           <span>{pathwayContent.summaryPage.newJourneyButtonText}</span>
         </Button>
       </div>
+
+      {/* Creator Attribution */}
+      <p className="text-xs text-brand-slate/50 text-center pt-8">
+        The Mountain Pathway created by{" "}
+        <a
+          href="https://www.webdevbyrau.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-brand-gold transition-colors underline"
+        >
+          webdevbyrau
+        </a>
+      </p>
     </motion.div>
   );
 };
