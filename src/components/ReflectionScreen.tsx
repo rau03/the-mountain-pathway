@@ -61,12 +61,14 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
 
       {/* Scripture Text - Integrated Scrolling Card */}
       {step.content?.scripture && (
-        <div className="w-full h-[40vh] bg-white/50 rounded-lg p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-brand-slate/30">
-          <h3 className="text-xl font-semibold text-brand-gold mb-4">
-            Psalm 139
-          </h3>
-          <div className="text-slate-700 leading-relaxed whitespace-pre-line">
-            {step.content.scripture}
+        <div className="pr-2">
+          <div className="w-full h-[40vh] bg-white/50 rounded-lg p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-brand-slate/30">
+            <h3 className="text-xl font-semibold text-brand-gold mb-4">
+              Psalm 139
+            </h3>
+            <div className="text-slate-700 leading-relaxed whitespace-pre-line">
+              {step.content.scripture}
+            </div>
           </div>
         </div>
       )}

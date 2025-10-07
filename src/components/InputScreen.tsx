@@ -104,12 +104,12 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
         {step.prompt}
       </p>
 
-      <div className="space-y-4">
+      <div className="space-y-4 pr-2">
         <textarea
           value={currentValue}
           onChange={(e) => handleInputChange(e.target.value)}
           placeholder={pathwayContent.general.textareaPlaceholder}
-          className="w-full h-48 p-4 bg-brand-stone border border-slate-300 rounded-xl text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed shadow-sm"
+          className="w-full h-48 bg-white/50 rounded-lg p-6 shadow-md border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed"
           autoFocus
         />
 

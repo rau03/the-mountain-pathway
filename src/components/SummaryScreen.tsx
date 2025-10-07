@@ -149,7 +149,7 @@ export const SummaryScreen: React.FC = () => {
       {/* Summary Content */}
       <div
         id="summary-content"
-        className="bg-brand-stone rounded-xl p-4 border border-slate-200"
+        className="bg-white/50 rounded-lg p-8 shadow-md border border-slate-300 h-full overflow-y-auto scrollbar-thin"
       >
         <div className="space-y-4">
           <div className="text-center border-b border-slate-300 pb-4">
