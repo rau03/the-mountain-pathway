@@ -32,6 +32,7 @@ export default function RootLayout({
           as="image"
           fetchPriority="high"
         />
+        <link rel="preload" href="/stage-1-trailhead.jpg" as="image" />
         <link rel="prefetch" href="/homepage-background.v3.jpg" />
       </head>
       <body
