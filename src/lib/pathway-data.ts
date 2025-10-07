@@ -7,6 +7,7 @@ export interface PathwayStep {
   subtitle: string;
   type: "landing" | "timer" | "reflection" | "input" | "summary";
   prompt: string;
+  icon: string;
   content?: {
     scripture?: string;
     instructions?: string;
@@ -73,6 +74,7 @@ export const pathwayData: PathwayStep[] = [
     type: "timer",
     prompt:
       "Let's begin with a few moments of quiet. Find a comfortable stillness, and for the next few moments, simply rest in God's care, allowing your heart to find its center in Him.",
+    icon: "Heart",
     isInput: false,
     isTimer: true,
     key: "begin",
@@ -85,6 +87,7 @@ export const pathwayData: PathwayStep[] = [
     type: "reflection",
     prompt:
       "Let's ground this time in His Word. As you slowly read through Psalm 139, listen for any word or phrase that resonates with your heart today.",
+    icon: "BookOpen",
     content: {
       scripture: `O Lord, you have searched me and known me!
 You know when I sit down and when I rise up;
@@ -149,6 +152,7 @@ and lead me in the way everlasting!
     type: "input",
     prompt:
       "Now, let's gently name what you've brought to this time. What specific situation, relationship, or question would you like to walk through with God?",
+    icon: "PenLine",
     isInput: true,
     key: "respond",
   },
@@ -160,6 +164,7 @@ and lead me in the way everlasting!
     type: "input",
     prompt:
       "Let's explore the thoughts surrounding this issue. What stories are you telling yourself about it? What is undeniably true, and what might be a misperception you've held onto?",
+    icon: "Lightbulb",
     isInput: true,
     key: "thoughts",
   },
@@ -171,6 +176,7 @@ and lead me in the way everlasting!
     type: "input",
     prompt:
       "Now, let's turn our attention from the head to the heart. As you consider this situation, what emotions are present? Name them here without judgment.",
+    icon: "Heart",
     isInput: true,
     key: "emotions",
   },
@@ -182,6 +188,7 @@ and lead me in the way everlasting!
     type: "input",
     prompt:
       "Beneath the struggle, there is often a deep longing. What is it you truly hope for in this? How might this desire point to the way God has made you and the good things He has for you?",
+    icon: "Star",
     isInput: true,
     key: "desire",
   },
@@ -193,6 +200,7 @@ and lead me in the way everlasting!
     type: "input",
     prompt:
       "Let's create a space and take a quiet moment to consciously invite Jesus into this very situation, just as it is.",
+    icon: "DoorOpen",
     isInput: true,
     key: "pause",
   },
@@ -204,6 +212,7 @@ and lead me in the way everlasting!
     type: "input",
     prompt:
       "Having sat with your thoughts, feelings, and hopes, what does a wise and loving next step look like? What is one small, faithful action you can take?",
+    icon: "Compass",
     isInput: true,
     key: "choices",
   },
@@ -215,6 +224,7 @@ and lead me in the way everlasting!
     type: "input",
     prompt:
       "Finally, let's bring everything you've discovered back to God. Use this space to write a prayer that gathers your thoughts, surrenders your feelings, and commits your next step to Him.",
+    icon: "HandHeart",
     content: {
       specialMessage:
         "This is your final reflection. Take time to offer everything to God in prayer.",

@@ -201,7 +201,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
           animate={{ opacity: 1, scale: 1 }}
           className="text-center space-y-4"
         >
-          <p className="text-amber-400 font-medium drop-shadow-md">
+          <p className="text-brand-slate font-medium drop-shadow-md">
             {pathwayContent.timerScreen.completionMessage}
           </p>
           <p className="text-brand-slate/80 text-sm">
