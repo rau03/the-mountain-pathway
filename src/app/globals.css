@@ -3,13 +3,13 @@
 
 /* Prevent flash of blank page on initial load */
 body {
-  background-color: #e7e5e4; /* brand-stone shows immediately */
+  background-color: #d6d3d1; /* brand-stone shows immediately */
   /* Add multiple background layers for complete homepage effect */
   background-image: radial-gradient(
       ellipse at center,
       transparent 55%,
-      rgba(231, 229, 228, 0.4) 85%,
-      #e7e5e4 100%
+      rgba(214, 211, 209, 0.4) 85%,
+      #d6d3d1 100%
     ),
     url("/homepage-background.v3.jpg"), url("/homepage-background.v3.jpg");
   background-size: 100% 100%, 50vw auto, cover;
@@ -79,7 +79,7 @@ body.journey-mode {
   --brand-forest: oklch(0.35 0.08 150);
   --brand-slate: oklch(0.45 0.02 220);
   --brand-gold: #fbbf24;
-  --brand-stone: #e7e5e4;
+  --brand-stone: #d6d3d1;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.129 0.042 264.695);
   --popover: oklch(1 0 0);
@@ -117,7 +117,7 @@ body.journey-mode {
   --brand-forest: oklch(0.4 0.1 150);
   --brand-slate: oklch(0.5 0.03 220);
   --brand-gold: #fbbf24;
-  --brand-stone: #e7e5e4;
+  --brand-stone: #d6d3d1;
   --card: oklch(0.208 0.042 265.755);
   --card-foreground: oklch(0.984 0.003 247.858);
   --popover: oklch(0.208 0.042 265.755);

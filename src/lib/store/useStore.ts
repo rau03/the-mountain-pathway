@@ -74,6 +74,9 @@ export const useStore = create<AppState>()(
           currentEntry: createNewEntry(),
           currentStep: -1,
         }),
+
+      // Force reset to homepage (for debugging)
+      resetToHomepage: () => set({ currentStep: -1 }),
     }),
     {
       name: "mountain-pathway-storage",

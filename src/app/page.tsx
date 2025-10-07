@@ -16,6 +16,7 @@ export default function Home() {
     "/homepage-background.v3.jpg"
   );
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   // Update background when step changes
   useEffect(() => {
@@ -42,6 +43,14 @@ export default function Home() {
       setCurrentBackground(getBackgroundForStep(currentStep));
     }
   }, [currentStep, currentBackground]);
+
+  // Force homepage on first load to prevent jumping
+  useEffect(() => {
+    if (!isInitialized) {
+      setCurrentStep(-1);
+      setIsInitialized(true);
+    }
+  }, [isInitialized, setCurrentStep]);
 
   // Reset invalid step to landing page
   useEffect(() => {
@@ -72,157 +81,62 @@ export default function Home() {
     return <JourneyScreen />;
   };
 
+  // This is the stable, desktop-first layout
+  const isJourneyScreen = currentStep > -1 && currentStep < 9;
+
   return (
     <div className="relative min-h-screen">
-      {/* The Conditional Rendering Block */}
+      {/* The single, persistent AudioToggle */}
+      <div className="absolute top-4 right-4 z-50">
+        <AudioToggle context={currentStep === -1 ? "landing" : "journey"} />
+      </div>
+
       {currentStep === -1 ? (
-        // Landing Page - Mobile-first container; desktop gets layered "Framed Ghost"
-        <div
-          className={`relative min-h-screen transition-all duration-1000 ${
-            isTransitioning ? "opacity-60" : "opacity-100"
-          } bg-no-repeat bg-cover bg-center`}
-          style={{
-            backgroundImage: currentBackground
-              ? `url('${currentBackground}')`
-              : "none",
-          }}
-        >
-          {/* Desktop-only layered effects */}
-          <div className="hidden md:block">
-            {/* Layer 1: Ghosted Background (blurred) */}
-            <div className="md:absolute md:inset-0 md:w-full md:h-full">
-              <div
-                className="md:absolute md:inset-0 md:bg-cover md:bg-center md:blur-xl md:brightness-125"
-                style={{
-                  backgroundImage: currentBackground
-                    ? `url('${currentBackground}')`
-                    : "none",
-                }}
-              />
-              {/* Layer 2: Vellum readability overlay */}
-              <div className="md:absolute md:inset-0 md:bg-brand-stone/80" />
-            </div>
-
-            {/* Layer 3: Crisp contained image */}
-            <div
-              className="md:absolute md:inset-0 md:w-full md:h-full md:bg-no-repeat md:bg-center"
-              style={{
-                backgroundImage: currentBackground
-                  ? `url('${currentBackground}')`
-                  : "none",
-                backgroundSize: "50vw auto",
-              }}
-            />
-
-            {/* Layer 4: Edge blend vignette */}
-            <div className="md:absolute md:inset-0 md:w-full md:h-full md:bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(231,229,228,0.4)_85%,#E7E5E4_100%)]" />
-          </div>
-
-          {/* Content floating above background (mobile and desktop) */}
-          <div className="relative z-10 min-h-screen grid place-items-center">
-            <LandingPage />
-          </div>
-
-          {/* Audio toggle within the same container */}
+        // --- START OF FINAL HOMEPAGE CODE ---
+        <div className="relative min-h-screen bg-brand-stone">
+          {/* The single, persistent AudioToggle */}
           <div className="absolute top-4 right-4 z-50">
             <AudioToggle context="landing" />
           </div>
+
+          {/* The Crisp Contained Image & Content */}
+          <div
+            className="relative z-10 min-h-screen"
+            style={{
+              backgroundImage: `url('/homepage-background.v3.jpg')`,
+              backgroundSize: "72vw auto",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }}
+          >
+            <LandingPage />
+          </div>
         </div>
       ) : (
-        // Journey Mode - Mobile-first with full-screen background
-        <div className="relative min-h-screen">
-          {/* Mobile: Full-screen background */}
+        // --- END OF FINAL HOMEPAGE CODE ---
+        // --- END OF CORRECT HOMEPAGE CODE ---
+        // --- END OF STABLE HOMEPAGE CODE ---
+        // --- START OF STABLE SPLIT-SCREEN CODE ---
+        <main className="flex flex-row h-screen">
+          {/* Visual Pane */}
           <div
-            className={`absolute inset-0 bg-cover bg-center transition-all duration-1000 ${
-              isTransitioning ? "opacity-60" : "opacity-100"
-            }`}
-            style={{
-              backgroundImage: currentBackground
-                ? `url('${currentBackground}')`
-                : "none",
-            }}
+            className="w-[45%] h-full bg-cover bg-center transition-all duration-1000"
+            style={{ backgroundImage: `url('${currentBackground}')` }}
           />
 
-          {/* Desktop: Split-screen layout (hidden on mobile) */}
-          <div className="hidden md:block min-h-screen overflow-hidden">
-            <main className="flex flex-row h-screen">
-              {/* Visual Pane - Left Side */}
-              <div
-                className={`w-[45%] h-full bg-cover bg-center transition-all duration-1000 ${
-                  isTransitioning ? "opacity-60" : "opacity-100"
-                }`}
-                style={{
-                  backgroundImage: currentBackground
-                    ? `url('${currentBackground}')`
-                    : "none",
-                }}
-              />
-
-              {/* Content Pane - Right Side */}
-              <div className="w-[55%] h-full text-slate-900 flex flex-col relative overflow-hidden">
-                {/* Ghosted Image Layer */}
-                <div
-                  className="absolute inset-0 blur-2xl brightness-125"
-                  style={{
-                    backgroundImage: currentBackground
-                      ? `url('${currentBackground}')`
-                      : "none",
-                  }}
-                />
-
-                {/* Vellum Readability Layer */}
-                <div className="absolute inset-0 bg-brand-stone/80" />
-
-                {/* Content Layer */}
-                <div className="relative z-10 flex flex-col h-full">
-                  {/* Header */}
-                  <div className="flex-shrink-0 p-8 pb-4">
-                    <Header />
-                  </div>
-
-                  {/* Main Content */}
-                  <div className="flex-grow flex items-start justify-center px-8 py-4 overflow-y-auto">
-                    {renderCurrentScreen()}
-                  </div>
-
-                  {/* Footer */}
-                  <div className="flex-shrink-0 p-8 pt-4">
-                    <Footer />
-                  </div>
-                </div>
+          {/* Content Pane */}
+          <div className="w-[55%] h-full flex flex-col relative p-8 bg-brand-stone">
+            {/* The Content Layer */}
+            <div className="relative z-10 flex flex-col h-full">
+              {isJourneyScreen && <Header />}
+              <div className="flex-grow flex items-center justify-center">
+                {renderCurrentScreen()}
               </div>
-            </main>
-          </div>
-
-          {/* Mobile: Header positioned outside sheet */}
-          <div className="md:hidden">
-            <Header />
-          </div>
-
-          {/* Mobile: Bottom Sheet Content */}
-          <div className="md:hidden">
-            {/* Bottom Sheet Container */}
-            <div className="absolute bottom-0 left-0 right-0 bg-brand-stone/80 backdrop-blur-md rounded-t-3xl shadow-2xl h-[50dvh] overflow-y-auto">
-              {/* Content */}
-              <div className="flex flex-col h-full">
-                {/* Main Content */}
-                <div className="flex-grow px-6 py-4 overflow-y-auto">
-                  {renderCurrentScreen()}
-                </div>
-
-                {/* Footer */}
-                <div className="flex-shrink-0 p-4 pt-3">
-                  <Footer />
-                </div>
-              </div>
+              {isJourneyScreen && <Footer />}
             </div>
           </div>
-
-          {/* Audio Toggle */}
-          <div className="absolute top-4 right-4 z-50">
-            <AudioToggle context="journey" />
-          </div>
-        </div>
+        </main>
+        // --- END OF STABLE SPLIT-SCREEN CODE ---
       )}
     </div>
   );
