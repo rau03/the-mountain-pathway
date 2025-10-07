@@ -93,7 +93,7 @@ export default function Home() {
             className="relative z-10 min-h-screen"
             style={{
               backgroundImage: `url('/homepage-background.v3.jpg')`,
-              backgroundSize: "72vw auto",
+              backgroundSize: "50vw auto",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
             }}
