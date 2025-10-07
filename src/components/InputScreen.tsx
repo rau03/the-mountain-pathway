@@ -1,5 +1,16 @@
 import React from "react";
 import { motion } from "framer-motion";
+import {
+  Heart,
+  BookOpen,
+  PenLine,
+  Lightbulb,
+  Star,
+  DoorOpen,
+  Compass,
+  HandHeart,
+  LucideIcon,
+} from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { PathwayStep, pathwayContent } from "@/lib/pathway-data";
 import {
@@ -8,6 +19,18 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
+// Icon mapping for dynamic icon rendering
+const iconMap: Record<string, LucideIcon> = {
+  Heart,
+  BookOpen,
+  PenLine,
+  Lightbulb,
+  Star,
+  DoorOpen,
+  Compass,
+  HandHeart,
+};
 
 interface InputScreenProps {
   step: PathwayStep;
@@ -22,6 +45,9 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
   const handleInputChange = (value: string) => {
     updateResponse(step.key, value);
   };
+
+  // Get the icon component for this step
+  const IconComponent = iconMap[step.icon];
 
   // Prayer guidance points for Step 9
   const prayerGuidance = [
@@ -59,6 +85,15 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
       className="flex flex-col gap-6 w-full"
     >
       <div className="text-center">
+        {/* Step Icon */}
+        {IconComponent && (
+          <div className="flex justify-center mb-4">
+            <div className="p-4 bg-amber-100 rounded-full">
+              <IconComponent className="w-8 h-8 text-brand-gold" />
+            </div>
+          </div>
+        )}
+
         <h2 className="text-3xl font-bold mb-2 text-brand-slate">
           {step.title}
         </h2>

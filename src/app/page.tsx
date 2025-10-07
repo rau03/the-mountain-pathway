@@ -119,23 +119,33 @@ export default function Home() {
         // --- END OF CORRECT HOMEPAGE CODE ---
         // --- END OF STABLE HOMEPAGE CODE ---
         // --- START OF STABLE SPLIT-SCREEN CODE ---
-        <main className="flex flex-row h-screen">
+        <main className="flex flex-row h-screen overflow-hidden">
           {/* Visual Pane */}
           <div
-            className="w-[45%] h-full bg-cover bg-center transition-all duration-1000"
+            className="w-[45%] h-screen bg-cover bg-center transition-all duration-1000"
             style={{ backgroundImage: `url('${currentBackground}')` }}
           />
 
           {/* Content Pane */}
-          <div className="w-[55%] h-full flex flex-col relative p-8 bg-brand-stone">
-            {/* The Content Layer */}
-            <div className="relative z-10 flex flex-col h-full">
-              {isJourneyScreen && <Header />}
-              <div className="flex-grow flex items-center justify-center">
-                {renderCurrentScreen()}
+          <div className="w-[55%] h-screen flex flex-col relative bg-brand-stone p-8 overflow-hidden">
+            {/* 1. The Header (Top Section) */}
+            {isJourneyScreen && (
+              <div className="flex-shrink-0">
+                <Header />
               </div>
-              {isJourneyScreen && <Footer />}
+            )}
+
+            {/* 2. The Main Content (Middle Section that grows) */}
+            <div className="flex-grow flex items-center justify-center py-6 overflow-y-auto">
+              {renderCurrentScreen()}
             </div>
+
+            {/* 3. The Footer (Bottom Section) */}
+            {isJourneyScreen && (
+              <div className="flex-shrink-0 pt-6 pb-4">
+                <Footer />
+              </div>
+            )}
           </div>
         </main>
         // --- END OF STABLE SPLIT-SCREEN CODE ---

@@ -1,13 +1,38 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { BookOpen } from "lucide-react";
+import {
+  Heart,
+  BookOpen,
+  PenLine,
+  Lightbulb,
+  Star,
+  DoorOpen,
+  Compass,
+  HandHeart,
+  LucideIcon,
+} from "lucide-react";
 import { PathwayStep } from "@/lib/pathway-data";
+
+// Icon mapping for dynamic icon rendering
+const iconMap: Record<string, LucideIcon> = {
+  Heart,
+  BookOpen,
+  PenLine,
+  Lightbulb,
+  Star,
+  DoorOpen,
+  Compass,
+  HandHeart,
+};
 
 interface ReflectionScreenProps {
   step: PathwayStep;
 }
 
 export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
+  // Get the icon component for this step
+  const IconComponent = iconMap[step.icon];
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -15,11 +40,14 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
       className="flex flex-col gap-6 w-full"
     >
       <div className="text-center">
-        <div className="flex justify-center mb-4">
-          <div className="p-4 bg-amber-100 rounded-full">
-            <BookOpen className="w-8 h-8 text-brand-gold" />
+        {/* Step Icon */}
+        {IconComponent && (
+          <div className="flex justify-center mb-4">
+            <div className="p-4 bg-amber-100 rounded-full">
+              <IconComponent className="w-8 h-8 text-brand-gold" />
+            </div>
           </div>
-        </div>
+        )}
 
         <h2 className="text-3xl font-bold mb-2 text-brand-slate">
           {step.title}
@@ -31,13 +59,13 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
         {step.prompt}
       </p>
 
-      {/* Scripture Text */}
+      {/* Scripture Text - Integrated Scrolling Card */}
       {step.content?.scripture && (
-        <div className="bg-brand-stone rounded-xl p-6 max-h-96 overflow-y-auto">
+        <div className="w-full h-[40vh] bg-white/50 rounded-lg p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-brand-slate/30">
           <h3 className="text-xl font-semibold text-brand-gold mb-4">
             Psalm 139
           </h3>
-          <div className="text-slate-700 leading-relaxed whitespace-pre-line text-left">
+          <div className="text-slate-700 leading-relaxed whitespace-pre-line">
             {step.content.scripture}
           </div>
         </div>
@@ -47,7 +75,7 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
         <div className="pt-4">
           <p className="text-sm text-brand-slate/70 italic">
             {step.content.instructions}
-          </p>
+          </p>{" "}
         </div>
       )}
     </motion.div>

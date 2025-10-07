@@ -1,9 +1,34 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, RotateCcw } from "lucide-react";
+import {
+  Play,
+  Pause,
+  RotateCcw,
+  Heart,
+  BookOpen,
+  PenLine,
+  Lightbulb,
+  Star,
+  DoorOpen,
+  Compass,
+  HandHeart,
+  LucideIcon,
+} from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { PathwayStep, pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
+
+// Icon mapping for dynamic icon rendering
+const iconMap: Record<string, LucideIcon> = {
+  Heart,
+  BookOpen,
+  PenLine,
+  Lightbulb,
+  Star,
+  DoorOpen,
+  Compass,
+  HandHeart,
+};
 
 interface TimerScreenProps {
   step: PathwayStep;
@@ -19,6 +44,9 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
   } = useStore();
   const [timeLeft, setTimeLeft] = useState(silenceTimer * 60);
   const [hasStarted, setHasStarted] = useState(false);
+
+  // Get the icon component for this step
+  const IconComponent = iconMap[step.icon];
 
   useEffect(() => {
     setTimeLeft(silenceTimer * 60);
@@ -82,6 +110,15 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
       className="flex flex-col items-center space-y-8 w-full"
     >
       <div className="text-center space-y-4">
+        {/* Step Icon */}
+        {IconComponent && (
+          <div className="flex justify-center mb-4">
+            <div className="p-4 bg-amber-100 rounded-full">
+              <IconComponent className="w-8 h-8 text-brand-gold" />
+            </div>
+          </div>
+        )}
+
         <div>
           <h2 className="text-3xl font-bold text-brand-slate mb-2">
             {step.title}
