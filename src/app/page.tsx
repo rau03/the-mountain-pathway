@@ -88,30 +88,21 @@ export default function Home() {
       </div>
 
       {currentStep === -1 ? (
-        // --- START OF FINAL HOMEPAGE CODE ---
-        <div className="relative min-h-screen bg-brand-stone">
-          {/* The Crisp Contained Image & Content */}
-          <div
-            className="relative z-10 min-h-screen"
-            style={{
-              backgroundImage: `url('/homepage-background.v3.jpg')`,
-              backgroundSize: "50vw auto",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-            }}
-          >
-            {/* Edge Blend Overlay */}
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_70%,#D6D3D1_100%)]" />
-
-            {/* Content Layer */}
-            <div className="relative z-10">
-              {/* The single, persistent SimpleAudioPlayer */}
-              <div className="absolute top-4 right-4 z-50">
-                <SimpleAudioPlayer context="landing" />
-              </div>
-
-              <LandingPage />
+        // --- Simple full-page crisp image - no ghost background ---
+        <div
+          className="relative min-h-screen bg-cover bg-center"
+          style={{
+            backgroundImage: `url('/homepage-background.v3.jpg')`,
+          }}
+        >
+          {/* Content Layer */}
+          <div className="relative z-10">
+            {/* The single, persistent SimpleAudioPlayer */}
+            <div className="absolute top-4 right-4 z-50">
+              <SimpleAudioPlayer context="landing" />
             </div>
+
+            <LandingPage />
           </div>
         </div>
       ) : (
