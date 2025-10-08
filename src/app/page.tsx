@@ -90,9 +90,10 @@ export default function Home() {
       {currentStep === -1 ? (
         // --- Simple full-page crisp image - no ghost background ---
         <div
-          className="relative min-h-screen bg-cover bg-center"
+          className="relative min-h-screen bg-cover"
           style={{
             backgroundImage: `url('/homepage-background.v3.jpg')`,
+            backgroundPosition: "center 65%",
           }}
         >
           {/* Content Layer */}
