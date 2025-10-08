@@ -88,31 +88,20 @@ export default function Home() {
       </div>
 
       {currentStep === -1 ? (
-        // --- START OF MOBILE-FIRST RESPONSIVE HOMEPAGE CODE ---
-        <div className="relative min-h-screen md:bg-brand-stone">
-          {/* The Background & Content Layer */}
+        // --- START OF FINAL HOMEPAGE CODE ---
+        <div className="relative min-h-screen bg-brand-stone">
+          {/* The Crisp Contained Image & Content */}
           <div
-            className="relative z-10 min-h-screen bg-cover bg-center md:bg-none"
+            className="relative z-10 min-h-screen"
             style={{
               backgroundImage: `url('/homepage-background.v3.jpg')`,
-              backgroundSize: "cover",
+              backgroundSize: "50vw auto",
               backgroundRepeat: "no-repeat",
               backgroundPosition: "center",
             }}
           >
-            {/* Desktop-Only: Edge Blend Overlay for "Framed Ghost" Effect */}
-            <div className="hidden md:block absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_70%,#D6D3D1_100%)]" />
-
-            {/* Desktop-Only: Apply Crisp Contained Image */}
-            <div
-              className="hidden md:block absolute inset-0"
-              style={{
-                backgroundImage: `url('/homepage-background.v3.jpg')`,
-                backgroundSize: "50vw auto",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "center",
-              }}
-            />
+            {/* Edge Blend Overlay */}
+            <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_70%,#D6D3D1_100%)]" />
 
             {/* Content Layer */}
             <div className="relative z-10">
