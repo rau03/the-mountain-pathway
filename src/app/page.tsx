@@ -78,6 +78,10 @@ export default function Home() {
   // This is the stable, desktop-first layout
   const isJourneyScreen = currentStep > -1 && currentStep < 9;
 
+  // Define background position explicitly for Tailwind purge-proof class names
+  // Step 0 uses bg-bottom, all other steps use bg-center
+  const backgroundPositionClass = currentStep === 0 ? "bg-bottom" : "bg-center";
+
   return (
     <div className="relative min-h-screen">
       {/* The single, persistent SimpleAudioPlayer */}
@@ -88,7 +92,7 @@ export default function Home() {
       </div>
 
       {currentStep === -1 ? (
-        // --- Simple full-page crisp image - no ghost background ---
+        // Landing Page - Full screen image
         <div
           className="relative min-h-screen bg-cover"
           style={{
@@ -107,32 +111,29 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        // --- END OF FINAL HOMEPAGE CODE ---
-        // --- END OF CORRECT HOMEPAGE CODE ---
-        // --- END OF STABLE HOMEPAGE CODE ---
-        // --- START OF STABLE SPLIT-SCREEN CODE ---
+        // Journey Screen - Split-screen layout
         <main className="flex flex-row h-screen overflow-hidden">
-          {/* Visual Pane */}
+          {/* Visual Pane - Left side with background image */}
           <div
-            className="w-[45%] h-screen bg-cover bg-center transition-all duration-1000"
+            className={`w-[45%] h-screen bg-cover ${backgroundPositionClass} transition-all duration-1000`}
             style={{ backgroundImage: `url('${currentBackground}')` }}
           />
 
-          {/* Content Pane */}
+          {/* Content Pane - Right side with content */}
           <div className="w-[55%] h-screen flex flex-col relative bg-brand-stone p-8 overflow-hidden">
-            {/* 1. The Header (Top Section) */}
+            {/* Header */}
             {isJourneyScreen && (
               <div className="flex-shrink-0">
                 <Header />
               </div>
             )}
 
-            {/* 2. The Main Content (Middle Section that grows) */}
+            {/* Main Content - Scrollable */}
             <div className="flex-grow flex flex-col py-6 pr-2 overflow-y-auto scrollbar-thin">
               {renderCurrentScreen()}
             </div>
 
-            {/* 3. The Footer (Bottom Section) */}
+            {/* Footer */}
             {isJourneyScreen && (
               <div className="flex-shrink-0 pt-6 pb-4">
                 <Footer />
@@ -140,7 +141,6 @@ export default function Home() {
             )}
           </div>
         </main>
-        // --- END OF STABLE SPLIT-SCREEN CODE ---
       )}
     </div>
   );
