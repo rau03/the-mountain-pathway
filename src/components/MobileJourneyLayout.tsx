@@ -53,7 +53,7 @@ export const MobileJourneyLayout: React.FC = () => {
         <div className="flex-grow" />
 
         {/* Fading Bottom Sheet */}
-        <div className="flex-shrink-0 bg-gradient-to-t from-brand-stone via-brand-stone to-transparent pt-12 pb-6">
+        <div className="flex-shrink-0 bg-gradient-to-t from-brand-stone from-50% to-brand-stone/80 pt-12 pb-6">
           {/* All Content in Sheet - Scrollable */}
           <div className="px-6 pb-4 max-h-[40dvh] overflow-y-auto">
             <JourneyScreen />
