@@ -17,6 +17,7 @@ export interface PathwayStep {
   isTimer?: boolean;
   isSummary?: boolean;
   key: string;
+  mobileAlignment?: string;
 }
 
 export interface PathwayContent {
@@ -143,6 +144,7 @@ and lead me in the way everlasting!
     },
     isInput: false,
     key: "reflect",
+    mobileAlignment: "bg-left-bottom",
   },
   {
     stepIndex: 2,
@@ -155,6 +157,7 @@ and lead me in the way everlasting!
     icon: "PenLine",
     isInput: true,
     key: "respond",
+    mobileAlignment: "bg-left-bottom",
   },
   {
     stepIndex: 3,

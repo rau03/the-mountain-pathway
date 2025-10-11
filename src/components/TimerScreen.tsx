@@ -62,7 +62,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    if (isTimerActive && timeLeft > 0) {
+    if (isTimerActive) {
       interval = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
@@ -78,7 +78,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
         clearInterval(interval);
       }
     };
-  }, [isTimerActive, timeLeft]);
+  }, [isTimerActive]);
 
   const handleStart = () => {
     setHasStarted(true);
