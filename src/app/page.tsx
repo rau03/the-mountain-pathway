@@ -5,8 +5,9 @@ import { useStore } from "@/lib/store/useStore";
 import { LandingPage } from "@/components/LandingPage";
 import { JourneyScreen } from "@/components/JourneyScreen";
 import { SummaryScreen } from "@/components/SummaryScreen";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import { HeaderDesktop } from "@/components/HeaderDesktop";
+import { FooterDesktop } from "@/components/FooterDesktop";
+import { MobileJourneyLayout } from "@/components/MobileJourneyLayout";
 import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
 import { getBackgroundForStep } from "@/lib/pathway-data";
 
@@ -111,36 +112,46 @@ export default function Home() {
           </div>
         </div>
       ) : (
-        // Journey Screen - Split-screen layout
-        <main className="flex flex-row h-screen overflow-hidden">
-          {/* Visual Pane - Left side with background image */}
-          <div
-            className={`w-[45%] h-screen bg-cover ${backgroundPositionClass} transition-all duration-1000`}
-            style={{ backgroundImage: `url('${currentBackground}')` }}
-          />
+        // Journey Screen - Clean Layout Swap
+        <>
+          {/* DESKTOP LAYOUT: Stable split-screen (visible ≥ 768px) */}
+          <div className="hidden md:block">
+            <main className="flex flex-row h-screen overflow-hidden">
+              {/* Visual Pane - Left side with background image */}
+              <div
+                className={`w-[45%] h-screen bg-cover ${backgroundPositionClass} transition-all duration-1000`}
+                style={{ backgroundImage: `url('${currentBackground}')` }}
+              />
 
-          {/* Content Pane - Right side with content */}
-          <div className="w-[55%] h-screen flex flex-col relative bg-brand-stone p-8 overflow-hidden">
-            {/* Header */}
-            {isJourneyScreen && (
-              <div className="flex-shrink-0">
-                <Header />
+              {/* Content Pane - Right side with content */}
+              <div className="w-[55%] h-screen flex flex-col relative bg-brand-stone p-8 overflow-hidden">
+                {/* Header */}
+                {isJourneyScreen && (
+                  <div className="flex-shrink-0">
+                    <HeaderDesktop />
+                  </div>
+                )}
+
+                {/* Main Content - Scrollable */}
+                <div className="flex-grow flex flex-col py-6 pr-2 overflow-y-auto scrollbar-thin">
+                  {renderCurrentScreen()}
+                </div>
+
+                {/* Footer */}
+                {isJourneyScreen && (
+                  <div className="flex-shrink-0 pt-6 pb-4">
+                    <FooterDesktop />
+                  </div>
+                )}
               </div>
-            )}
-
-            {/* Main Content - Scrollable */}
-            <div className="flex-grow flex flex-col py-6 pr-2 overflow-y-auto scrollbar-thin">
-              {renderCurrentScreen()}
-            </div>
-
-            {/* Footer */}
-            {isJourneyScreen && (
-              <div className="flex-shrink-0 pt-6 pb-4">
-                <Footer />
-              </div>
-            )}
+            </main>
           </div>
-        </main>
+
+          {/* MOBILE LAYOUT: Fading bottom sheet (visible < 768px) */}
+          <div className="md:hidden">
+            <MobileJourneyLayout />
+          </div>
+        </>
       )}
     </div>
   );

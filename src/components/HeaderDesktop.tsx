@@ -2,7 +2,7 @@ import React from "react";
 import { Mountain } from "lucide-react";
 import { ProgressPath } from "./ProgressPath";
 
-export const Header: React.FC = () => {
+export const HeaderDesktop: React.FC = () => {
   return (
     <header className="flex flex-col gap-6">
       {/* Brand Logotype */}

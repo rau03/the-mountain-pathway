@@ -4,7 +4,7 @@ import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
 
-export const Footer: React.FC = () => {
+export const FooterDesktop: React.FC = () => {
   const { currentStep, nextStep, prevStep } = useStore();
   const isFirstStep = currentStep === 0;
 
