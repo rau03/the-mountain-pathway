@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { useStore } from "@/lib/store/useStore";
 import { HeaderMobile } from "./HeaderMobile";
 import { FooterMobile } from "./FooterMobile";
@@ -8,6 +8,15 @@ import { getBackgroundForStep, pathwayData } from "@/lib/pathway-data";
 
 export const MobileJourneyLayout: React.FC = () => {
   const { currentStep } = useStore();
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  // Reset scroll position when step changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+  }, [currentStep]);
+
   const isJourneyScreen = currentStep > -1 && currentStep < 9;
   const isSummaryScreen = currentStep === 9;
 
@@ -55,7 +64,10 @@ export const MobileJourneyLayout: React.FC = () => {
         {/* Fading Bottom Sheet */}
         <div className="flex-shrink-0 bg-gradient-to-t from-brand-stone from-50% to-brand-stone/80 pt-12 pb-6">
           {/* All Content in Sheet - Scrollable */}
-          <div className="px-6 pb-4 max-h-[40dvh] overflow-y-auto">
+          <div
+            ref={scrollContainerRef}
+            className="px-6 pb-4 max-h-[40dvh] overflow-y-auto"
+          >
             <JourneyScreen />
           </div>
 
