@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import {
   Heart,
@@ -38,12 +38,25 @@ interface InputScreenProps {
 
 export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
   const { currentEntry, updateResponse } = useStore();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const currentValue =
     currentEntry.responses[step.key as keyof typeof currentEntry.responses] ||
     "";
 
   const handleInputChange = (value: string) => {
     updateResponse(step.key, value);
+  };
+
+  const handleTextareaFocus = () => {
+    // Wait for keyboard animation to complete
+    setTimeout(() => {
+      if (textareaRef.current) {
+        textareaRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }, 300);
   };
 
   // Get the icon component for this step
@@ -139,8 +152,10 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
 
       <div className="space-y-4 pr-2">
         <textarea
+          ref={textareaRef}
           value={currentValue}
           onChange={(e) => handleInputChange(e.target.value)}
+          onFocus={handleTextareaFocus}
           placeholder={pathwayContent.general.textareaPlaceholder}
           className="w-full h-48 bg-white/50 rounded-lg p-6 shadow-md border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed"
           autoFocus
