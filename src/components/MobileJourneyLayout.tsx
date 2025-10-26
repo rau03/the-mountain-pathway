@@ -42,15 +42,15 @@ export const MobileJourneyLayout: React.FC = () => {
   }
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative h-[100dvh] flex flex-col">
       {/* Full-Screen Background Image */}
       <div
         className={`absolute inset-0 bg-cover ${mobileAlignment} transition-all duration-1000`}
         style={{ backgroundImage: `url('${currentBackground}')` }}
       />
 
-      {/* Mobile Content Layout */}
-      <div className="relative z-10 min-h-screen flex flex-col">
+      {/* Mobile Content Layout - Full Height Flex Container */}
+      <div className="relative z-10 h-full flex flex-col">
         {/* Mobile Header at Top */}
         {isJourneyScreen && (
           <div className="flex-shrink-0 px-4 pt-4 pb-2">
@@ -58,22 +58,22 @@ export const MobileJourneyLayout: React.FC = () => {
           </div>
         )}
 
-        {/* Spacer - Pushes sheet to bottom */}
-        <div className="flex-grow" />
+        {/* Spacer - Visual Area Above Content */}
+        <div className="flex-shrink-0 min-h-[20dvh]" />
 
-        {/* Fading Bottom Sheet */}
-        <div className="flex-shrink-0 bg-gradient-to-t from-brand-stone from-50% to-brand-stone/80 pt-12 pb-6">
-          {/* All Content in Sheet - Scrollable */}
+        {/* Bottom Sheet - Fixed Height Container with Gradient */}
+        <div className="flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% to-brand-stone/80 pt-12">
+          {/* Scrollable Content Area */}
           <div
             ref={scrollContainerRef}
-            className="px-6 pb-4 max-h-[70dvh] overflow-y-auto"
+            className="flex-grow overflow-y-auto px-6"
           >
             <JourneyScreen />
           </div>
 
-          {/* Mobile Footer at Bottom of Sheet */}
+          {/* Sticky Footer - Always Visible at Bottom */}
           {isJourneyScreen && (
-            <div className="px-6 pt-4">
+            <div className="flex-shrink-0 px-6 py-4 bg-brand-stone border-t border-brand-stone/20">
               <FooterMobile />
             </div>
           )}
