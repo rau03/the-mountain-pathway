@@ -66,7 +66,7 @@ export const MobileJourneyLayout: React.FC = () => {
           {/* All Content in Sheet - Scrollable */}
           <div
             ref={scrollContainerRef}
-            className="px-6 pb-4 max-h-[40dvh] overflow-y-auto"
+            className="px-6 pb-4 max-h-[70dvh] overflow-y-auto"
           >
             <JourneyScreen />
           </div>
