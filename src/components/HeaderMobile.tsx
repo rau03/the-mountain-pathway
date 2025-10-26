@@ -5,12 +5,18 @@ import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
 
 export const HeaderMobile: React.FC = () => {
-  const { currentStep } = useStore();
+  const { currentStep, resetJourney } = useStore();
 
   return (
     <header className="flex items-center justify-between gap-3">
-      {/* Mobile Logo - Icon Only */}
-      <Mountain className="w-6 h-6 text-brand-gold flex-shrink-0" />
+      {/* Mobile Logo - Icon Only, Clickable to return home */}
+      <button
+        onClick={resetJourney}
+        className="bg-transparent border-none p-0 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
+        aria-label="Return to home"
+      >
+        <Mountain className="w-6 h-6 text-brand-gold" />
+      </button>
 
       {/* Mobile Progress: Simple Dots */}
       <div className="flex items-center gap-1.5 flex-grow justify-center">

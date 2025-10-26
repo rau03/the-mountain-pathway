@@ -82,6 +82,13 @@ export const useStore = create<AppState>()(
 
       // Force reset to homepage (for debugging)
       resetToHomepage: () => set({ currentStep: -1 }),
+
+      // Reset journey - returns to landing page and clears current entry
+      resetJourney: () =>
+        set({
+          currentEntry: createNewEntry(),
+          currentStep: -1,
+        }),
     }),
     {
       name: "mountain-pathway-storage",

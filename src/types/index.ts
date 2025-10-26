@@ -31,6 +31,7 @@ export interface AppState {
   startJourney: () => void;
   startNewJourney: () => void;
   resetToHomepage: () => void;
+  resetJourney: () => void;
   toggleAudio: () => void;
   setAudioTrack: (track: "music" | "nature") => void;
   setSilenceTimer: (minutes: number) => void;
