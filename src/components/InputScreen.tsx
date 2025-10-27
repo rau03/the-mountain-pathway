@@ -59,6 +59,11 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
     }, 300);
   };
 
+  const handleBlur = () => {
+    // Force browser to repaint and remove keyboard white space
+    window.scrollTo(0, 0);
+  };
+
   // Get the icon component for this step
   const IconComponent = iconMap[step.icon];
 
@@ -156,6 +161,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
           value={currentValue}
           onChange={(e) => handleInputChange(e.target.value)}
           onFocus={handleTextareaFocus}
+          onBlur={handleBlur}
           placeholder={pathwayContent.general.textareaPlaceholder}
           className="w-full h-48 bg-white/50 rounded-lg p-6 shadow-md border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed"
         />
