@@ -12,6 +12,10 @@ export const MobileJourneyLayout: React.FC = () => {
 
   // Reset scroll position when step changes
   useEffect(() => {
+    // Reset main window scroll
+    window.scrollTo(0, 0);
+
+    // Reset internal content scroll
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollTop = 0;
     }
