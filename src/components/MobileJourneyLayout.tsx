@@ -27,12 +27,13 @@ export const MobileJourneyLayout: React.FC = () => {
   // Get the current background image
   const currentBackground = getBackgroundForStep(currentStep);
 
-  // Get mobile alignment for current step (default to bg-bottom)
+  // Get mobile alignment for current step (default to center 40%)
   const currentStepData =
     currentStep >= 0 && currentStep < pathwayData.length
       ? pathwayData[currentStep]
       : null;
-  const mobileAlignment = currentStepData?.mobileAlignment || "bg-bottom";
+  const mobileAlignment =
+    currentStepData?.mobileAlignment || "[background-position:center_40%]";
 
   // Summary screen has its own rendering
   if (isSummaryScreen) {
