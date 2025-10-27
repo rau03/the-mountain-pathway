@@ -54,6 +54,9 @@ export const MobileJourneyLayout: React.FC = () => {
         style={{ backgroundImage: `url('${currentBackground}')` }}
       />
 
+      {/* Top-Fade Vignette - Reveals more of background at top */}
+      <div className="absolute inset-0 z-5 bg-gradient-to-t from-brand-stone/80 to-transparent" />
+
       {/* Mobile Content Layout - Full Height Flex Container */}
       <div className="relative z-10 h-full flex flex-col">
         {/* Mobile Header at Top */}
@@ -67,7 +70,7 @@ export const MobileJourneyLayout: React.FC = () => {
         <div className="flex-shrink-0 min-h-[20dvh]" />
 
         {/* Bottom Sheet - Fixed Height Container with Gradient */}
-        <div className="flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% to-brand-stone/80 pt-12">
+        <div className="flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-40% via-brand-stone/70 via-70% to-transparent pt-12">
           {/* Scrollable Content Area */}
           <div
             ref={scrollContainerRef}
