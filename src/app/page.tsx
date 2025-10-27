@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useStore } from "@/lib/store/useStore";
 import { LandingPage } from "@/components/LandingPage";
 import { JourneyScreen } from "@/components/JourneyScreen";
@@ -17,6 +17,7 @@ export default function Home() {
     "/homepage-background.v3.jpg"
   );
   const [isInitialized, setIsInitialized] = useState(false);
+  const desktopScrollRef = useRef<HTMLDivElement>(null);
 
   // Update background when step changes
   useEffect(() => {
@@ -61,6 +62,33 @@ export default function Home() {
       document.body.classList.remove("journey-mode");
     } else {
       document.body.classList.add("journey-mode");
+    }
+  }, [currentStep]);
+
+  // Reset desktop scroll position when step changes
+  useEffect(() => {
+    if (desktopScrollRef.current) {
+      // Immediate reset
+      desktopScrollRef.current.scrollTop = 0;
+
+      // Additional reset after DOM update
+      requestAnimationFrame(() => {
+        if (desktopScrollRef.current) {
+          desktopScrollRef.current.scrollTop = 0;
+          desktopScrollRef.current.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: "instant" as ScrollBehavior,
+          });
+        }
+      });
+
+      // Final safety reset after render
+      setTimeout(() => {
+        if (desktopScrollRef.current) {
+          desktopScrollRef.current.scrollTop = 0;
+        }
+      }, 50);
     }
   }, [currentStep]);
 
@@ -133,7 +161,10 @@ export default function Home() {
                 )}
 
                 {/* Main Content - Scrollable */}
-                <div className="flex-grow flex flex-col py-6 pr-2 overflow-y-auto scrollbar-thin">
+                <div
+                  ref={desktopScrollRef}
+                  className="flex-grow flex flex-col py-6 pr-2 overflow-y-auto scrollbar-thin"
+                >
                   {renderCurrentScreen()}
                 </div>
 

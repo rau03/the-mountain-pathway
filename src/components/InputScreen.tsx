@@ -158,7 +158,6 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
           onFocus={handleTextareaFocus}
           placeholder={pathwayContent.general.textareaPlaceholder}
           className="w-full h-48 bg-white/50 rounded-lg p-6 shadow-md border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed"
-          autoFocus
         />
 
         <div className="text-right">
