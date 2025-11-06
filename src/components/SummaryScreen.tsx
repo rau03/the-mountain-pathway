@@ -1,17 +1,112 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Download, Copy, RotateCcw, CheckCircle } from "lucide-react";
+import {
+  Download,
+  Copy,
+  RotateCcw,
+  CheckCircle,
+  UploadCloud,
+  Loader2,
+} from "lucide-react";
+import { Session } from "@supabase/supabase-js";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData, pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
+import supabase from "@/lib/supabaseClient";
 
-export const SummaryScreen: React.FC = () => {
+export const SummaryScreen: React.FC<{ session: Session | null }> = ({
+  session,
+}) => {
   const { currentEntry, startNewJourney } = useStore();
   const [copied, setCopied] = React.useState(false);
   const [downloading, setDownloading] = React.useState(false);
+  const [saveState, setSaveState] = React.useState<"idle" | "saving" | "saved">(
+    "idle"
+  );
 
   const handleStartNew = () => {
     startNewJourney();
+  };
+
+  const handleSaveJourney = async () => {
+    // 1. Guard Clauses: Ensure we have a user and a journey to save.
+    if (!session?.user) {
+      console.error("No user session found. Cannot save journey.");
+      alert("You must be logged in to save a journey.");
+      return;
+    }
+
+    if (!currentEntry) {
+      console.error("No current journey entry found in state.");
+      return;
+    }
+
+    // 2. Set Loading State
+    setSaveState("saving");
+
+    try {
+      // 3. Insert into the 'journeys' table
+      const { data: journeyData, error: journeyError } = await supabase
+        .from("journeys")
+        .insert({
+          user_id: session.user.id,
+          // Use the response from step 2 ("Respond") as the title
+          title:
+            currentEntry.responses[
+              "respond" as keyof typeof currentEntry.responses
+            ] || "Untitled Journey",
+          template_id: "default", // As we planned
+        })
+        .select("id") // IMPORTANT: This returns the ID of the new row
+        .single(); // We expect only one row to be created
+
+      if (journeyError) throw journeyError;
+      if (!journeyData) throw new Error("Failed to get new journey ID.");
+
+      const newJourneyId = journeyData.id;
+
+      // 4. Prepare the 'journey_steps' data
+      const stepsToInsert = pathwayData
+        .filter(
+          (step) =>
+            step.isInput &&
+            currentEntry.responses[
+              step.key as keyof typeof currentEntry.responses
+            ]
+        )
+        .map((step) => ({
+          journey_id: newJourneyId,
+          step_number: step.stepIndex,
+          prompt_text: step.title,
+          user_response:
+            currentEntry.responses[
+              step.key as keyof typeof currentEntry.responses
+            ],
+        }));
+
+      if (stepsToInsert.length === 0) {
+        // Handle case with no responses, though unlikely
+        console.log("No responses to save.");
+        setSaveState("saved");
+        return;
+      }
+
+      // 5. Bulk insert into the 'journey_steps' table
+      const { error: stepsError } = await supabase
+        .from("journey_steps")
+        .insert(stepsToInsert);
+
+      if (stepsError) throw stepsError;
+
+      // 6. Update UI State on Success
+      console.log("Journey saved successfully!");
+      setSaveState("saved");
+    } catch (error) {
+      console.error("Error saving journey:", error);
+      alert("There was an error saving your journey. Please try again.");
+      // Reset UI state on failure
+      setSaveState("idle");
+    }
   };
 
   const handleCopyToClipboard = async () => {
@@ -192,6 +287,28 @@ export const SummaryScreen: React.FC = () => {
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        {/* NEW SAVE BUTTON */}
+        <Button
+          onClick={handleSaveJourney}
+          disabled={saveState !== "idle" || !session}
+          variant="default"
+          size="lg"
+          className="font-medium bg-brand-gold hover:bg-brand-gold/90"
+        >
+          {saveState === "saving" && (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          )}
+          {saveState === "saved" && <CheckCircle className="w-4 h-4" />}
+          {saveState === "idle" && <UploadCloud className="w-4 h-4" />}
+          <span>
+            {saveState === "saving"
+              ? "Saving..."
+              : saveState === "saved"
+              ? "Saved to Cloud"
+              : "Save Journey"}
+          </span>
+        </Button>
+
         <Button
           onClick={handleDownloadPDF}
           disabled={downloading}
@@ -224,10 +341,13 @@ export const SummaryScreen: React.FC = () => {
               : pathwayContent.summaryPage.copyButtonText}
           </span>
         </Button>
+      </div>
 
+      {/* Start New Journey Button - Now separate */}
+      <div className="text-center mt-6">
         <Button
           onClick={handleStartNew}
-          variant="default"
+          variant="outline"
           size="lg"
           className="font-medium"
         >
