@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Session } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 import { useStore } from "@/lib/store/useStore";
 import { LandingPage } from "@/components/LandingPage";
 import { JourneyScreen } from "@/components/JourneyScreen";
@@ -12,22 +11,20 @@ import { FooterDesktop } from "@/components/FooterDesktop";
 import { MobileJourneyLayout } from "@/components/MobileJourneyLayout";
 import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
 import { getBackgroundForStep } from "@/lib/pathway-data";
+import AuthButton from "@/components/AuthButton";
 
 export default function HomeClient({ session }: { session: Session | null }) {
-  const { currentStep, setCurrentStep } = useStore();
-  const router = useRouter();
+  const { currentStep, setCurrentStep, setAnonymous } = useStore();
   const [currentBackground, setCurrentBackground] = useState(
     "/homepage-background.v3.jpg"
   );
   const [isInitialized, setIsInitialized] = useState(false);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
 
-  // Protect journey content - redirect to login if trying to access journey without session
+  // Update anonymous status when session changes
   useEffect(() => {
-    if (currentStep > -1 && !session) {
-      router.push("/login");
-    }
-  }, [currentStep, session, router]);
+    setAnonymous(!session);
+  }, [session, setAnonymous]);
 
   // Update background when step changes
   useEffect(() => {
@@ -125,9 +122,21 @@ export default function HomeClient({ session }: { session: Session | null }) {
     <div className="relative min-h-screen">
       {/* The single, persistent SimpleAudioPlayer */}
       <div className="absolute top-4 right-4 z-50">
-        <SimpleAudioPlayer
-          context={currentStep === -1 ? "landing" : "journey"}
-        />
+        <div className="flex items-center gap-2">
+          <AuthButton
+            session={session}
+            context={
+              currentStep === -1
+                ? "landing"
+                : currentStep === 9
+                ? "summary"
+                : "journey"
+            }
+          />
+          <SimpleAudioPlayer
+            context={currentStep === -1 ? "landing" : "journey"}
+          />
+        </div>
       </div>
 
       {currentStep === -1 ? (
@@ -143,7 +152,10 @@ export default function HomeClient({ session }: { session: Session | null }) {
           <div className="relative z-10">
             {/* The single, persistent SimpleAudioPlayer */}
             <div className="absolute top-4 right-4 z-50">
-              <SimpleAudioPlayer context="landing" />
+              <div className="flex items-center gap-2">
+                <AuthButton session={session} context="landing" />
+                <SimpleAudioPlayer context="landing" />
+              </div>
             </div>
 
             <LandingPage />

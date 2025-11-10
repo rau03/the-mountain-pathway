@@ -6,107 +6,84 @@ import {
   RotateCcw,
   CheckCircle,
   UploadCloud,
-  Loader2,
 } from "lucide-react";
 import { Session } from "@supabase/supabase-js";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData, pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
-import supabase from "@/lib/supabaseClient";
+import SaveJourneyModal from "@/components/SaveJourneyModal";
+import { saveJourney, updateJourney } from "@/lib/journeyApi";
 
 export const SummaryScreen: React.FC<{ session: Session | null }> = ({
   session,
 }) => {
-  const { currentEntry, startNewJourney } = useStore();
+  const {
+    currentEntry,
+    startNewJourney,
+    currentStep,
+    isSaved,
+    savedJourneyId,
+    markSaved,
+  } = useStore();
   const [copied, setCopied] = React.useState(false);
   const [downloading, setDownloading] = React.useState(false);
-  const [saveState, setSaveState] = React.useState<"idle" | "saving" | "saved">(
-    "idle"
-  );
+  const [saveModalOpen, setSaveModalOpen] = React.useState(false);
+  const [saveLoading, setSaveLoading] = React.useState(false);
 
   const handleStartNew = () => {
     startNewJourney();
   };
 
-  const handleSaveJourney = async () => {
-    // 1. Guard Clauses: Ensure we have a user and a journey to save.
+  const handleSaveJourney = async (title: string) => {
     if (!session?.user) {
-      console.error("No user session found. Cannot save journey.");
-      alert("You must be logged in to save a journey.");
-      return;
+      throw new Error("You must be logged in to save a journey.");
     }
 
     if (!currentEntry) {
-      console.error("No current journey entry found in state.");
-      return;
+      throw new Error("No journey data to save.");
     }
 
-    // 2. Set Loading State
-    setSaveState("saving");
+    setSaveLoading(true);
 
     try {
-      // 3. Insert into the 'journeys' table
-      const { data: journeyData, error: journeyError } = await supabase
-        .from("journeys")
-        .insert({
-          user_id: session.user.id,
-          // Use the response from step 2 ("Respond") as the title
-          title:
-            currentEntry.responses[
-              "respond" as keyof typeof currentEntry.responses
-            ] || "Untitled Journey",
-          template_id: "default", // As we planned
-        })
-        .select("id") // IMPORTANT: This returns the ID of the new row
-        .single(); // We expect only one row to be created
+      const journeyData = {
+        title,
+        currentEntry,
+        currentStep,
+        isCompleted: true, // Summary screen means journey is complete
+        metadata: {
+          stepsCompleted: currentStep + 1,
+          completedAt: new Date().toISOString(),
+        },
+      };
 
-      if (journeyError) throw journeyError;
-      if (!journeyData) throw new Error("Failed to get new journey ID.");
-
-      const newJourneyId = journeyData.id;
-
-      // 4. Prepare the 'journey_steps' data
-      const stepsToInsert = pathwayData
-        .filter(
-          (step) =>
-            step.isInput &&
-            currentEntry.responses[
-              step.key as keyof typeof currentEntry.responses
-            ]
-        )
-        .map((step) => ({
-          journey_id: newJourneyId,
-          step_number: step.stepIndex,
-          prompt_text: step.title,
-          user_response:
-            currentEntry.responses[
-              step.key as keyof typeof currentEntry.responses
-            ],
-        }));
-
-      if (stepsToInsert.length === 0) {
-        // Handle case with no responses, though unlikely
-        console.log("No responses to save.");
-        setSaveState("saved");
-        return;
+      let savedJourney;
+      if (isSaved && savedJourneyId) {
+        // Update existing journey
+        savedJourney = await updateJourney(savedJourneyId, journeyData);
+      } else {
+        // Save new journey
+        savedJourney = await saveJourney(journeyData);
       }
 
-      // 5. Bulk insert into the 'journey_steps' table
-      const { error: stepsError } = await supabase
-        .from("journey_steps")
-        .insert(stepsToInsert);
+      // Update store with save status
+      markSaved(savedJourney.id);
 
-      if (stepsError) throw stepsError;
-
-      // 6. Update UI State on Success
       console.log("Journey saved successfully!");
-      setSaveState("saved");
     } catch (error) {
       console.error("Error saving journey:", error);
-      alert("There was an error saving your journey. Please try again.");
-      // Reset UI state on failure
-      setSaveState("idle");
+      throw error; // Let SaveJourneyModal handle the error display
+    } finally {
+      setSaveLoading(false);
     }
+  };
+
+  const handleSaveClick = () => {
+    if (!session) {
+      alert("You must be logged in to save a journey.");
+      return;
+    }
+    setSaveModalOpen(true);
   };
 
   const handleCopyToClipboard = async () => {
@@ -287,27 +264,23 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
-        {/* NEW SAVE BUTTON */}
-        <Button
-          onClick={handleSaveJourney}
-          disabled={saveState !== "idle" || !session}
-          variant="default"
-          size="lg"
-          className="font-medium bg-brand-gold hover:bg-brand-gold/90"
-        >
-          {saveState === "saving" && (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          )}
-          {saveState === "saved" && <CheckCircle className="w-4 h-4" />}
-          {saveState === "idle" && <UploadCloud className="w-4 h-4" />}
-          <span>
-            {saveState === "saving"
-              ? "Saving..."
-              : saveState === "saved"
-              ? "Saved to Cloud"
-              : "Save Journey"}
-          </span>
-        </Button>
+        {/* Save Journey Button - Only show if authenticated */}
+        {session && (
+          <Button
+            onClick={handleSaveClick}
+            disabled={saveLoading}
+            variant="default"
+            size="lg"
+            className="font-medium bg-brand-gold hover:bg-brand-gold/90"
+          >
+            {isSaved ? (
+              <CheckCircle className="w-4 h-4" />
+            ) : (
+              <UploadCloud className="w-4 h-4" />
+            )}
+            <span>{isSaved ? "Update Journey" : "Save Journey"}</span>
+          </Button>
+        )}
 
         <Button
           onClick={handleDownloadPDF}
@@ -368,6 +341,20 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
           webdevbyrau
         </a>
       </p>
+
+      {/* Save Journey Modal */}
+      <SaveJourneyModal
+        open={saveModalOpen}
+        onOpenChange={setSaveModalOpen}
+        onSave={handleSaveJourney}
+        isLoading={saveLoading}
+        isUpdate={isSaved}
+        initialTitle={
+          isSaved
+            ? currentEntry.responses.respond || "My Journey"
+            : currentEntry.responses.respond || ""
+        }
+      />
     </motion.div>
   );
 };

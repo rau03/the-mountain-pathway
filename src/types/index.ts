@@ -22,6 +22,11 @@ export interface AppState {
   currentAudioTrack: "music" | "nature";
   silenceTimer: number;
   isTimerActive: boolean;
+  // Tracking flags for Phase 3 persistence
+  isAnonymous: boolean;
+  isSaved: boolean;
+  savedJourneyId: string | null;
+  isDirty: boolean;
   setCurrentStep: (step: number) => void;
   nextStep: () => void;
   prevStep: () => void;
@@ -37,6 +42,11 @@ export interface AppState {
   setSilenceTimer: (minutes: number) => void;
   startTimer: () => void;
   stopTimer: () => void;
+  // New tracking actions
+  markSaved: (id: string) => void;
+  markDirty: () => void;
+  setAnonymous: (flag: boolean) => void;
+  clearLocalProgress: () => void;
 }
 
 export interface Step {

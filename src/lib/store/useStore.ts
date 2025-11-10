@@ -19,6 +19,11 @@ export const useStore = create<AppState>()(
       currentAudioTrack: "music",
       silenceTimer: 3,
       isTimerActive: false,
+      // Tracking flags for Phase 3 persistence
+      isAnonymous: true, // Default to anonymous until session is established
+      isSaved: false,
+      savedJourneyId: null,
+      isDirty: false,
 
       setCurrentStep: (step: number) => set({ currentStep: step }),
 
@@ -36,6 +41,7 @@ export const useStore = create<AppState>()(
               [stepKey]: value,
             },
           },
+          isDirty: true, // Mark as dirty when user adds/edits responses
         })),
 
       createNewEntry: () =>
@@ -71,13 +77,16 @@ export const useStore = create<AppState>()(
       stopTimer: () => set({ isTimerActive: false }),
 
       // Start the journey from landing page (move to first step)
-      startJourney: () => set({ currentStep: 0 }),
+      startJourney: () => set({ currentStep: 0, isDirty: true }),
 
       // Add a new function to start a fresh journey
       startNewJourney: () =>
         set({
           currentEntry: createNewEntry(),
           currentStep: -1,
+          isDirty: true, // Mark as dirty when starting new journey
+          isSaved: false, // Reset save status
+          savedJourneyId: null, // Clear any previous journey ID
         }),
 
       // Force reset to homepage (for debugging)
@@ -88,10 +97,66 @@ export const useStore = create<AppState>()(
         set({
           currentEntry: createNewEntry(),
           currentStep: -1,
+          isDirty: true, // Mark as dirty when resetting journey
+          isSaved: false, // Reset save status
+          savedJourneyId: null, // Clear any previous journey ID
+        }),
+
+      // New tracking actions for Phase 3
+      markSaved: (id: string) =>
+        set({
+          isSaved: true,
+          savedJourneyId: id,
+          isDirty: false,
+        }),
+
+      markDirty: () => set({ isDirty: true }),
+
+      setAnonymous: (flag: boolean) => set({ isAnonymous: flag }),
+
+      clearLocalProgress: () =>
+        set({
+          currentStep: -1,
+          currentEntry: createNewEntry(),
+          entries: [],
+          isSaved: false,
+          savedJourneyId: null,
+          isDirty: false,
+          // Keep audio preferences
         }),
     }),
     {
       name: "mountain-pathway-storage",
+      version: 2,
+      partialize: (state) => ({
+        // Persist journey data and preferences
+        currentStep: state.currentStep,
+        currentEntry: state.currentEntry,
+        entries: state.entries,
+        audioEnabled: state.audioEnabled,
+        currentAudioTrack: state.currentAudioTrack,
+        silenceTimer: state.silenceTimer,
+        // Persist tracking flags
+        isAnonymous: state.isAnonymous,
+        isSaved: state.isSaved,
+        savedJourneyId: state.savedJourneyId,
+        isDirty: state.isDirty,
+        // Exclude: isTimerActive (session-specific)
+      }),
+      migrate: (persistedState: unknown, version: number) => {
+        // Migrate from version 1 to version 2
+        if (version < 2) {
+          return {
+            ...(persistedState as object),
+            // Add new tracking flags with defaults
+            isAnonymous: true,
+            isSaved: false,
+            savedJourneyId: null,
+            isDirty: false,
+          };
+        }
+        return persistedState;
+      },
     }
   )
 );
