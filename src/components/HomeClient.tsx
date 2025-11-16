@@ -12,6 +12,7 @@ import { MobileJourneyLayout } from "@/components/MobileJourneyLayout";
 import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
 import { getBackgroundForStep } from "@/lib/pathway-data";
 import AuthButton from "@/components/AuthButton";
+import supabase from "@/lib/supabaseClient";
 
 export default function HomeClient({ session }: { session: Session | null }) {
   const { currentStep, setCurrentStep, setAnonymous } = useStore();
@@ -19,12 +20,29 @@ export default function HomeClient({ session }: { session: Session | null }) {
     "/homepage-background.v3.jpg"
   );
   const [isInitialized, setIsInitialized] = useState(false);
+  const [liveSession, setLiveSession] = useState<Session | null>(session);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
 
   // Update anonymous status when session changes
   useEffect(() => {
-    setAnonymous(!session);
-  }, [session, setAnonymous]);
+    setAnonymous(!liveSession);
+  }, [liveSession, setAnonymous]);
+
+  // Listen for real-time session changes
+  useEffect(() => {
+    // Set initial session
+    setLiveSession(session);
+
+    // Subscribe to auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, newSession) => {
+      setLiveSession(newSession);
+    });
+
+    // Cleanup subscription on unmount
+    return () => subscription.unsubscribe();
+  }, [session]);
 
   // Update background when step changes
   useEffect(() => {
@@ -105,7 +123,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
     }
 
     if (currentStep === 9) {
-      return <SummaryScreen session={session} />;
+      return <SummaryScreen session={liveSession} />;
     }
 
     return <JourneyScreen />;
@@ -124,7 +142,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
       <div className="absolute top-4 right-4 z-50">
         <div className="flex items-center gap-2">
           <AuthButton
-            session={session}
+            session={liveSession}
             context={
               currentStep === -1
                 ? "landing"
@@ -153,7 +171,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
             {/* The single, persistent SimpleAudioPlayer */}
             <div className="absolute top-4 right-4 z-50">
               <div className="flex items-center gap-2">
-                <AuthButton session={session} context="landing" />
+                <AuthButton session={liveSession} context="landing" />
                 <SimpleAudioPlayer context="landing" />
               </div>
             </div>

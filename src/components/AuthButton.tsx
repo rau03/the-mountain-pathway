@@ -32,12 +32,18 @@ export default function AuthButton({ session, context }: AuthButtonProps) {
     }
   }, [session, context]);
 
+  // Match audio player styling based on context
+  const buttonStyle =
+    context === "landing"
+      ? "bg-brand-gold text-brand-slate hover:bg-brand-gold/90 px-3 py-2 rounded-full"
+      : "bg-black/10 backdrop-blur-sm px-3 py-2 rounded-full border border-brand-slate/20";
+
   return (
     <>
       <Button
         variant="ghost"
         size="sm"
-        className="px-3"
+        className={buttonStyle}
         onClick={() => setOpen(true)}
         aria-label={label}
         data-context={context}

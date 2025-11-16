@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Session } from "@supabase/supabase-js";
@@ -27,26 +27,50 @@ export default function AuthModal({
   session,
 }: AuthModalProps) {
   const [showSavedJourneys, setShowSavedJourneys] = useState(false);
+  const [currentSession, setCurrentSession] = useState<Session | null>(
+    session || null
+  );
+
+  // Listen for real-time session changes
+  useEffect(() => {
+    // Check initial session state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setCurrentSession(session);
+    });
+
+    // Subscribe to auth state changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setCurrentSession(session);
+      // Close modal only when user successfully authenticates (new session after login)
+      if (session && !currentSession && open) {
+        onOpenChange(false);
+      }
+    });
+
+    // Cleanup subscription on unmount
+    return () => subscription.unsubscribe();
+  }, [open, onOpenChange, currentSession]);
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent
-          // Anchor near top-right on desktop, centered fallback on small screens
-          className="top-4 right-4 left-auto translate-x-0 translate-y-0 w-full max-w-sm sm:top-4 sm:right-4 sm:left-auto"
-        >
+        <DialogContent className="top-4 right-4 left-auto translate-x-0 translate-y-0 w-full max-w-[420px] sm:max-w-[420px] p-4 gap-3">
           <DialogHeader className="sr-only">
-            <DialogTitle>{session ? "Account" : "Authenticate"}</DialogTitle>
+            <DialogTitle>
+              {currentSession ? "Account" : "Authenticate"}
+            </DialogTitle>
           </DialogHeader>
 
           <div className="w-full">
-            {session ? (
+            {currentSession ? (
               // Authenticated user - show account options
               <div className="space-y-4">
                 <div className="text-center">
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Signed in as
                   </p>
-                  <p className="font-medium">{session.user?.email}</p>
+                  <p className="font-medium">{currentSession.user?.email}</p>
                 </div>
 
                 <div className="space-y-2">
