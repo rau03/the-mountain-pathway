@@ -29,6 +29,7 @@ export default function AuthModal({
   const [currentSession, setCurrentSession] = useState<Session | null>(
     session || null
   );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [supabase, setSupabase] = useState<any>(null);
 
   // Lazy load supabase client to avoid build-time errors
@@ -53,11 +54,13 @@ export default function AuthModal({
     if (!supabase) return;
 
     // Check initial session state
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     supabase.auth.getSession().then(({ data: { session } }: any) => {
       setCurrentSession(session);
     });
 
     // Subscribe to auth state changes
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(

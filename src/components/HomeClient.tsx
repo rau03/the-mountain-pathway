@@ -20,6 +20,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
   );
   const [isInitialized, setIsInitialized] = useState(false);
   const [liveSession, setLiveSession] = useState<Session | null>(session);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [supabase, setSupabase] = useState<any>(null);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
 
@@ -53,6 +54,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
     setLiveSession(session);
 
     // Subscribe to auth state changes
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
