@@ -36,8 +36,9 @@ export default function AuthModal({
     if (!supabase) return;
 
     // Check initial session state
-    supabase.auth.getSession().then(({ data: { session } }: unknown) => {
-      setCurrentSession(session as Session | null);
+    supabase.auth.getSession().then((result: unknown) => {
+      const { data: { session } } = result as { data: { session: Session | null } };
+      setCurrentSession(session);
     });
 
     // Subscribe to auth state changes
