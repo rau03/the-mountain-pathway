@@ -289,7 +289,7 @@ export async function deleteJourney(id: string): Promise<void> {
  */
 export async function hasUserJourneys(): Promise<boolean> {
   if (!supabase) return false;
-  
+
   const {
     data: { user },
   } = await supabase.auth.getUser();

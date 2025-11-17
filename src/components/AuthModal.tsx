@@ -115,9 +115,10 @@ export default function AuthModal({
                 onlyThirdPartyProviders={false}
               />
             ) : (
-              // Loading supabase client
-              <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-                <p>Loading...</p>
+              // Configuration error
+              <div className="text-center space-y-3">
+                <p className="text-sm text-red-500">Authentication not configured</p>
+                <p className="text-xs text-gray-500">Please check environment variables</p>
               </div>
             )}
           </div>
