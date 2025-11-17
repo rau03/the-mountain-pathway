@@ -116,6 +116,9 @@ export async function updateJourney(
   id: string,
   data: Partial<SaveJourneyData>
 ): Promise<SavedJourney> {
+  if (!supabase) {
+    throw new Error("Supabase is not configured");
+  }
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -182,6 +185,9 @@ export async function updateJourney(
  * Fetch all user's saved journeys
  */
 export async function fetchUserJourneys(): Promise<SavedJourney[]> {
+  if (!supabase) {
+    throw new Error("Supabase is not configured");
+  }
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -208,6 +214,9 @@ export async function fetchUserJourneys(): Promise<SavedJourney[]> {
  * Fetch a specific journey by ID with its steps
  */
 export async function fetchJourney(id: string): Promise<SavedJourney> {
+  if (!supabase) {
+    throw new Error("Supabase is not configured");
+  }
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -251,6 +260,9 @@ export async function fetchJourney(id: string): Promise<SavedJourney> {
  * Delete a saved journey and all its steps
  */
 export async function deleteJourney(id: string): Promise<void> {
+  if (!supabase) {
+    throw new Error("Supabase is not configured");
+  }
   const {
     data: { user },
   } = await supabase.auth.getUser();
@@ -276,6 +288,8 @@ export async function deleteJourney(id: string): Promise<void> {
  * Check if user has any saved journeys
  */
 export async function hasUserJourneys(): Promise<boolean> {
+  if (!supabase) return false;
+  
   const {
     data: { user },
   } = await supabase.auth.getUser();
