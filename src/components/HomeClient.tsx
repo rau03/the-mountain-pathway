@@ -212,7 +212,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
 
           {/* MOBILE LAYOUT: Fading bottom sheet (visible < 768px) */}
           <div className="md:hidden">
-            <MobileJourneyLayout />
+            <MobileJourneyLayout session={liveSession} />
           </div>
         </>
       )}

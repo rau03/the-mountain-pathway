@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from "react";
+import { Session } from "@supabase/supabase-js";
 import { useStore } from "@/lib/store/useStore";
 import { HeaderMobile } from "./HeaderMobile";
 import { FooterMobile } from "./FooterMobile";
@@ -6,7 +7,13 @@ import { JourneyScreen } from "./JourneyScreen";
 import { SummaryScreen } from "./SummaryScreen";
 import { getBackgroundForStep, pathwayData } from "@/lib/pathway-data";
 
-export const MobileJourneyLayout: React.FC = () => {
+interface MobileJourneyLayoutProps {
+  session: Session | null;
+}
+
+export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
+  session,
+}) => {
   const { currentStep } = useStore();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -40,7 +47,7 @@ export const MobileJourneyLayout: React.FC = () => {
     return (
       <div className="relative min-h-screen bg-brand-stone">
         <div className="relative z-10 px-6 py-8">
-          <SummaryScreen />
+          <SummaryScreen session={session} />
         </div>
       </div>
     );
