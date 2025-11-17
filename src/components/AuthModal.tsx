@@ -37,20 +37,24 @@ export default function AuthModal({
 
     // Check initial session state
     supabase.auth.getSession().then((result: unknown) => {
-      const { data: { session } } = result as { data: { session: Session | null } };
+      const {
+        data: { session },
+      } = result as { data: { session: Session | null } };
       setCurrentSession(session);
     });
 
     // Subscribe to auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event: unknown, session: Session | null) => {
-      setCurrentSession(session);
-      // Close modal only when user successfully authenticates (new session after login)
-      if (session && !currentSession && open) {
-        onOpenChange(false);
+    } = supabase.auth.onAuthStateChange(
+      (_event: unknown, session: Session | null) => {
+        setCurrentSession(session);
+        // Close modal only when user successfully authenticates (new session after login)
+        if (session && !currentSession && open) {
+          onOpenChange(false);
+        }
       }
-    });
+    );
 
     // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
@@ -117,8 +121,12 @@ export default function AuthModal({
             ) : (
               // Configuration error
               <div className="text-center space-y-3">
-                <p className="text-sm text-red-500">Authentication not configured</p>
-                <p className="text-xs text-gray-500">Please check environment variables</p>
+                <p className="text-sm text-red-500">
+                  Authentication not configured
+                </p>
+                <p className="text-xs text-gray-500">
+                  Please check environment variables
+                </p>
               </div>
             )}
           </div>
