@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
-import supabase from "@/lib/supabaseClient";
 import SavedJourneysView from "@/components/SavedJourneysView";
 
 type AuthModalProps = {
@@ -30,28 +29,50 @@ export default function AuthModal({
   const [currentSession, setCurrentSession] = useState<Session | null>(
     session || null
   );
+  const [supabase, setSupabase] = useState<any>(null);
+
+  // Lazy load supabase client to avoid build-time errors
+  useEffect(() => {
+    let mounted = true;
+
+    if (typeof window !== "undefined") {
+      import("@/lib/supabaseClient").then((module) => {
+        if (mounted) {
+          setSupabase(module.default);
+        }
+      });
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Listen for real-time session changes
   useEffect(() => {
+    if (!supabase) return;
+
     // Check initial session state
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }: any) => {
       setCurrentSession(session);
     });
 
     // Subscribe to auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setCurrentSession(session);
-      // Close modal only when user successfully authenticates (new session after login)
-      if (session && !currentSession && open) {
-        onOpenChange(false);
+    } = supabase.auth.onAuthStateChange(
+      (_event: any, session: Session | null) => {
+        setCurrentSession(session);
+        // Close modal only when user successfully authenticates (new session after login)
+        if (session && !currentSession && open) {
+          onOpenChange(false);
+        }
       }
-    });
+    );
 
     // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
-  }, [open, onOpenChange, currentSession]);
+  }, [open, onOpenChange, currentSession, supabase]);
 
   return (
     <>
@@ -89,7 +110,9 @@ export default function AuthModal({
 
                   <Button
                     onClick={async () => {
-                      await supabase.auth.signOut();
+                      if (supabase) {
+                        await supabase.auth.signOut();
+                      }
                       onOpenChange(false);
                     }}
                     variant="outline"
@@ -99,7 +122,7 @@ export default function AuthModal({
                   </Button>
                 </div>
               </div>
-            ) : (
+            ) : supabase ? (
               // Not authenticated - show auth UI
               <Auth
                 supabaseClient={supabase}
@@ -109,6 +132,11 @@ export default function AuthModal({
                 redirectTo={`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`}
                 onlyThirdPartyProviders={false}
               />
+            ) : (
+              // Loading supabase client
+              <div className="text-center text-sm text-gray-600 dark:text-gray-400">
+                <p>Loading...</p>
+              </div>
             )}
           </div>
         </DialogContent>
