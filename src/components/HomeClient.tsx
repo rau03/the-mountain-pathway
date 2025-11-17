@@ -36,10 +36,9 @@ export default function HomeClient({ session }: { session: Session | null }) {
     setLiveSession(session);
 
     // Subscribe to auth state changes
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event: any, newSession: Session | null) => {
+    } = supabase.auth.onAuthStateChange((_event: unknown, newSession: Session | null) => {
       setLiveSession(newSession);
     });
 
