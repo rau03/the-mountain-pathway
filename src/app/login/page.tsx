@@ -7,6 +7,9 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
 
+// Prevent static generation of this page
+export const dynamic = "force-dynamic";
+
 export default function LoginPage() {
   const router = useRouter();
   const user = useUser();
