@@ -33,9 +33,6 @@ export default function HomeClient({ session }: { session: Session | null }) {
     // Set initial session
     setLiveSession(session);
 
-    // Only subscribe to auth changes if supabase client is available
-    if (!supabase) return;
-
     // Subscribe to auth state changes
     const {
       data: { subscription },

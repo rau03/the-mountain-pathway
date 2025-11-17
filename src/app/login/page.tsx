@@ -21,29 +21,6 @@ export default function LoginPage() {
     }
   }, [user, router]);
 
-  // If supabase client is not available, show error
-  if (!supabase) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "2rem",
-        }}
-      >
-        <div style={{ textAlign: "center" }}>
-          <h1>Configuration Error</h1>
-          <p>
-            Supabase is not properly configured. Please check your environment
-            variables.
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       style={{

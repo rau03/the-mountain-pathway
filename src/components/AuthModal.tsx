@@ -34,9 +34,6 @@ export default function AuthModal({
   // Listen for real-time session changes
   useEffect(() => {
     // Check initial session state
-    // Only proceed if supabase client is available
-    if (!supabase) return;
-
     supabase.auth.getSession().then(({ data: { session } }) => {
       setCurrentSession(session);
     });
@@ -92,9 +89,7 @@ export default function AuthModal({
 
                   <Button
                     onClick={async () => {
-                      if (supabase) {
-                        await supabase.auth.signOut();
-                      }
+                      await supabase.auth.signOut();
                       onOpenChange(false);
                     }}
                     variant="outline"
@@ -104,8 +99,8 @@ export default function AuthModal({
                   </Button>
                 </div>
               </div>
-            ) : supabase ? (
-              // Not authenticated - show auth UI (only if supabase client is available)
+            ) : (
+              // Not authenticated - show auth UI
               <Auth
                 supabaseClient={supabase}
                 appearance={{ theme: ThemeSupa }}
@@ -114,11 +109,6 @@ export default function AuthModal({
                 redirectTo={`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`}
                 onlyThirdPartyProviders={false}
               />
-            ) : (
-              // Supabase not configured
-              <div className="text-center text-sm text-gray-600 dark:text-gray-400">
-                <p>Configuration error: Supabase is not available</p>
-              </div>
             )}
           </div>
         </DialogContent>

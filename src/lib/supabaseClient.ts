@@ -4,11 +4,12 @@ import { createClient } from "@supabase/supabase-js";
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-// Create client only if environment variables are available
-// This prevents errors during build or if env vars are missing
-const supabase =
-  supabaseUrl && supabaseAnonKey
-    ? createClient(supabaseUrl, supabaseAnonKey)
-    : null;
+// Ensure env vars exist, fallback to empty strings for build time
+// The actual values will be available at runtime in production
+const url = supabaseUrl || "";
+const key = supabaseAnonKey || "";
+
+// Create client - on build time with empty strings is ok, actual connection happens at runtime
+const supabase = createClient(url, key);
 
 export default supabase;
