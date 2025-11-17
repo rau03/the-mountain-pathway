@@ -1,17 +1,10 @@
 import { Session } from "@supabase/supabase-js";
-import Header from "@/components/Header";
 import HomeClient from "@/components/HomeClient";
 
 /**
- * Server-side wrapper that combines:
- * - Header (client component) for authentication state display
- * - HomeClient (client component) for interactive journey UI
+ * Server-side wrapper that renders the interactive journey UI
+ * Authentication is now handled via the AuthButton modal in the top-right
  */
 export default function PageWrapper({ session }: { session: Session | null }) {
-  return (
-    <>
-      <Header session={session} />
-      <HomeClient session={session} />
-    </>
-  );
+  return <HomeClient session={session} />;
 }

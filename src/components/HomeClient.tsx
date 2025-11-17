@@ -138,7 +138,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
 
   return (
     <div className="relative min-h-screen">
-      {/* The single, persistent SimpleAudioPlayer */}
+      {/* Audio Player and Auth Button - Always visible in top-right */}
       <div className="absolute top-4 right-4 z-50">
         <div className="flex items-center gap-2">
           <AuthButton
@@ -168,14 +168,6 @@ export default function HomeClient({ session }: { session: Session | null }) {
         >
           {/* Content Layer */}
           <div className="relative z-10">
-            {/* The single, persistent SimpleAudioPlayer */}
-            <div className="absolute top-4 right-4 z-50">
-              <div className="flex items-center gap-2">
-                <AuthButton session={liveSession} context="landing" />
-                <SimpleAudioPlayer context="landing" />
-              </div>
-            </div>
-
             <LandingPage />
           </div>
         </div>

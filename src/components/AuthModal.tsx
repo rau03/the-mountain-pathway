@@ -18,7 +18,7 @@ import SavedJourneysView from "@/components/SavedJourneysView";
 type AuthModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  session?: Session | null; // Add session prop to show different content when authenticated
+  session?: Session | null;
 };
 
 export default function AuthModal({
@@ -52,10 +52,11 @@ export default function AuthModal({
     // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
   }, [open, onOpenChange, currentSession]);
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="top-4 right-4 left-auto translate-x-0 translate-y-0 w-full max-w-[420px] sm:max-w-[420px] p-4 gap-3">
+        <DialogContent className="top-4 right-4 left-auto translate-x-0 translate-y-0 w-full max-w-[360px] sm:max-w-[360px] p-4 gap-3">
           <DialogHeader className="sr-only">
             <DialogTitle>
               {currentSession ? "Account" : "Authenticate"}
