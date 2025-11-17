@@ -6,13 +6,22 @@ import PageWrapper from "@/components/PageWrapper";
  * Users can view the landing page without logging in
  * Journey content requires authentication (handled in HomeClient)
  */
+
+// Prevent static generation - this page needs runtime environment variables
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   // Create a basic Supabase client with environment variables
   // This works better with Next.js 15's async cookies system
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-  );
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
+
+  // If env vars are missing, render without session (for build time)
+  if (!supabaseUrl || !supabaseAnonKey) {
+    return <PageWrapper session={null} />;
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
   // Fetch the current session
   const {
