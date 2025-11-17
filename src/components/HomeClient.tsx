@@ -12,6 +12,7 @@ import { MobileJourneyLayout } from "@/components/MobileJourneyLayout";
 import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
 import { getBackgroundForStep } from "@/lib/pathway-data";
 import AuthButton from "@/components/AuthButton";
+import supabase from "@/lib/supabaseClient";
 
 export default function HomeClient({ session }: { session: Session | null }) {
   const { currentStep, setCurrentStep, setAnonymous } = useStore();
@@ -20,26 +21,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
   );
   const [isInitialized, setIsInitialized] = useState(false);
   const [liveSession, setLiveSession] = useState<Session | null>(session);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [supabase, setSupabase] = useState<any>(null);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
-
-  // Lazy load supabase client to avoid build-time errors
-  useEffect(() => {
-    let mounted = true;
-
-    if (typeof window !== "undefined") {
-      import("@/lib/supabaseClient").then((module) => {
-        if (mounted) {
-          setSupabase(module.default);
-        }
-      });
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   // Update anonymous status when session changes
   useEffect(() => {
@@ -54,18 +36,15 @@ export default function HomeClient({ session }: { session: Session | null }) {
     setLiveSession(session);
 
     // Subscribe to auth state changes
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(
-      (_event: any, newSession: Session | null) => {
-        setLiveSession(newSession);
-      }
-    );
+    } = supabase.auth.onAuthStateChange((_event: any, newSession: Session | null) => {
+      setLiveSession(newSession);
+    });
 
     // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
-  }, [supabase, session]);
+  }, [session]);
 
   // Update background when step changes
   useEffect(() => {

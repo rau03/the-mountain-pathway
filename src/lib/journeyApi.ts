@@ -1,18 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
+import supabase from "@/lib/supabaseClient";
 import type { JournalEntry } from "@/types";
-
-// Lazy create Supabase client to avoid build-time errors
-let supabaseInstance: ReturnType<typeof createClient> | null = null;
-
-function getSupabase() {
-  if (!supabaseInstance) {
-    supabaseInstance = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
-    );
-  }
-  return supabaseInstance;
-}
 
 export interface SavedJourney {
   id: string;
@@ -67,7 +54,9 @@ function getPromptForStepKey(stepKey: string): string {
 export async function saveJourney(
   data: SaveJourneyData
 ): Promise<SavedJourney> {
-  const supabase = getSupabase();
+  if (!supabase) {
+    throw new Error("Supabase is not configured");
+  }
   const {
     data: { user },
   } = await supabase.auth.getUser();

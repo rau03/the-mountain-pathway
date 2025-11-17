@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
+import supabase from "@/lib/supabaseClient";
 import SavedJourneysView from "@/components/SavedJourneysView";
 
 type AuthModalProps = {
@@ -29,53 +30,30 @@ export default function AuthModal({
   const [currentSession, setCurrentSession] = useState<Session | null>(
     session || null
   );
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [supabase, setSupabase] = useState<any>(null);
-
-  // Lazy load supabase client to avoid build-time errors
-  useEffect(() => {
-    let mounted = true;
-
-    if (typeof window !== "undefined") {
-      import("@/lib/supabaseClient").then((module) => {
-        if (mounted) {
-          setSupabase(module.default);
-        }
-      });
-    }
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
 
   // Listen for real-time session changes
   useEffect(() => {
     if (!supabase) return;
 
     // Check initial session state
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     supabase.auth.getSession().then(({ data: { session } }: any) => {
       setCurrentSession(session);
     });
 
     // Subscribe to auth state changes
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(
-      (_event: any, session: Session | null) => {
-        setCurrentSession(session);
-        // Close modal only when user successfully authenticates (new session after login)
-        if (session && !currentSession && open) {
-          onOpenChange(false);
-        }
+    } = supabase.auth.onAuthStateChange((_event: any, session: Session | null) => {
+      setCurrentSession(session);
+      // Close modal only when user successfully authenticates (new session after login)
+      if (session && !currentSession && open) {
+        onOpenChange(false);
       }
-    );
+    });
 
     // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
-  }, [open, onOpenChange, currentSession, supabase]);
+  }, [open, onOpenChange, currentSession]);
 
   return (
     <>
