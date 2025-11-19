@@ -38,9 +38,11 @@ export default function HomeClient({ session }: { session: Session | null }) {
     // Subscribe to auth state changes
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event: unknown, newSession: Session | null) => {
-      setLiveSession(newSession);
-    });
+    } = supabase.auth.onAuthStateChange(
+      (_event: unknown, newSession: Session | null) => {
+        setLiveSession(newSession);
+      }
+    );
 
     // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
@@ -138,11 +140,30 @@ export default function HomeClient({ session }: { session: Session | null }) {
   // Step 0 uses bg-bottom, all other steps use bg-center
   const backgroundPositionClass = currentStep === 0 ? "bg-bottom" : "bg-center";
 
+  // Check if we're on mobile (for conditional rendering)
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640); // sm breakpoint
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <div className="relative min-h-screen">
-      {/* Audio Player and Auth Button - Always visible in top-right */}
+      {/* Audio Player - All screens */}
       <div className="absolute top-4 right-4 z-50">
-        <div className="flex items-center gap-2">
+        <SimpleAudioPlayer
+          context={currentStep === -1 ? "landing" : "journey"}
+        />
+      </div>
+
+      {/* Auth Button - Desktop only */}
+      {!isMobile && (
+        <div className="absolute top-4 right-12 z-50">
           <AuthButton
             session={liveSession}
             context={
@@ -153,11 +174,8 @@ export default function HomeClient({ session }: { session: Session | null }) {
                 : "journey"
             }
           />
-          <SimpleAudioPlayer
-            context={currentStep === -1 ? "landing" : "journey"}
-          />
         </div>
-      </div>
+      )}
 
       {currentStep === -1 ? (
         // Landing Page - Full screen image

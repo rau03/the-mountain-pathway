@@ -42,7 +42,7 @@ export const LandingPage: React.FC = () => {
         <Button
           onClick={startJourney}
           size="lg"
-          className="group mx-auto flex items-center gap-2 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl bg-brand-gold text-slate-900 hover:bg-brand-gold/90"
+          className="group mx-auto flex items-center gap-2 px-8 py-4 rounded-md font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl bg-brand-gold text-slate-900 hover:bg-brand-gold/90"
         >
           <Play className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1" />
           <span>{pathwayContent.landingPage.buttonText}</span>

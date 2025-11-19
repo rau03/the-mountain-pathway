@@ -12,6 +12,7 @@ import { useStore } from "@/lib/store/useStore";
 import { pathwayData, pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
 import SaveJourneyModal from "@/components/SaveJourneyModal";
+import AuthModal from "@/components/AuthModal";
 import { saveJourney, updateJourney } from "@/lib/journeyApi";
 
 export const SummaryScreen: React.FC<{ session: Session | null }> = ({
@@ -29,6 +30,17 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
   const [downloading, setDownloading] = React.useState(false);
   const [saveModalOpen, setSaveModalOpen] = React.useState(false);
   const [saveLoading, setSaveLoading] = React.useState(false);
+  const [showAuthModal, setShowAuthModal] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 640); // sm breakpoint
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const handleStartNew = () => {
     startNewJourney();
@@ -80,7 +92,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
   const handleSaveClick = () => {
     if (!session) {
-      alert("You must be logged in to save a journey.");
+      setShowAuthModal(true);
       return;
     }
     setSaveModalOpen(true);
@@ -262,8 +274,8 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         </div>
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      {/* Action Buttons - All buttons with consistent spacing */}
+      <div className="flex flex-col gap-3 justify-center items-center mt-6">
         {/* Save Journey Button - Only show if authenticated */}
         {session && (
           <Button
@@ -271,7 +283,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
             disabled={saveLoading}
             variant="default"
             size="lg"
-            className="font-medium bg-brand-gold hover:bg-brand-gold/90"
+            className="font-medium bg-brand-gold hover:bg-brand-gold/90 w-48"
           >
             {isSaved ? (
               <CheckCircle className="w-4 h-4" />
@@ -287,7 +299,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
           disabled={downloading}
           variant="default"
           size="lg"
-          className="font-medium"
+          className="font-medium w-48"
         >
           <Download className="w-4 h-4" />
           <span>
@@ -301,7 +313,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
           onClick={handleCopyToClipboard}
           variant="secondary"
           size="lg"
-          className="font-medium"
+          className="font-medium w-48"
         >
           {copied ? (
             <CheckCircle className="w-4 h-4 text-brand-gold" />
@@ -314,20 +326,45 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
               : pathwayContent.summaryPage.copyButtonText}
           </span>
         </Button>
-      </div>
 
-      {/* Start New Journey Button - Now separate */}
-      <div className="text-center mt-6">
         <Button
           onClick={handleStartNew}
           variant="outline"
           size="lg"
-          className="font-medium"
+          className="font-medium w-48"
         >
           <RotateCcw className="w-4 h-4" />
           <span>{pathwayContent.summaryPage.newJourneyButtonText}</span>
         </Button>
       </div>
+
+      {/* Mobile Save Button - Only show on mobile */}
+      {isMobile && (
+        <div className="text-center mt-4">
+          <Button
+            onClick={handleSaveClick}
+            disabled={saveLoading}
+            variant="ghost"
+            size="lg"
+            className="bg-black/10 backdrop-blur-sm text-white font-medium rounded-md border border-brand-slate/20 hover:bg-black/20"
+          >
+            {session ? (
+              <>
+                {isSaved ? (
+                  <CheckCircle className="w-4 h-4" />
+                ) : (
+                  <UploadCloud className="w-4 h-4" />
+                )}
+                <span>{isSaved ? "Update Journey" : "Save Journey"}</span>
+              </>
+            ) : (
+              <>
+                <span>Log in to Save</span>
+              </>
+            )}
+          </Button>
+        </div>
+      )}
 
       {/* Creator Attribution */}
       <p className="text-xs text-brand-slate/50 text-center pt-8">
@@ -354,6 +391,13 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
             ? currentEntry.responses.respond || "My Journey"
             : currentEntry.responses.respond || ""
         }
+      />
+
+      {/* Auth Modal for mobile save */}
+      <AuthModal
+        open={showAuthModal}
+        onOpenChange={setShowAuthModal}
+        session={session}
       />
     </motion.div>
   );

@@ -3,6 +3,7 @@ import { Session } from "@supabase/supabase-js";
 import { useStore } from "@/lib/store/useStore";
 import { HeaderMobile } from "./HeaderMobile";
 import { FooterMobile } from "./FooterMobile";
+import { MobileSaveFooter } from "./MobileSaveFooter";
 import { JourneyScreen } from "./JourneyScreen";
 import { SummaryScreen } from "./SummaryScreen";
 import { getBackgroundForStep, pathwayData } from "@/lib/pathway-data";
@@ -86,8 +87,11 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
             <JourneyScreen />
           </div>
 
-          {/* Sticky Footer - Always Visible at Bottom */}
-          {isJourneyScreen && (
+          {/* Mobile Save Footer - Always Visible at Bottom */}
+          {isJourneyScreen && <MobileSaveFooter session={session} />}
+
+          {/* Legacy Footer Mobile - Hidden for now */}
+          {isJourneyScreen && false && (
             <div className="flex-shrink-0 px-6 py-4 bg-brand-stone border-t border-brand-stone/20">
               <FooterMobile />
             </div>
