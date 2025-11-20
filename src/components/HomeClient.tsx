@@ -7,11 +7,10 @@ import { LandingPage } from "@/components/LandingPage";
 import { JourneyScreen } from "@/components/JourneyScreen";
 import { SummaryScreen } from "@/components/SummaryScreen";
 import { HeaderDesktop } from "@/components/HeaderDesktop";
-import { FooterDesktop } from "@/components/FooterDesktop";
+import { DesktopSaveFooter } from "@/components/DesktopSaveFooter";
+import { DesktopAuthSection } from "@/components/DesktopAuthSection";
 import { MobileJourneyLayout } from "@/components/MobileJourneyLayout";
-import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
 import { getBackgroundForStep } from "@/lib/pathway-data";
-import AuthButton from "@/components/AuthButton";
 import supabase from "@/lib/supabaseClient";
 
 export default function HomeClient({ session }: { session: Session | null }) {
@@ -154,27 +153,9 @@ export default function HomeClient({ session }: { session: Session | null }) {
 
   return (
     <div className="relative min-h-screen">
-      {/* Audio Player - All screens */}
-      <div className="absolute top-4 right-4 z-50">
-        <SimpleAudioPlayer
-          context={currentStep === -1 ? "landing" : "journey"}
-        />
-      </div>
-
-      {/* Auth Button - Desktop only */}
+      {/* Desktop Auth Section - Save Button + Audio Controls - Top Right */}
       {!isMobile && (
-        <div className="absolute top-4 right-12 z-50">
-          <AuthButton
-            session={liveSession}
-            context={
-              currentStep === -1
-                ? "landing"
-                : currentStep === 9
-                ? "summary"
-                : "journey"
-            }
-          />
-        </div>
+        <DesktopAuthSection session={liveSession} currentStep={currentStep} />
       )}
 
       {currentStep === -1 ? (
@@ -223,7 +204,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
                 {/* Footer */}
                 {isJourneyScreen && (
                   <div className="flex-shrink-0 pt-6 pb-4">
-                    <FooterDesktop />
+                    <DesktopSaveFooter />
                   </div>
                 )}
               </div>
