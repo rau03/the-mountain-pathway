@@ -10,8 +10,7 @@ export const DesktopSaveFooter = () => {
   const isFirstStep = currentStep === 0;
 
   return (
-    <footer className="w-full flex items-center justify-between pt-8">
-      {/* Back Button */}
+    <footer className="w-full flex items-center justify-between pt-6">
       <Button
         onClick={prevStep}
         disabled={isFirstStep}
@@ -21,12 +20,10 @@ export const DesktopSaveFooter = () => {
         <ArrowLeft className="h-5 w-5" />
       </Button>
 
-      {/* Step Counter */}
       <p className="text-sm text-brand-slate/70">
         Step {currentStep + 1} of {pathwayData.length}
       </p>
 
-      {/* Continue/Next Button */}
       <Button onClick={nextStep} size="lg">
         <ArrowRight className="h-5 w-5" />
       </Button>

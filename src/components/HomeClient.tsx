@@ -10,6 +10,9 @@ import { HeaderDesktop } from "@/components/HeaderDesktop";
 import { DesktopSaveFooter } from "@/components/DesktopSaveFooter";
 import { DesktopAuthSection } from "@/components/DesktopAuthSection";
 import { MobileJourneyLayout } from "@/components/MobileJourneyLayout";
+import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
+import AuthModal from "@/components/AuthModal";
+import { Button } from "@/components/ui/button";
 import { getBackgroundForStep } from "@/lib/pathway-data";
 import supabase from "@/lib/supabaseClient";
 
@@ -20,6 +23,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
   );
   const [isInitialized, setIsInitialized] = useState(false);
   const [liveSession, setLiveSession] = useState<Session | null>(session);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
 
   // Update anonymous status when session changes
@@ -167,6 +171,26 @@ export default function HomeClient({ session }: { session: Session | null }) {
             backgroundPosition: "center 65%",
           }}
         >
+          {/* Mobile Controls - Top Right */}
+          {isMobile && (
+            <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+              {/* Login Button */}
+              <Button
+                onClick={() => setShowAuthModal(true)}
+                variant="ghost"
+                size="icon"
+                className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 w-10 h-10 rounded-full border border-brand-slate/20"
+                aria-label="Log in"
+                title="Log in"
+              >
+                <span className="text-lg">↗</span>
+              </Button>
+
+              {/* Audio Controls */}
+              <SimpleAudioPlayer context="landing" />
+            </div>
+          )}
+
           {/* Content Layer */}
           <div className="relative z-10">
             <LandingPage />
@@ -217,6 +241,13 @@ export default function HomeClient({ session }: { session: Session | null }) {
           </div>
         </>
       )}
+
+      {/* Auth Modal for mobile homepage login */}
+      <AuthModal
+        open={showAuthModal}
+        onOpenChange={setShowAuthModal}
+        session={liveSession}
+      />
     </div>
   );
 }

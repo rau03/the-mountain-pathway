@@ -63,7 +63,7 @@ export default function AuthModal({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="top-4 right-4 left-auto translate-x-0 translate-y-0 w-full max-w-[360px] sm:max-w-[360px] p-4 gap-3">
+        <DialogContent className="top-4 right-2 left-2 translate-x-0 translate-y-0 w-auto max-w-xs sm:max-w-sm p-3 gap-2 rounded-lg">
           <DialogHeader className="sr-only">
             <DialogTitle>
               {currentSession ? "Account" : "Authenticate"}
