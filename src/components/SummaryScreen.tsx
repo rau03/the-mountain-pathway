@@ -276,19 +276,19 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
       {/* Action Buttons - All buttons with consistent spacing */}
       <div className="flex flex-col gap-3 justify-center items-center mt-6">
-        {/* Save Journey Button - Only show if authenticated */}
-        {session && (
+        {/* Save Journey Button - Only show if authenticated and on desktop (mobile has button in footer) */}
+        {session && !isMobile && (
           <Button
             onClick={handleSaveClick}
             disabled={saveLoading}
-            variant="default"
+            variant="ghost"
             size="lg"
-            className="font-medium bg-brand-gold hover:bg-brand-gold/90 w-48"
+            className="font-medium bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 px-8 py-4 rounded-md border border-brand-slate/20"
           >
             {isSaved ? (
-              <CheckCircle className="w-4 h-4" />
+              <CheckCircle className="w-5 h-5" />
             ) : (
-              <UploadCloud className="w-4 h-4" />
+              <UploadCloud className="w-5 h-5" />
             )}
             <span>{isSaved ? "Update Journey" : "Save Journey"}</span>
           </Button>
@@ -311,7 +311,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
         <Button
           onClick={handleCopyToClipboard}
-          variant="secondary"
+          variant="outline"
           size="lg"
           className="font-medium w-48"
         >

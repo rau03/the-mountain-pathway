@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Session } from "@supabase/supabase-js";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, User } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
 import AuthModal from "./AuthModal";
@@ -34,6 +34,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
 
   const handleFooterButtonClick = () => {
     if (isAuthenticated) {
+      // Show save modal on journey screens
       setShowSaveModal(true);
     } else {
       setShowAuthModal(true);
@@ -93,6 +94,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
             <Button
               onClick={handleFooterButtonClick}
               variant="ghost"
+              size="lg"
               className="bg-black/10 backdrop-blur-sm text-white font-medium px-6 py-2 rounded-md border border-brand-slate/20 hover:bg-black/20"
             >
               {isAuthenticated ? "Save Journey" : "Log in / Save Journey"}
@@ -113,10 +115,26 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
               <ArrowLeft className="h-4 w-4" />
             </Button>
 
-            {/* Step Counter */}
-            <p className="text-xs text-brand-slate/70 font-medium">
-              Step {currentStep + 1} of {pathwayData.length}
-            </p>
+            {/* Center: Step Counter + Account Button */}
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-brand-slate/70 font-medium">
+                Step {currentStep + 1} of {pathwayData.length}
+              </p>
+
+              {/* Account Button - Only show when authenticated */}
+              {isAuthenticated && (
+                <Button
+                  onClick={() => setShowAuthModal(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0"
+                  aria-label="Account"
+                  title="Account settings"
+                >
+                  <User className="h-3.5 w-3.5" />
+                </Button>
+              )}
+            </div>
 
             {/* Next Button */}
             <Button

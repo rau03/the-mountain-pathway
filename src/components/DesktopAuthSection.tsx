@@ -29,8 +29,10 @@ export const DesktopAuthSection = ({
 
   const handleSaveClick = () => {
     if (isAuthenticated) {
-      setShowSaveModal(true);
+      // When authenticated, show account options (allows logout)
+      setShowAuthModal(true);
     } else {
+      // When not authenticated, show login modal
       setShowAuthModal(true);
     }
   };
@@ -78,18 +80,34 @@ export const DesktopAuthSection = ({
   return (
     <>
       <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
-        {/* Save Button - Circular, next to audio */}
-        <Button
-          onClick={handleSaveClick}
-          disabled={saveLoading}
-          variant="ghost"
-          size="icon"
-          className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 w-10 h-10 rounded-full border border-brand-slate/20"
-          aria-label={isAuthenticated ? "Save journey" : "Log in to save"}
-          title={isAuthenticated ? "Save journey" : "Log in to save"}
-        >
-          <Upload className="h-5 w-5" />
-        </Button>
+        {/* Save/Account Button */}
+        {isAuthenticated ? (
+          // Authenticated: Show "Account" text button
+          <Button
+            onClick={handleSaveClick}
+            disabled={saveLoading}
+            variant="ghost"
+            size="lg"
+            className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 px-8 py-4 rounded-md border border-brand-slate/20 font-medium"
+            aria-label="Account"
+            title="Account settings"
+          >
+            Account
+          </Button>
+        ) : (
+          // Not authenticated: Show icon button
+          <Button
+            onClick={handleSaveClick}
+            disabled={saveLoading}
+            variant="ghost"
+            size="lg"
+            className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 px-8 py-4 rounded-md border border-brand-slate/20"
+            aria-label="Log in to save"
+            title="Log in to save"
+          >
+            <Upload className="h-5 w-5" />
+          </Button>
+        )}
 
         {/* Audio Controls */}
         <SimpleAudioPlayer
