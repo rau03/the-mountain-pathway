@@ -12,18 +12,21 @@ import { DesktopAuthSection } from "@/components/DesktopAuthSection";
 import { MobileJourneyLayout } from "@/components/MobileJourneyLayout";
 import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
 import AuthModal from "@/components/AuthModal";
+import SoftGateModal from "@/components/SoftGateModal";
 import { Button } from "@/components/ui/button";
 import { getBackgroundForStep } from "@/lib/pathway-data";
 import supabase from "@/lib/supabaseClient";
 
 export default function HomeClient({ session }: { session: Session | null }) {
-  const { currentStep, setCurrentStep, setAnonymous } = useStore();
+  const { currentStep, setCurrentStep, setAnonymous, startJourney } =
+    useStore();
   const [currentBackground, setCurrentBackground] = useState(
     "/homepage-background.v3.jpg"
   );
   const [isInitialized, setIsInitialized] = useState(false);
   const [liveSession, setLiveSession] = useState<Session | null>(session);
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showSoftGateModal, setShowSoftGateModal] = useState(false);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
 
   // Update anonymous status when session changes
@@ -124,9 +127,32 @@ export default function HomeClient({ session }: { session: Session | null }) {
     }
   }, [currentStep]);
 
+  // Handle "Begin your pathway" button click - opens soft gate modal
+  const handleBeginClick = () => {
+    // If user is already logged in, skip the soft gate and start journey
+    if (liveSession) {
+      startJourney();
+    } else {
+      // Show the soft gate modal for non-authenticated users
+      setShowSoftGateModal(true);
+    }
+  };
+
+  // Handle continuing as guest (from soft gate modal)
+  const handleContinueAsGuest = () => {
+    setAnonymous(true);
+    startJourney();
+  };
+
+  // Handle successful authentication (from soft gate modal)
+  const handleAuthComplete = () => {
+    setAnonymous(false);
+    startJourney();
+  };
+
   const renderCurrentScreen = () => {
     if (currentStep === -1) {
-      return <LandingPage />;
+      return <LandingPage onBeginClick={handleBeginClick} />;
     }
 
     if (currentStep === 9) {
@@ -174,9 +200,9 @@ export default function HomeClient({ session }: { session: Session | null }) {
           {/* Mobile Controls - Top Right */}
           {isMobile && (
             <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
-              {/* Login/Account Button */}
-              {liveSession ? (
-                // Authenticated: Show text button
+              {/* Account Button - Only show for authenticated users on landing page */}
+              {/* Non-authenticated users will use the soft gate modal */}
+              {liveSession && (
                 <Button
                   onClick={() => setShowAuthModal(true)}
                   variant="ghost"
@@ -187,18 +213,6 @@ export default function HomeClient({ session }: { session: Session | null }) {
                 >
                   Account
                 </Button>
-              ) : (
-                // Not authenticated: Show icon button
-                <Button
-                  onClick={() => setShowAuthModal(true)}
-                  variant="ghost"
-                  size="icon"
-                  className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 w-10 h-10 rounded-full border border-brand-slate/20"
-                  aria-label="Log in"
-                  title="Log in"
-                >
-                  <span className="text-lg">↗</span>
-                </Button>
               )}
 
               {/* Audio Controls */}
@@ -208,7 +222,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
 
           {/* Content Layer */}
           <div className="relative z-10">
-            <LandingPage />
+            <LandingPage onBeginClick={handleBeginClick} />
           </div>
         </div>
       ) : (
@@ -257,11 +271,19 @@ export default function HomeClient({ session }: { session: Session | null }) {
         </>
       )}
 
-      {/* Auth Modal for mobile homepage login */}
+      {/* Auth Modal for mobile homepage login (account access) */}
       <AuthModal
         open={showAuthModal}
         onOpenChange={setShowAuthModal}
         session={liveSession}
+      />
+
+      {/* Soft Gate Modal for journey start */}
+      <SoftGateModal
+        open={showSoftGateModal}
+        onOpenChange={setShowSoftGateModal}
+        onContinueAsGuest={handleContinueAsGuest}
+        onAuthComplete={handleAuthComplete}
       />
     </div>
   );

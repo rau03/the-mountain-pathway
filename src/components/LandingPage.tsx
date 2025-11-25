@@ -1,12 +1,13 @@
 import React from "react";
 import { Mountain, Play } from "lucide-react";
-import { useStore } from "@/lib/store/useStore";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
 
-export const LandingPage: React.FC = () => {
-  const { startJourney } = useStore();
+type LandingPageProps = {
+  onBeginClick: () => void;
+};
 
+export const LandingPage: React.FC<LandingPageProps> = ({ onBeginClick }) => {
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-between md:justify-center p-8 pt-16 pb-8 md:gap-8">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
@@ -40,7 +41,7 @@ export const LandingPage: React.FC = () => {
       <div className="flex flex-col items-center gap-4 md:gap-6 md:pt-8">
         {/* Call to Action */}
         <Button
-          onClick={startJourney}
+          onClick={onBeginClick}
           size="lg"
           className="group mx-auto flex items-center gap-2 px-8 py-4 rounded-md font-semibold text-lg transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl bg-brand-gold text-slate-900 hover:bg-brand-gold/90"
         >
