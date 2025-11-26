@@ -95,7 +95,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
               onClick={handleFooterButtonClick}
               variant="ghost"
               size="lg"
-              className="bg-black/10 backdrop-blur-sm text-white font-medium px-6 py-2 rounded-md border border-brand-slate/20 hover:bg-black/20"
+              className="bg-black/10 backdrop-blur-sm text-white font-semibold px-3 py-3 rounded-md border border-brand-slate/20 hover:bg-black/20"
             >
               {isAuthenticated ? "Save Journey" : "Log in / Save Journey"}
             </Button>

@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Mountain, Sparkles, User, ArrowLeft } from "lucide-react";
+import { Mountain, ArrowLeft } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
 
 type SoftGateModalProps = {
@@ -111,22 +111,17 @@ export default function SoftGateModal({
             </div>
 
             {/* Options */}
-            <div className="space-y-3">
+            <div className="space-y-2">
               {/* Sign Up Option */}
               <Button
                 onClick={() => setView("signup")}
-                className="w-full h-auto py-4 px-4 bg-brand-gold hover:bg-brand-gold/90 text-slate-900 flex items-start gap-3 justify-start"
+                className="w-full h-auto py-3 px-4 bg-brand-gold hover:bg-brand-gold/90 text-slate-900 flex flex-col items-center justify-center gap-0.5"
               >
-                <div className="flex-shrink-0 mt-0.5">
-                  <Sparkles className="w-5 h-5" />
+                <div className="font-semibold text-sm">
+                  Yes, create my free account
                 </div>
-                <div className="text-left">
-                  <div className="font-semibold">
-                    Yes, create my free account
-                  </div>
-                  <div className="text-xs opacity-80 font-normal">
-                    Save and return to your journey anytime
-                  </div>
+                <div className="text-xs opacity-80 font-normal">
+                  Save and return to your journey anytime
                 </div>
               </Button>
 
@@ -134,18 +129,13 @@ export default function SoftGateModal({
               <Button
                 onClick={handleContinueAsGuest}
                 variant="outline"
-                className="w-full h-auto py-4 px-4 flex items-start gap-3 justify-start border-gray-300 dark:border-gray-600"
+                className="w-full h-auto py-3 px-4 flex flex-col items-center justify-center gap-0.5 border-gray-300 dark:border-gray-600"
               >
-                <div className="flex-shrink-0 mt-0.5">
-                  <User className="w-5 h-5 text-gray-500" />
+                <div className="font-semibold text-sm text-gray-700 dark:text-gray-200">
+                  No thanks, I&apos;ll explore first
                 </div>
-                <div className="text-left">
-                  <div className="font-semibold text-gray-700 dark:text-gray-200">
-                    No thanks, I&apos;ll explore first
-                  </div>
-                  <div className="text-xs text-gray-500 dark:text-gray-400 font-normal">
-                    Continue without saving
-                  </div>
+                <div className="text-xs text-gray-500 dark:text-gray-400 font-normal">
+                  Continue without saving
                 </div>
               </Button>
             </div>
@@ -154,7 +144,7 @@ export default function SoftGateModal({
             <div className="text-center pt-2 border-t border-gray-200 dark:border-gray-700">
               <button
                 onClick={() => setView("login")}
-                className="text-sm text-brand-gold hover:text-brand-gold/80 transition-colors"
+                className="text-sm text-gray-900 dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               >
                 I already have an account →
               </button>
