@@ -66,14 +66,9 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
         },
       };
 
-      let savedJourney;
-      if (isSaved && savedJourneyId) {
-        // Update existing journey
-        savedJourney = await updateJourney(savedJourneyId, journeyData);
-      } else {
-        // Save new journey
-        savedJourney = await saveJourney(journeyData);
-      }
+      // Always save as NEW journey when clicking "Save Journey" or "Save As New"
+      // The quick-save button handles updates to existing journeys
+      const savedJourney = await saveJourney(journeyData);
 
       // Update store with save status and title
       markSaved(savedJourney.id, title);

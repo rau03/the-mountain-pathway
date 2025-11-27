@@ -24,6 +24,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
     currentStep,
     isSaved,
     savedJourneyId,
+    savedJourneyTitle,
     markSaved,
   } = useStore();
   const [copied, setCopied] = React.useState(false);
@@ -78,8 +79,8 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         savedJourney = await saveJourney(journeyData);
       }
 
-      // Update store with save status
-      markSaved(savedJourney.id);
+      // Update store with save status and title
+      markSaved(savedJourney.id, title);
 
       console.log("Journey saved successfully!");
     } catch (error) {
@@ -387,8 +388,8 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         isLoading={saveLoading}
         isUpdate={isSaved}
         initialTitle={
-          isSaved
-            ? currentEntry.responses.respond || "My Journey"
+          isSaved && savedJourneyTitle
+            ? savedJourneyTitle
             : currentEntry.responses.respond || ""
         }
       />

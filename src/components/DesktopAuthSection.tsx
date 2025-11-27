@@ -67,12 +67,9 @@ export const DesktopAuthSection = ({
         },
       };
 
-      let savedJourney;
-      if (isSaved && savedJourneyId) {
-        savedJourney = await updateJourney(savedJourneyId, journeyData);
-      } else {
-        savedJourney = await saveJourney(journeyData);
-      }
+      // Always save as NEW journey when clicking "Save Journey" or "Save As New"
+      // The quick-save button handles updates to existing journeys
+      const savedJourney = await saveJourney(journeyData);
 
       markSaved(savedJourney.id, title);
       console.log("Journey saved successfully!");
