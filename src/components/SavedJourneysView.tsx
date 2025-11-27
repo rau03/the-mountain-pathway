@@ -116,6 +116,7 @@ export default function SavedJourneysView({
       // Close the modal
       onOpenChange(false);
     } catch (err) {
+      console.error("DEBUG: Error loading journey:", err);
       setError(err instanceof Error ? err.message : "Failed to load journey");
     } finally {
       setViewLoading(null);
