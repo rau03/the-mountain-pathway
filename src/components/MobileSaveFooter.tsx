@@ -55,27 +55,43 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
     setSaveLoading(true);
 
     try {
+      console.log("DEBUG: Starting to save journey...", {
+        title,
+        currentStep,
+        hasResponses: Object.keys(currentEntry.responses).length > 0,
+      });
+
       const journeyData = {
         title,
         currentEntry,
         currentStep,
         isCompleted: false, // Saving at any point, not necessarily complete
-        metadata: {
-          stepsCompleted: currentStep + 1,
-          completedAt: new Date().toISOString(),
-        },
       };
+
+      // Add timeout to prevent infinite loading
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(
+            new Error(
+              "Save operation timed out. Please check your connection and try again."
+            )
+          );
+        }, 30000); // 30 second timeout
+      });
 
       // Always save as NEW journey when clicking "Save Journey" or "Save As New"
       // The quick-save button handles updates to existing journeys
-      const savedJourney = await saveJourney(journeyData);
+      const savedJourney = await Promise.race([
+        saveJourney(journeyData),
+        timeoutPromise,
+      ]);
 
       // Update store with save status and title
       markSaved(savedJourney.id, title);
 
-      console.log("Journey saved successfully!");
+      console.log("DEBUG: Journey saved successfully!", savedJourney.id);
     } catch (error) {
-      console.error("Error saving journey:", error);
+      console.error("DEBUG: Error saving journey:", error);
       throw error; // Let SaveJourneyModal handle the error display
     } finally {
       setSaveLoading(false);

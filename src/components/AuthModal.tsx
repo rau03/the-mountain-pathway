@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Session } from "@supabase/supabase-js";
@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Loader2 } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
 import SavedJourneysView from "@/components/SavedJourneysView";
 
@@ -30,6 +30,13 @@ export default function AuthModal({
   const [currentSession, setCurrentSession] = useState<Session | null>(
     session || null
   );
+  const [signingOut, setSigningOut] = useState(false);
+  const wasUnauthenticatedRef = useRef(!session);
+
+  // Sync with prop changes
+  useEffect(() => {
+    setCurrentSession(session || null);
+  }, [session]);
 
   // Listen for real-time session changes
   useEffect(() => {
@@ -38,27 +45,45 @@ export default function AuthModal({
     // Check initial session state
     supabase.auth.getSession().then((result: unknown) => {
       const {
-        data: { session },
+        data: { session: fetchedSession },
       } = result as { data: { session: Session | null } };
-      setCurrentSession(session);
+      setCurrentSession(fetchedSession);
+      wasUnauthenticatedRef.current = !fetchedSession;
     });
 
     // Subscribe to auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
-      (_event: unknown, session: Session | null) => {
-        setCurrentSession(session);
-        // Close modal only when user successfully authenticates (new session after login)
-        if (session && !currentSession && open) {
+      (_event: unknown, newSession: Session | null) => {
+        setCurrentSession(newSession);
+        // Close modal only when user successfully authenticates (new session after being unauthenticated)
+        if (newSession && wasUnauthenticatedRef.current && open) {
           onOpenChange(false);
         }
+        wasUnauthenticatedRef.current = !newSession;
       }
     );
 
     // Cleanup subscription on unmount
     return () => subscription.unsubscribe();
-  }, [open, onOpenChange, currentSession]);
+  }, [open, onOpenChange]);
+
+  const handleSignOut = async () => {
+    if (!supabase) return;
+
+    setSigningOut(true);
+    try {
+      await supabase.auth.signOut();
+      setCurrentSession(null);
+      onOpenChange(false);
+      // Force page reload to clear all state
+      window.location.reload();
+    } catch (error) {
+      console.error("Error signing out:", error);
+      setSigningOut(false);
+    }
+  };
 
   return (
     <>
@@ -95,16 +120,19 @@ export default function AuthModal({
                   </Button>
 
                   <Button
-                    onClick={async () => {
-                      if (supabase) {
-                        await supabase.auth.signOut();
-                      }
-                      onOpenChange(false);
-                    }}
+                    onClick={handleSignOut}
+                    disabled={signingOut}
                     variant="outline"
                     className="w-full"
                   >
-                    Sign Out
+                    {signingOut ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                        Signing out...
+                      </>
+                    ) : (
+                      "Sign Out"
+                    )}
                   </Button>
                 </div>
               </div>

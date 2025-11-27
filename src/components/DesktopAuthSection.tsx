@@ -61,10 +61,6 @@ export const DesktopAuthSection = ({
         currentEntry,
         currentStep,
         isCompleted: false,
-        metadata: {
-          stepsCompleted: currentStep + 1,
-          completedAt: new Date().toISOString(),
-        },
       };
 
       // Always save as NEW journey when clicking "Save Journey" or "Save As New"

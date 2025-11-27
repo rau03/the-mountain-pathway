@@ -53,10 +53,24 @@ export default function SavedJourneysView({
   const loadJourneys = async () => {
     setLoading(true);
     setError(null);
+
+    // Add timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      setLoading(false);
+      setError(
+        "Loading timed out. Please check your connection and try again."
+      );
+    }, 15000); // 15 second timeout
+
     try {
+      console.log("DEBUG: Starting to fetch journeys...");
       const userJourneys = await fetchUserJourneys();
+      console.log("DEBUG: Fetched journeys:", userJourneys?.length || 0);
+      clearTimeout(timeoutId);
       setJourneys(userJourneys);
     } catch (err) {
+      clearTimeout(timeoutId);
+      console.error("DEBUG: Error fetching journeys:", err);
       setError(err instanceof Error ? err.message : "Failed to load journeys");
     } finally {
       setLoading(false);

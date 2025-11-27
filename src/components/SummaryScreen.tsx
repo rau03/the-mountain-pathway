@@ -64,10 +64,6 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         currentEntry,
         currentStep,
         isCompleted: true, // Summary screen means journey is complete
-        metadata: {
-          stepsCompleted: currentStep + 1,
-          completedAt: new Date().toISOString(),
-        },
       };
 
       let savedJourney;

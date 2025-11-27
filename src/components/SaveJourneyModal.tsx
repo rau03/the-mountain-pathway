@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -28,6 +28,21 @@ export default function SaveJourneyModal({
 }: SaveJourneyModalProps) {
   const [title, setTitle] = useState(initialTitle);
   const [error, setError] = useState<string | null>(null);
+  const [internalLoading, setInternalLoading] = useState(false);
+
+  // Reset title when modal opens or initialTitle changes
+  useEffect(() => {
+    if (open) {
+      setTitle(initialTitle);
+      setError(null);
+      setInternalLoading(false);
+    }
+  }, [open, initialTitle]);
+
+  // Sync internal loading with prop
+  useEffect(() => {
+    setInternalLoading(isLoading);
+  }, [isLoading]);
 
   const handleSave = async () => {
     if (!title.trim()) {
@@ -45,19 +60,29 @@ export default function SaveJourneyModal({
       return;
     }
 
+    setInternalLoading(true);
+    setError(null);
+
     try {
-      setError(null);
+      console.log("DEBUG: Saving journey with title:", title.trim());
       await onSave(title.trim());
+      console.log("DEBUG: Journey saved successfully");
+      // Only close and reset if save was successful
+      setTitle("");
+      setError(null);
       onOpenChange(false);
-      setTitle(""); // Reset for next time
     } catch (err) {
+      console.error("DEBUG: Error in SaveJourneyModal:", err);
       setError(err instanceof Error ? err.message : "Failed to save journey");
+    } finally {
+      setInternalLoading(false);
     }
   };
 
   const handleCancel = () => {
     setTitle(initialTitle);
     setError(null);
+    setInternalLoading(false);
     onOpenChange(false);
   };
 
@@ -86,8 +111,18 @@ export default function SaveJourneyModal({
               placeholder="Enter a name for your journey..."
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent dark:border-gray-600 dark:bg-gray-800 dark:text-white"
               maxLength={100}
-              disabled={isLoading}
+              disabled={internalLoading || isLoading}
               autoFocus
+              onKeyDown={(e) => {
+                if (
+                  e.key === "Enter" &&
+                  !internalLoading &&
+                  !isLoading &&
+                  title.trim()
+                ) {
+                  handleSave();
+                }
+              }}
             />
             <div className="text-xs text-gray-500 mt-1">
               {title.length}/100 characters
@@ -104,16 +139,16 @@ export default function SaveJourneyModal({
             <Button
               variant="outline"
               onClick={handleCancel}
-              disabled={isLoading}
+              disabled={internalLoading || isLoading}
             >
               Cancel
             </Button>
             <Button
               onClick={handleSave}
-              disabled={isLoading || !title.trim()}
+              disabled={internalLoading || isLoading || !title.trim()}
               className="min-w-[80px]"
             >
-              {isLoading ? (
+              {internalLoading || isLoading ? (
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                   Saving...
