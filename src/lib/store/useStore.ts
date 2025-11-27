@@ -124,6 +124,16 @@ export const useStore = create<AppState>()(
           isDirty: false,
           // Keep audio preferences
         }),
+
+      // Restore a saved journey entry (for viewing/continuing saved journeys)
+      restoreJourneyEntry: (entry, step, journeyId) =>
+        set({
+          currentEntry: entry,
+          currentStep: step,
+          isSaved: true,
+          savedJourneyId: journeyId,
+          isDirty: false,
+        }),
     }),
     {
       name: "mountain-pathway-storage",

@@ -47,6 +47,12 @@ export interface AppState {
   markDirty: () => void;
   setAnonymous: (flag: boolean) => void;
   clearLocalProgress: () => void;
+  // Restore saved journey
+  restoreJourneyEntry: (
+    entry: JournalEntry,
+    step: number,
+    journeyId: string
+  ) => void;
 }
 
 export interface Step {

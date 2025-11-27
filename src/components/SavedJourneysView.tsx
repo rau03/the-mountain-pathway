@@ -19,10 +19,12 @@ import {
 } from "lucide-react";
 import {
   fetchUserJourneys,
+  fetchJourney,
   deleteJourney,
   type SavedJourney,
 } from "@/lib/journeyApi";
 import { useStore } from "@/lib/store/useStore";
+import type { JournalEntry } from "@/types";
 
 type SavedJourneysViewProps = {
   open: boolean;
@@ -38,7 +40,8 @@ export default function SavedJourneysView({
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const { setCurrentStep, markSaved } = useStore();
+  const { restoreJourneyEntry } = useStore();
+  const [viewLoading, setViewLoading] = useState<string | null>(null);
 
   // Load journeys when modal opens
   useEffect(() => {
@@ -80,13 +83,43 @@ export default function SavedJourneysView({
     }
   };
 
-  const handleContinue = (journey: SavedJourney) => {
-    // Load the journey data into the store
-    // For now, we'll just navigate to the step - in a full implementation
-    // we'd restore the entire journey state
-    setCurrentStep(journey.current_step);
-    markSaved(journey.id);
-    onOpenChange(false);
+  const handleContinue = async (journey: SavedJourney) => {
+    setViewLoading(journey.id);
+    setError(null);
+
+    try {
+      // Fetch the full journey with all steps
+      const fullJourney = await fetchJourney(journey.id);
+
+      // Convert journey steps back to responses format
+      const responses: JournalEntry["responses"] = {};
+      if (fullJourney.steps) {
+        fullJourney.steps.forEach((step) => {
+          if (step.step_key && step.user_response) {
+            responses[step.step_key as keyof JournalEntry["responses"]] =
+              step.user_response;
+          }
+        });
+      }
+
+      // Create a JournalEntry from the saved journey
+      const restoredEntry: JournalEntry = {
+        id: journey.id,
+        createdAt: journey.created_at,
+        responses,
+        completed: journey.is_completed,
+      };
+
+      // Restore the journey entry to the store
+      restoreJourneyEntry(restoredEntry, journey.current_step, journey.id);
+
+      // Close the modal
+      onOpenChange(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to load journey");
+    } finally {
+      setViewLoading(null);
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -174,9 +207,14 @@ export default function SavedJourneysView({
                           size="sm"
                           variant="outline"
                           onClick={() => handleContinue(journey)}
+                          disabled={viewLoading === journey.id}
                           className="flex items-center gap-1"
                         >
-                          <Play className="w-3 h-3" />
+                          {viewLoading === journey.id ? (
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                          ) : (
+                            <Play className="w-3 h-3" />
+                          )}
                           Continue
                         </Button>
                       )}
@@ -185,9 +223,14 @@ export default function SavedJourneysView({
                         size="sm"
                         variant="outline"
                         onClick={() => handleContinue(journey)}
+                        disabled={viewLoading === journey.id}
                         className="flex items-center gap-1"
                       >
-                        <Eye className="w-3 h-3" />
+                        {viewLoading === journey.id ? (
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                        ) : (
+                          <Eye className="w-3 h-3" />
+                        )}
                         View
                       </Button>
 
