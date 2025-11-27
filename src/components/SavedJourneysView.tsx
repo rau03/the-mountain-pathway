@@ -110,8 +110,13 @@ export default function SavedJourneysView({
         completed: journey.is_completed,
       };
 
-      // Restore the journey entry to the store
-      restoreJourneyEntry(restoredEntry, journey.current_step, journey.id);
+      // Restore the journey entry to the store (including title for updates)
+      restoreJourneyEntry(
+        restoredEntry,
+        journey.current_step,
+        journey.id,
+        journey.title
+      );
 
       // Close the modal
       onOpenChange(false);

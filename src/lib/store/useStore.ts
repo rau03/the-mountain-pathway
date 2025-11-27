@@ -23,6 +23,7 @@ export const useStore = create<AppState>()(
       isAnonymous: true, // Default to anonymous until session is established
       isSaved: false,
       savedJourneyId: null,
+      savedJourneyTitle: null,
       isDirty: false,
 
       setCurrentStep: (step: number) => set({ currentStep: step }),
@@ -87,6 +88,7 @@ export const useStore = create<AppState>()(
           isDirty: true, // Mark as dirty when starting new journey
           isSaved: false, // Reset save status
           savedJourneyId: null, // Clear any previous journey ID
+          savedJourneyTitle: null, // Clear any previous journey title
         }),
 
       // Force reset to homepage (for debugging)
@@ -100,15 +102,17 @@ export const useStore = create<AppState>()(
           isDirty: true, // Mark as dirty when resetting journey
           isSaved: false, // Reset save status
           savedJourneyId: null, // Clear any previous journey ID
+          savedJourneyTitle: null, // Clear any previous journey title
         }),
 
       // New tracking actions for Phase 3
-      markSaved: (id: string) =>
-        set({
+      markSaved: (id: string, title?: string) =>
+        set((state) => ({
           isSaved: true,
           savedJourneyId: id,
+          savedJourneyTitle: title ?? state.savedJourneyTitle,
           isDirty: false,
-        }),
+        })),
 
       markDirty: () => set({ isDirty: true }),
 
@@ -121,23 +125,25 @@ export const useStore = create<AppState>()(
           entries: [],
           isSaved: false,
           savedJourneyId: null,
+          savedJourneyTitle: null,
           isDirty: false,
           // Keep audio preferences
         }),
 
       // Restore a saved journey entry (for viewing/continuing saved journeys)
-      restoreJourneyEntry: (entry, step, journeyId) =>
+      restoreJourneyEntry: (entry, step, journeyId, title) =>
         set({
           currentEntry: entry,
           currentStep: step,
           isSaved: true,
           savedJourneyId: journeyId,
+          savedJourneyTitle: title,
           isDirty: false,
         }),
     }),
     {
       name: "mountain-pathway-storage",
-      version: 2,
+      version: 3,
       partialize: (state) => ({
         // Persist journey data and preferences
         currentStep: state.currentStep,
@@ -150,6 +156,7 @@ export const useStore = create<AppState>()(
         isAnonymous: state.isAnonymous,
         isSaved: state.isSaved,
         savedJourneyId: state.savedJourneyId,
+        savedJourneyTitle: state.savedJourneyTitle,
         isDirty: state.isDirty,
         // Exclude: isTimerActive (session-specific)
       }),
@@ -162,7 +169,16 @@ export const useStore = create<AppState>()(
             isAnonymous: true,
             isSaved: false,
             savedJourneyId: null,
+            savedJourneyTitle: null,
             isDirty: false,
+          };
+        }
+        // Migrate from version 2 to version 3 - add savedJourneyTitle
+        const state = persistedState as Record<string, unknown>;
+        if (!("savedJourneyTitle" in state)) {
+          return {
+            ...state,
+            savedJourneyTitle: null,
           };
         }
         return persistedState;

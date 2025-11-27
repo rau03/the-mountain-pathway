@@ -26,6 +26,7 @@ export interface AppState {
   isAnonymous: boolean;
   isSaved: boolean;
   savedJourneyId: string | null;
+  savedJourneyTitle: string | null;
   isDirty: boolean;
   setCurrentStep: (step: number) => void;
   nextStep: () => void;
@@ -43,7 +44,7 @@ export interface AppState {
   startTimer: () => void;
   stopTimer: () => void;
   // New tracking actions
-  markSaved: (id: string) => void;
+  markSaved: (id: string, title?: string) => void;
   markDirty: () => void;
   setAnonymous: (flag: boolean) => void;
   clearLocalProgress: () => void;
@@ -51,7 +52,8 @@ export interface AppState {
   restoreJourneyEntry: (
     entry: JournalEntry,
     step: number,
-    journeyId: string
+    journeyId: string,
+    title: string
   ) => void;
 }
 
