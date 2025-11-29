@@ -128,51 +128,10 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
   return (
     <>
       <footer className="w-full bg-brand-stone py-4 px-4 border-t border-brand-stone/20">
-        <div className="flex flex-col gap-2">
-          {/* Save Buttons - Centered */}
-          <div className="flex justify-center gap-2">
-            {/* Quick Save button for existing journeys with changes */}
-            {isAuthenticated && canQuickSave && (
-              <Button
-                onClick={handleQuickSave}
-                disabled={saveLoading}
-                variant="ghost"
-                size="lg"
-                className="bg-green-600/80 backdrop-blur-sm text-white font-semibold px-3 py-3 rounded-md border border-green-500/30 hover:bg-green-600"
-              >
-                {saveLoading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                    Saving...
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <Save className="w-4 h-4" />
-                    Save Changes
-                  </div>
-                )}
-              </Button>
-            )}
-
-            {/* Main Save/Login button */}
-            <Button
-              onClick={handleFooterButtonClick}
-              disabled={saveLoading}
-              variant="ghost"
-              size="lg"
-              className="bg-black/10 backdrop-blur-sm text-white font-semibold px-3 py-3 rounded-md border border-brand-slate/20 hover:bg-black/20"
-            >
-              {isAuthenticated
-                ? isSaved
-                  ? "Save As New"
-                  : "Save Journey"
-                : "Log in / Save Journey"}
-            </Button>
-          </div>
-
-          {/* Navigation Controls - Bottom Row */}
-          <div className="flex items-center justify-between">
-            {/* Back Button */}
+        {/* Navigation Controls - Single Row with Save Buttons */}
+        <div className="flex items-center justify-between gap-2">
+          {/* Left Side: Back Button + Quick Save (if applicable) */}
+          <div className="flex items-center gap-2">
             <Button
               onClick={prevStep}
               disabled={isFirstStep}
@@ -184,28 +143,78 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
               <ArrowLeft className="h-4 w-4" />
             </Button>
 
-            {/* Center: Step Counter + Account Button */}
-            <div className="flex items-center gap-2">
-              <p className="text-xs text-brand-slate/70 font-medium">
-                Step {currentStep + 1} of {pathwayData.length}
-              </p>
+            {/* Quick Save button for existing journeys with changes */}
+            {isAuthenticated && canQuickSave && (
+              <Button
+                onClick={handleQuickSave}
+                disabled={saveLoading}
+                variant="ghost"
+                size="sm"
+                className="bg-green-600/80 backdrop-blur-sm text-white font-medium px-2.5 py-1.5 rounded-md border border-green-500/30 hover:bg-green-600 text-xs"
+              >
+                {saveLoading ? (
+                  <div className="flex items-center gap-1">
+                    <div className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                    <span className="hidden sm:inline">Saving...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <Save className="w-3 h-3" />
+                    <span className="hidden sm:inline">Save</span>
+                  </div>
+                )}
+              </Button>
+            )}
+          </div>
 
-              {/* Account Button - Only show when authenticated */}
-              {isAuthenticated && (
-                <Button
-                  onClick={() => setShowAuthModal(true)}
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0"
-                  aria-label="Account"
-                  title="Account settings"
-                >
-                  <User className="h-3.5 w-3.5" />
-                </Button>
-              )}
-            </div>
+          {/* Center: Step Counter + Account Button */}
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <p className="text-xs text-brand-slate/70 font-medium whitespace-nowrap">
+              Step {currentStep + 1} of {pathwayData.length}
+            </p>
 
-            {/* Next Button */}
+            {/* Account Button - Only show when authenticated */}
+            {isAuthenticated && (
+              <Button
+                onClick={() => setShowAuthModal(true)}
+                variant="ghost"
+                size="sm"
+                className="h-6 w-6 p-0"
+                aria-label="Account"
+                title="Account settings"
+              >
+                <User className="h-3.5 w-3.5" />
+              </Button>
+            )}
+          </div>
+
+          {/* Right Side: Save Journey Button + Next Button */}
+          <div className="flex items-center gap-2">
+            {/* Main Save/Login button */}
+            {isAuthenticated && (
+              <Button
+                onClick={handleFooterButtonClick}
+                disabled={saveLoading}
+                variant="ghost"
+                size="sm"
+                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2.5 py-1.5 rounded-md border border-brand-slate/20 hover:bg-black/20 text-xs"
+              >
+                {isSaved ? "Save As New" : "Save"}
+              </Button>
+            )}
+
+            {!isAuthenticated && (
+              <Button
+                onClick={handleFooterButtonClick}
+                disabled={saveLoading}
+                variant="ghost"
+                size="sm"
+                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2.5 py-1.5 rounded-md border border-brand-slate/20 hover:bg-black/20 text-xs"
+              >
+                Save
+              </Button>
+            )}
+
             <Button
               onClick={nextStep}
               size="sm"
