@@ -64,15 +64,12 @@ export default function SaveJourneyModal({
     setError(null);
 
     try {
-      console.log("DEBUG: Saving journey with title:", title.trim());
       await onSave(title.trim());
-      console.log("DEBUG: Journey saved successfully");
       // Only close and reset if save was successful
       setTitle("");
       setError(null);
       onOpenChange(false);
     } catch (err) {
-      console.error("DEBUG: Error in SaveJourneyModal:", err);
       setError(err instanceof Error ? err.message : "Failed to save journey");
     } finally {
       setInternalLoading(false);

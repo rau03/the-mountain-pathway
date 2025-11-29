@@ -86,7 +86,6 @@ export default function HomeClient({ session }: { session: Session | null }) {
   // Reset invalid step to landing page
   useEffect(() => {
     if (currentStep > 9) {
-      console.log("Invalid step detected, resetting to landing page");
       setCurrentStep(-1);
     }
   }, [currentStep, setCurrentStep]);

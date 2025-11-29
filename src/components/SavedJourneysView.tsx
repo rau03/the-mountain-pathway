@@ -24,6 +24,7 @@ import {
   type SavedJourney,
 } from "@/lib/journeyApi";
 import { useStore } from "@/lib/store/useStore";
+import { pathwayData } from "@/lib/pathway-data";
 import type { JournalEntry } from "@/types";
 
 type SavedJourneysViewProps = {
@@ -63,14 +64,11 @@ export default function SavedJourneysView({
     }, 15000); // 15 second timeout
 
     try {
-      console.log("DEBUG: Starting to fetch journeys...");
       const userJourneys = await fetchUserJourneys();
-      console.log("DEBUG: Fetched journeys:", userJourneys?.length || 0);
       clearTimeout(timeoutId);
       setJourneys(userJourneys);
     } catch (err) {
       clearTimeout(timeoutId);
-      console.error("DEBUG: Error fetching journeys:", err);
       setError(err instanceof Error ? err.message : "Failed to load journeys");
     } finally {
       setLoading(false);
@@ -135,7 +133,6 @@ export default function SavedJourneysView({
       // Close the modal
       onOpenChange(false);
     } catch (err) {
-      console.error("DEBUG: Error loading journey:", err);
       setError(err instanceof Error ? err.message : "Failed to load journey");
     } finally {
       setViewLoading(null);
@@ -156,7 +153,11 @@ export default function SavedJourneysView({
     if (journey.is_completed) {
       return "Completed";
     }
-    return `Step ${journey.current_step + 1} of 9`;
+    const stepNumber =
+      journey.current_step === 9
+        ? pathwayData.length
+        : journey.current_step + 1;
+    return `Step ${stepNumber} of ${pathwayData.length}`;
   };
 
   return (

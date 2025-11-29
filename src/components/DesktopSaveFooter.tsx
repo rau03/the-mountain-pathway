@@ -31,6 +31,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
+  const [quickSaveError, setQuickSaveError] = useState<string | null>(null);
 
   const canQuickSave =
     isSaved && savedJourneyId && savedJourneyTitle && isDirty;
@@ -42,6 +43,14 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
 
     if (!currentEntry) {
       throw new Error("No journey data to save.");
+    }
+
+    // Check if journey has any responses
+    const hasResponses = Object.values(currentEntry.responses).some(
+      (response) => response && response.trim()
+    );
+    if (!hasResponses) {
+      throw new Error("Please add some content to your journey before saving.");
     }
 
     setSaveLoading(true);
@@ -56,9 +65,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
 
       const savedJourney = await saveJourney(journeyData);
       markSaved(savedJourney.id, title);
-      console.log("Journey saved successfully!");
     } catch (error) {
-      console.error("Error saving journey:", error);
       throw error;
     } finally {
       setSaveLoading(false);
@@ -68,6 +75,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
   const handleQuickSave = async () => {
     if (!session?.user || !savedJourneyTitle || !savedJourneyId) return;
 
+    setQuickSaveError(null);
     setSaveLoading(true);
     try {
       const journeyData = {
@@ -79,9 +87,14 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
 
       await updateJourney(savedJourneyId, journeyData);
       markSaved(savedJourneyId, savedJourneyTitle);
-      console.log("Journey updated successfully!");
     } catch (error) {
-      console.error("Error updating journey:", error);
+      setQuickSaveError(
+        error instanceof Error
+          ? error.message
+          : "Failed to save changes. Please try again."
+      );
+      // Clear error after 5 seconds
+      setTimeout(() => setQuickSaveError(null), 5000);
     } finally {
       setSaveLoading(false);
     }
@@ -97,6 +110,11 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
 
   return (
     <>
+      {quickSaveError && (
+        <div className="mb-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
+          {quickSaveError}
+        </div>
+      )}
       <footer className="w-full flex items-center justify-between pt-6 gap-4">
         {/* Left Side: Back Button + Quick Save */}
         <div className="flex items-center gap-2">

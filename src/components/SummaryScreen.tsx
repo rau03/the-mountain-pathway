@@ -56,6 +56,14 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       throw new Error("No journey data to save.");
     }
 
+    // Check if journey has any responses
+    const hasResponses = Object.values(currentEntry.responses).some(
+      (response) => response && response.trim()
+    );
+    if (!hasResponses) {
+      throw new Error("Please add some content to your journey before saving.");
+    }
+
     setSaveLoading(true);
 
     try {
@@ -77,10 +85,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
       // Update store with save status and title
       markSaved(savedJourney.id, title);
-
-      console.log("Journey saved successfully!");
     } catch (error) {
-      console.error("Error saving journey:", error);
       throw error; // Let SaveJourneyModal handle the error display
     } finally {
       setSaveLoading(false);
@@ -137,8 +142,6 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
   const handleDownloadPDF = async () => {
     setDownloading(true);
     try {
-      console.log("Starting text-based PDF generation...");
-
       const jsPDF = (await import("jspdf")).jsPDF;
       const pdf = new jsPDF("p", "mm", "a4");
 
@@ -195,10 +198,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         .toISOString()
         .split("T")[0];
       pdf.save(`mountain-pathway-${dateStr}.pdf`);
-
-      console.log("Text-based PDF saved successfully");
     } catch (err) {
-      console.error("Failed to generate text PDF:", err);
       alert(
         `Failed to generate PDF: ${
           err instanceof Error ? err.message : "Unknown error"

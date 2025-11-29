@@ -18,6 +18,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
+  const [quickSaveError, setQuickSaveError] = useState<string | null>(null);
 
   const {
     currentEntry,
@@ -52,15 +53,17 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
       throw new Error("No journey data to save.");
     }
 
+    // Check if journey has any responses
+    const hasResponses = Object.values(currentEntry.responses).some(
+      (response) => response && response.trim()
+    );
+    if (!hasResponses) {
+      throw new Error("Please add some content to your journey before saving.");
+    }
+
     setSaveLoading(true);
 
     try {
-      console.log("DEBUG: Starting to save journey...", {
-        title,
-        currentStep,
-        hasResponses: Object.keys(currentEntry.responses).length > 0,
-      });
-
       const journeyData = {
         title,
         currentEntry,
@@ -88,10 +91,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
 
       // Update store with save status and title
       markSaved(savedJourney.id, title);
-
-      console.log("DEBUG: Journey saved successfully!", savedJourney.id);
     } catch (error) {
-      console.error("DEBUG: Error saving journey:", error);
       throw error; // Let SaveJourneyModal handle the error display
     } finally {
       setSaveLoading(false);
@@ -102,6 +102,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
   const handleQuickSave = async () => {
     if (!session?.user || !savedJourneyTitle || !savedJourneyId) return;
 
+    setQuickSaveError(null);
     setSaveLoading(true);
     try {
       const journeyData = {
@@ -113,9 +114,14 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
 
       await updateJourney(savedJourneyId, journeyData);
       markSaved(savedJourneyId, savedJourneyTitle);
-      console.log("Journey updated successfully!");
     } catch (error) {
-      console.error("Error updating journey:", error);
+      setQuickSaveError(
+        error instanceof Error
+          ? error.message
+          : "Failed to save changes. Please try again."
+      );
+      // Clear error after 5 seconds
+      setTimeout(() => setQuickSaveError(null), 5000);
     } finally {
       setSaveLoading(false);
     }
@@ -128,6 +134,13 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
   return (
     <>
       <footer className="w-full bg-brand-stone py-4 px-4 border-t border-brand-stone/20">
+        {/* Quick Save Error Message */}
+        {quickSaveError && (
+          <div className="mb-2 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
+            {quickSaveError}
+          </div>
+        )}
+
         {/* Navigation Controls - Single Row with Save Buttons */}
         <div className="flex items-center justify-between gap-2">
           {/* Left Side: Back Button + Quick Save (if applicable) */}
