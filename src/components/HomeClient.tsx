@@ -163,7 +163,8 @@ export default function HomeClient({ session }: { session: Session | null }) {
   };
 
   // This is the stable, desktop-first layout
-  const isJourneyScreen = currentStep > -1 && currentStep < 9;
+  // Include summary page (step 9) so it gets the header and footer
+  const isJourneyScreen = currentStep > -1 && currentStep <= 9;
 
   // Define background position explicitly for Tailwind purge-proof class names
   // Step 0 uses bg-bottom, all other steps use bg-center

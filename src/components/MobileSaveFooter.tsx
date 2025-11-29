@@ -170,7 +170,8 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
           {/* Center: Step Counter + Account Button */}
           <div className="flex items-center gap-2 flex-shrink-0">
             <p className="text-xs text-brand-slate/70 font-medium whitespace-nowrap">
-              Step {currentStep + 1} of {pathwayData.length}
+              Step {currentStep === 9 ? pathwayData.length : currentStep + 1} of{" "}
+              {pathwayData.length}
             </p>
 
             {/* Account Button - Only show when authenticated */}

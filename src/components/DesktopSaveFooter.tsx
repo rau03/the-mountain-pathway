@@ -135,7 +135,8 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
 
         {/* Center: Step Counter */}
         <p className="text-sm text-brand-slate/70 flex-shrink-0">
-          Step {currentStep + 1} of {pathwayData.length}
+          Step {currentStep === 9 ? pathwayData.length : currentStep + 1} of{" "}
+          {pathwayData.length}
         </p>
 
         {/* Right Side: Save Journey Button + Next Button */}
