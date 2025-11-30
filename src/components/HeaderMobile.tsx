@@ -1,5 +1,5 @@
 import React from "react";
-import { Mountain } from "lucide-react";
+import Image from "next/image";
 import { SimpleAudioPlayer } from "./SimpleAudioPlayer";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
@@ -15,7 +15,17 @@ export const HeaderMobile: React.FC = () => {
         className="bg-transparent border-none p-0 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
         aria-label="Return to home"
       >
-        <Mountain className="w-6 h-6 text-brand-gold" />
+        <Image
+          src="/mountain-icon.svg"
+          alt="Mountain Pathway Logo"
+          width={24}
+          height={24}
+          className="w-6 h-6"
+          style={{
+            filter:
+              "brightness(0) saturate(100%) invert(75%) sepia(95%) saturate(1352%) hue-rotate(1deg) brightness(102%) contrast(101%)",
+          }}
+        />
       </button>
 
       {/* Mobile Progress: Simple Dots */}
