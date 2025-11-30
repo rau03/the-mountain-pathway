@@ -133,7 +133,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
 
   return (
     <>
-      <footer className="w-full bg-brand-stone py-4 px-4 border-t border-brand-stone/20">
+      <footer className="w-full bg-brand-stone pb-4 pt-1 px-4 border-t border-brand-stone/20">
         {/* Quick Save Error Message */}
         {quickSaveError && (
           <div className="mb-2 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
@@ -144,7 +144,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
         {/* Navigation Controls - Single Row with Save Buttons */}
         <div className="flex items-center justify-between gap-2">
           {/* Left Side: Back Button + Quick Save (if applicable) */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-1 justify-start">
             <Button
               onClick={prevStep}
               disabled={isFirstStep}
@@ -181,10 +181,15 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
           </div>
 
           {/* Center: Step Counter + Account Button */}
-          <div className="flex items-center gap-2 flex-shrink-0">
+          <div className="flex items-center gap-2 flex-shrink-0 justify-center">
             <p className="text-xs text-brand-slate/70 font-medium whitespace-nowrap">
-              Step {currentStep === 9 ? pathwayData.length : currentStep + 1} of{" "}
-              {pathwayData.length}
+              {currentStep === 9 ? (
+                "Complete"
+              ) : (
+                <>
+                  Step {currentStep + 1} of {pathwayData.length}
+                </>
+              )}
             </p>
 
             {/* Account Button - Only show when authenticated */}
@@ -203,7 +208,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
           </div>
 
           {/* Right Side: Save Journey Button + Next Button */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-1 justify-end">
             {/* Main Save/Login button */}
             {isAuthenticated && (
               <Button

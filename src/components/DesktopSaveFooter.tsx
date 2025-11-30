@@ -115,7 +115,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
           {quickSaveError}
         </div>
       )}
-      <footer className="w-full flex items-center justify-between pt-6 gap-4">
+      <footer className="w-full flex items-center justify-between pt-1 gap-4">
         {/* Left Side: Back Button + Quick Save */}
         <div className="flex items-center gap-2">
           <Button
@@ -153,8 +153,13 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
 
         {/* Center: Step Counter */}
         <p className="text-sm text-brand-slate/70 flex-shrink-0">
-          Step {currentStep === 9 ? pathwayData.length : currentStep + 1} of{" "}
-          {pathwayData.length}
+          {currentStep === 9 ? (
+            "Complete"
+          ) : (
+            <>
+              Step {currentStep + 1} of {pathwayData.length}
+            </>
+          )}
         </p>
 
         {/* Right Side: Save Journey Button + Next Button */}
