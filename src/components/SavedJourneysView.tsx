@@ -16,6 +16,7 @@ import {
   CheckCircle,
   Clock,
   Loader2,
+  BookOpen,
 } from "lucide-react";
 import {
   fetchUserJourneys,
@@ -162,28 +163,54 @@ export default function SavedJourneysView({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
-        <DialogHeader>
+      <DialogContent className="w-full max-w-2xl max-h-[80vh] overflow-hidden flex flex-col p-0 gap-0 border-brand-gold/20">
+        <DialogHeader className="sr-only">
           <DialogTitle>Your Saved Journeys</DialogTitle>
         </DialogHeader>
 
-        <div className="flex-1 overflow-y-auto">
+        {/* Header */}
+        <div className="p-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="text-center space-y-3">
+            <div className="mx-auto w-12 h-12 bg-brand-gold/20 rounded-full flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-brand-gold" />
+            </div>
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+              Your Saved Journeys
+            </h2>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Continue where you left off or revisit completed journeys
+            </p>
+          </div>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-6">
           {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin" />
-              <span className="ml-2">Loading journeys...</span>
+            <div className="flex flex-col items-center justify-center py-12">
+              <Loader2 className="w-8 h-8 animate-spin text-brand-gold" />
+              <span className="mt-3 text-gray-600 dark:text-gray-400">
+                Loading your journeys...
+              </span>
             </div>
           ) : error ? (
-            <div className="text-center py-8">
+            <div className="text-center py-12">
               <p className="text-red-600 dark:text-red-400 mb-4">{error}</p>
-              <Button onClick={loadJourneys} variant="outline">
+              <Button
+                onClick={loadJourneys}
+                variant="outline"
+                className="border-gray-300 dark:border-gray-600"
+              >
                 Try Again
               </Button>
             </div>
           ) : journeys.length === 0 ? (
-            <div className="text-center py-8 text-gray-500">
-              <p>No saved journeys yet.</p>
-              <p className="text-sm mt-2">
+            <div className="text-center py-12">
+              <div className="mx-auto w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-4">
+                <BookOpen className="w-8 h-8 text-gray-400" />
+              </div>
+              <p className="text-gray-700 dark:text-gray-300 font-medium">
+                No saved journeys yet
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                 Complete a journey and save it to see it here.
               </p>
             </div>
@@ -192,7 +219,7 @@ export default function SavedJourneysView({
               {journeys.map((journey) => (
                 <div
                   key={journey.id}
-                  className="border rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-brand-gold/30 transition-colors"
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
@@ -226,10 +253,9 @@ export default function SavedJourneysView({
                       {!journey.is_completed && (
                         <Button
                           size="sm"
-                          variant="outline"
                           onClick={() => handleContinue(journey)}
                           disabled={viewLoading === journey.id}
-                          className="flex items-center gap-1"
+                          className="flex items-center gap-1 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
                         >
                           {viewLoading === journey.id ? (
                             <Loader2 className="w-3 h-3 animate-spin" />
@@ -245,7 +271,7 @@ export default function SavedJourneysView({
                         variant="outline"
                         onClick={() => handleContinue(journey)}
                         disabled={viewLoading === journey.id}
-                        className="flex items-center gap-1"
+                        className="flex items-center gap-1 border-gray-300 dark:border-gray-600"
                       >
                         {viewLoading === journey.id ? (
                           <Loader2 className="w-3 h-3 animate-spin" />
@@ -260,7 +286,7 @@ export default function SavedJourneysView({
                         variant="outline"
                         onClick={() => handleDelete(journey.id)}
                         disabled={deleteLoading === journey.id}
-                        className="flex items-center gap-1 text-red-600 hover:text-red-700"
+                        className="flex items-center gap-1 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
                       >
                         {deleteLoading === journey.id ? (
                           <Loader2 className="w-3 h-3 animate-spin" />
@@ -277,8 +303,12 @@ export default function SavedJourneysView({
           )}
         </div>
 
-        <div className="border-t pt-4 flex justify-end">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+        <div className="border-t border-gray-200 dark:border-gray-700 p-4 flex justify-end">
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            className="border-gray-300 dark:border-gray-600"
+          >
             Close
           </Button>
         </div>

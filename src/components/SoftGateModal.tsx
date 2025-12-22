@@ -1,8 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { Session } from "@supabase/supabase-js";
 import {
   Dialog,
@@ -40,6 +38,17 @@ export default function SoftGateModal({
   const [signupError, setSignupError] = useState<string | null>(null);
   const [signupSuccess, setSignupSuccess] = useState(false);
 
+  // Custom login form state
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPassword, setLoginPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState<string | null>(null);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+  const [resetLoading, setResetLoading] = useState(false);
+  const [resetSuccess, setResetSuccess] = useState(false);
+  const [resetError, setResetError] = useState<string | null>(null);
+
   // Reset form when modal opens
   useEffect(() => {
     if (open) {
@@ -49,6 +58,13 @@ export default function SoftGateModal({
       setPassword("");
       setSignupError(null);
       setSignupSuccess(false);
+      setLoginEmail("");
+      setLoginPassword("");
+      setLoginError(null);
+      setShowForgotPassword(false);
+      setResetEmail("");
+      setResetSuccess(false);
+      setResetError(null);
     }
   }, [open]);
 
@@ -89,9 +105,92 @@ export default function SoftGateModal({
   };
 
   const handleBack = () => {
-    setView("choice");
-    setSignupError(null);
-    setSignupSuccess(false);
+    if (showForgotPassword) {
+      setShowForgotPassword(false);
+      setResetError(null);
+      setResetSuccess(false);
+    } else {
+      setView("choice");
+      setSignupError(null);
+      setSignupSuccess(false);
+      setLoginError(null);
+    }
+  };
+
+  // Custom login handler
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!supabase) {
+      setLoginError("Authentication not configured");
+      return;
+    }
+
+    if (!loginEmail.trim()) {
+      setLoginError("Please enter your email");
+      return;
+    }
+
+    if (!loginPassword) {
+      setLoginError("Please enter your password");
+      return;
+    }
+
+    setLoginLoading(true);
+    setLoginError(null);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: loginEmail.trim(),
+        password: loginPassword,
+      });
+
+      if (error) {
+        setLoginError(error.message);
+      }
+      // Success is handled by the auth state change listener
+    } catch (err) {
+      setLoginError(err instanceof Error ? err.message : "Login failed");
+    } finally {
+      setLoginLoading(false);
+    }
+  };
+
+  // Password reset handler
+  const handlePasswordReset = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!supabase) {
+      setResetError("Authentication not configured");
+      return;
+    }
+
+    if (!resetEmail.trim()) {
+      setResetError("Please enter your email");
+      return;
+    }
+
+    setResetLoading(true);
+    setResetError(null);
+
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(
+        resetEmail.trim(),
+        {
+          redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+        }
+      );
+
+      if (error) {
+        setResetError(error.message);
+      } else {
+        setResetSuccess(true);
+      }
+    } catch (err) {
+      setResetError(err instanceof Error ? err.message : "Reset failed");
+    } finally {
+      setResetLoading(false);
+    }
   };
 
   // Custom signup handler
@@ -358,7 +457,7 @@ export default function SoftGateModal({
             )}
           </div>
         ) : (
-          // Login form (using Supabase Auth UI)
+          // Custom Login Form
           <div className="p-6 space-y-4">
             {/* Back button */}
             <button
@@ -369,94 +468,184 @@ export default function SoftGateModal({
               Back
             </button>
 
-            {/* Header */}
-            <div className="text-center space-y-2">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Welcome Back
-              </h2>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Log in to continue your journey
-              </p>
-            </div>
+            {showForgotPassword ? (
+              // Forgot Password Form
+              <>
+                {/* Header */}
+                <div className="text-center space-y-2">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    Reset Password
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Enter your email to receive a reset link
+                  </p>
+                </div>
 
-            {/* Auth UI for Login */}
-            {supabase ? (
-              <Auth
-                supabaseClient={supabase}
-                appearance={{
-                  theme: ThemeSupa,
-                  variables: {
-                    default: {
-                      colors: {
-                        brand: "#D4A574",
-                        brandAccent: "#C49660",
-                        messageText: "#ef4444",
-                        messageTextDanger: "#ef4444",
-                        inputText: "#1f2937",
-                        inputBackground: "#ffffff",
-                        inputBorder: "#d1d5db",
-                        inputBorderFocus: "#D4A574",
-                        inputBorderHover: "#9ca3af",
-                      },
-                      borderWidths: {
-                        inputBorderWidth: "1px",
-                      },
-                      radii: {
-                        inputBorderRadius: "0.375rem",
-                        buttonBorderRadius: "0.375rem",
-                      },
-                    },
-                    dark: {
-                      colors: {
-                        brand: "#D4A574",
-                        brandAccent: "#C49660",
-                        messageText: "#f87171",
-                        messageTextDanger: "#f87171",
-                        inputText: "#f9fafb",
-                        inputBackground: "#374151",
-                        inputBorder: "#4b5563",
-                        inputBorderFocus: "#D4A574",
-                        inputBorderHover: "#6b7280",
-                      },
-                    },
-                  },
-                  style: {
-                    message: {
-                      color: "#ef4444",
-                      fontWeight: "500",
-                      padding: "8px 12px",
-                      borderRadius: "6px",
-                      backgroundColor: "rgba(239, 68, 68, 0.1)",
-                      border: "1px solid rgba(239, 68, 68, 0.3)",
-                    },
-                  },
-                }}
-                theme="dark"
-                providers={[]}
-                view="sign_in"
-                redirectTo={`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`}
-              />
+                {resetSuccess ? (
+                  <div className="text-center space-y-4 py-4">
+                    <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                      <p className="text-sm text-green-700 dark:text-green-300 font-medium">
+                        Check your email!
+                      </p>
+                      <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                        We&apos;ve sent a password reset link to {resetEmail}
+                      </p>
+                    </div>
+                    <Button
+                      onClick={() => {
+                        setShowForgotPassword(false);
+                        setResetSuccess(false);
+                      }}
+                      variant="outline"
+                      className="w-full border-gray-300 dark:border-gray-600"
+                    >
+                      Back to Login
+                    </Button>
+                  </div>
+                ) : (
+                  <form onSubmit={handlePasswordReset} className="space-y-4">
+                    <div>
+                      <label
+                        htmlFor="reset-email"
+                        className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                      >
+                        Email
+                      </label>
+                      <input
+                        id="reset-email"
+                        type="email"
+                        value={resetEmail}
+                        onChange={(e) => setResetEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
+                        autoFocus
+                        disabled={resetLoading}
+                      />
+                    </div>
+
+                    {resetError && (
+                      <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                        <p className="text-sm text-red-600 dark:text-red-400">
+                          {resetError}
+                        </p>
+                      </div>
+                    )}
+
+                    <Button
+                      type="submit"
+                      disabled={resetLoading}
+                      className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                    >
+                      {resetLoading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                          Sending...
+                        </>
+                      ) : (
+                        "Send Reset Link"
+                      )}
+                    </Button>
+                  </form>
+                )}
+              </>
             ) : (
-              <div className="text-center space-y-3 py-4">
-                <p className="text-sm text-red-500">
-                  Authentication not configured
-                </p>
-                <p className="text-xs text-gray-500">
-                  Please check environment variables
-                </p>
-              </div>
-            )}
+              // Login Form
+              <>
+                {/* Header */}
+                <div className="text-center space-y-2">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    Welcome Back
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Log in to continue your journey
+                  </p>
+                </div>
 
-            {/* Toggle to signup */}
-            <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-              Don&apos;t have an account?{" "}
-              <button
-                onClick={() => setView("signup")}
-                className="text-brand-gold hover:text-brand-gold/80"
-              >
-                Sign up
-              </button>
-            </div>
+                <form onSubmit={handleLogin} className="space-y-4">
+                  <div>
+                    <label
+                      htmlFor="login-email"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Email
+                    </label>
+                    <input
+                      id="login-email"
+                      type="email"
+                      value={loginEmail}
+                      onChange={(e) => setLoginEmail(e.target.value)}
+                      placeholder="you@example.com"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
+                      autoFocus
+                      disabled={loginLoading}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="login-password"
+                      className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                    >
+                      Password
+                    </label>
+                    <input
+                      id="login-password"
+                      type="password"
+                      value={loginPassword}
+                      onChange={(e) => setLoginPassword(e.target.value)}
+                      placeholder="Your password"
+                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
+                      disabled={loginLoading}
+                    />
+                  </div>
+
+                  {/* Forgot Password Link */}
+                  <div className="text-right">
+                    <button
+                      type="button"
+                      onClick={() => setShowForgotPassword(true)}
+                      className="text-sm text-brand-gold hover:text-brand-gold/80"
+                    >
+                      Forgot password?
+                    </button>
+                  </div>
+
+                  {loginError && (
+                    <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                      <p className="text-sm text-red-600 dark:text-red-400">
+                        {loginError}
+                      </p>
+                    </div>
+                  )}
+
+                  <Button
+                    type="submit"
+                    disabled={loginLoading}
+                    className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                  >
+                    {loginLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                        Logging in...
+                      </>
+                    ) : (
+                      "Log In"
+                    )}
+                  </Button>
+                </form>
+
+                {/* Toggle to signup */}
+                <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+                  Don&apos;t have an account?{" "}
+                  <button
+                    onClick={() => setView("signup")}
+                    className="text-brand-gold hover:text-brand-gold/80"
+                  >
+                    Sign up
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         )}
       </DialogContent>
