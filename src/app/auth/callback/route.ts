@@ -7,10 +7,16 @@ import type { NextRequest } from "next/server";
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
   const code = requestUrl.searchParams.get("code");
+  const type = requestUrl.searchParams.get("type");
 
   if (code) {
     const supabase = createRouteHandlerClient({ cookies });
     await supabase.auth.exchangeCodeForSession(code);
+  }
+
+  // Handle password recovery - redirect to reset password page
+  if (type === "recovery") {
+    return NextResponse.redirect(`${requestUrl.origin}/reset-password`);
   }
 
   // URL to redirect to after sign in process completes
