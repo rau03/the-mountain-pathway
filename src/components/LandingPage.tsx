@@ -1,13 +1,17 @@
 import React from "react";
-import { Mountain, Play } from "lucide-react";
+import { Mountain, Play, HelpCircle, Coffee } from "lucide-react";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
 
 type LandingPageProps = {
   onBeginClick: () => void;
+  onLearnMoreClick?: () => void;
 };
 
-export const LandingPage: React.FC<LandingPageProps> = ({ onBeginClick }) => {
+export const LandingPage: React.FC<LandingPageProps> = ({
+  onBeginClick,
+  onLearnMoreClick,
+}) => {
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-between md:justify-center p-8 pt-16 pb-8 md:gap-8">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
@@ -19,18 +23,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBeginClick }) => {
 
         {/* Main Content with Text Protection */}
         <div className="relative">
-          {/* Text Protection Gradient Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-lg" />
+          {/* Text Protection Gradient Overlay - Enhanced for better readability */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20 rounded-lg" />
 
           {/* Text Content */}
           <div className="relative z-10 max-w-2xl space-y-4 md:space-y-6 text-center p-6 md:p-8">
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight text-white/90 [text-shadow:0_2px_4px_rgba(0,0,0,0.4)]">
+            <h1 className="text-4xl md:text-5xl font-bold leading-tight text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.6),0_1px_3px_rgba(0,0,0,0.4)]">
               {pathwayContent.landingPage.heroTitle}
             </h1>
-            <p className="text-lg md:text-xl font-light text-white/90 [text-shadow:0_2px_4px_rgba(0,0,0,0.4)]">
+            <p className="text-lg md:text-xl font-light text-white [text-shadow:0_2px_6px_rgba(0,0,0,0.5),0_1px_2px_rgba(0,0,0,0.3)]">
               {pathwayContent.landingPage.heroSubtitle}
             </p>
-            <p className="text-base md:text-lg leading-relaxed text-white/90 [text-shadow:0_2px_4px_rgba(0,0,0,0.4)]">
+            <p className="text-base md:text-lg leading-relaxed text-white/95 [text-shadow:0_2px_6px_rgba(0,0,0,0.5),0_1px_2px_rgba(0,0,0,0.3)]">
               {pathwayContent.landingPage.heroDescription}
             </p>
           </div>
@@ -50,9 +54,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onBeginClick }) => {
         </Button>
 
         {/* Subtitle */}
-        <p className="text-sm text-white/90 italic font-medium [text-shadow:0_2px_4px_rgba(0,0,0,0.4)]">
+        <p className="text-sm text-white italic font-medium [text-shadow:0_2px_6px_rgba(0,0,0,0.5),0_1px_2px_rgba(0,0,0,0.3)]">
           {pathwayContent.landingPage.footerText}
         </p>
+
+        {/* Learn More Link */}
+        {onLearnMoreClick && (
+          <button
+            onClick={onLearnMoreClick}
+            className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
+          >
+            <HelpCircle className="w-4 h-4" />
+            <span>Who is this for?</span>
+          </button>
+        )}
+
+        {/* Support Link */}
+        <a
+          href="https://buymeacoffee.com/themountainpathway"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white/90 transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
+        >
+          <Coffee className="w-3.5 h-3.5" />
+          <span>Support this project</span>
+        </a>
       </div>
     </div>
   );

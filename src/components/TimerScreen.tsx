@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   Play,
@@ -45,6 +45,9 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
   const [timeLeft, setTimeLeft] = useState(silenceTimer * 60);
   const [hasStarted, setHasStarted] = useState(false);
 
+  // Use ref to track interval for immediate cleanup on completion
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
   // Get the icon component for this step
   const IconComponent = iconMap[step.icon];
 
@@ -52,33 +55,41 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
     setTimeLeft(silenceTimer * 60);
   }, [silenceTimer]);
 
-  // Separate effect to handle timer completion
+  // Timer effect with ref-based interval management to prevent 0:01 freeze
   useEffect(() => {
-    if (timeLeft === 0 && isTimerActive) {
-      stopTimer();
+    // Clear any existing interval when timer becomes inactive
+    if (!isTimerActive) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      return;
     }
-  }, [timeLeft, isTimerActive, stopTimer]);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-
-    if (isTimerActive) {
-      interval = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            return 0;
+    // Start interval when timer is active
+    intervalRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          // Clear interval immediately in the callback to prevent race condition
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
           }
-          return prev - 1;
-        });
-      }, 1000);
-    }
+          // Stop the timer synchronously
+          stopTimer();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
     return () => {
-      if (interval) {
-        clearInterval(interval);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
-  }, [isTimerActive]);
+  }, [isTimerActive, stopTimer]);
 
   const handleStart = () => {
     setHasStarted(true);

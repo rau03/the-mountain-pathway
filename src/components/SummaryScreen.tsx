@@ -7,6 +7,7 @@ import {
   RotateCcw,
   CheckCircle,
   UploadCloud,
+  Coffee,
 } from "lucide-react";
 import { Session } from "@supabase/supabase-js";
 import { useStore } from "@/lib/store/useStore";
@@ -176,8 +177,18 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
           ];
         if (!step.isInput || !response) return;
 
-        // Check if we need a new page
-        if (yPosition > 250) {
+        // Add response text (split into lines if too long)
+        pdf.setFontSize(10);
+        pdf.setFont("helvetica", "normal");
+        const lines = pdf.splitTextToSize(response, 170);
+
+        // Calculate total height needed for this section
+        const titleHeight = 12; // Space for title + gap
+        const contentHeight = lines.length * 5; // 5mm per line (improved from 4mm)
+        const sectionHeight = titleHeight + contentHeight + 15; // Plus spacing
+
+        // Check if we need a new page (reduced from 250 to 230 for better bottom margin)
+        if (yPosition + sectionHeight > 270) {
           pdf.addPage();
           yPosition = 20;
         }
@@ -188,12 +199,11 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         pdf.text(step.title.toUpperCase(), 20, yPosition);
         yPosition += 10;
 
-        // Add response text (split into lines if too long)
+        // Add response text
         pdf.setFontSize(10);
         pdf.setFont("helvetica", "normal");
-        const lines = pdf.splitTextToSize(response, 170);
         pdf.text(lines, 20, yPosition);
-        yPosition += lines.length * 4 + 15; // 4mm per line + 15mm spacing
+        yPosition += lines.length * 5 + 15; // 5mm per line + 15mm spacing
       });
 
       const dateStr = new Date(currentEntry.createdAt)
@@ -408,18 +418,55 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         </div>
       )}
 
-      {/* Creator Attribution */}
-      <p className="text-xs text-brand-slate/50 text-center pt-8">
-        The Mountain Pathway created by{" "}
+      {/* Creator Attribution & Support */}
+      <div className="text-center pt-8 space-y-3">
+        <p className="text-xs text-brand-slate/50">
+          The Mountain Pathway created by{" "}
+          <a
+            href="https://www.webdevbyrau.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-brand-gold transition-colors underline"
+          >
+            webdevbyrau
+          </a>
+        </p>
+
+        {/* Buy Me a Coffee Link */}
         <a
-          href="https://www.webdevbyrau.com"
+          href="https://buymeacoffee.com/themountainpathway"
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-brand-gold transition-colors underline"
+          className="inline-flex items-center gap-1.5 text-xs text-brand-slate/60 hover:text-brand-slate transition-colors"
         >
-          webdevbyrau
+          <Coffee className="w-3.5 h-3.5" />
+          <span>Support The Mountain Pathway</span>
         </a>
-      </p>
+
+        {/* Legal Links */}
+        <div className="flex items-center justify-center gap-3 text-xs text-brand-slate/40">
+          <a
+            href="/terms"
+            className="hover:text-brand-slate/70 transition-colors"
+          >
+            Terms
+          </a>
+          <span>·</span>
+          <a
+            href="/privacy"
+            className="hover:text-brand-slate/70 transition-colors"
+          >
+            Privacy
+          </a>
+          <span>·</span>
+          <a
+            href="/data-deletion"
+            className="hover:text-brand-slate/70 transition-colors"
+          >
+            Data Deletion
+          </a>
+        </div>
+      </div>
 
       {/* Save Journey Modal */}
       <SaveJourneyModal

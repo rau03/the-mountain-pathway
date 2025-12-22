@@ -77,8 +77,7 @@ export default function AuthModal({
       await supabase.auth.signOut();
       setCurrentSession(null);
       onOpenChange(false);
-      // Force page reload to clear all state
-      window.location.reload();
+      setSigningOut(false);
     } catch (error) {
       console.error("Error signing out:", error);
       setSigningOut(false);
@@ -103,7 +102,11 @@ export default function AuthModal({
                   <p className="text-sm text-gray-600 dark:text-gray-400">
                     Signed in as
                   </p>
-                  <p className="font-medium">{currentSession.user?.email}</p>
+                  <p className="font-medium">
+                    Hello,{" "}
+                    {currentSession.user?.user_metadata?.first_name ||
+                      currentSession.user?.email}
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -140,7 +143,47 @@ export default function AuthModal({
               // Not authenticated - show auth UI
               <Auth
                 supabaseClient={supabase}
-                appearance={{ theme: ThemeSupa }}
+                appearance={{
+                  theme: ThemeSupa,
+                  variables: {
+                    default: {
+                      colors: {
+                        brand: "#D4A574",
+                        brandAccent: "#C49660",
+                        messageText: "#ef4444",
+                        messageTextDanger: "#ef4444",
+                        inputText: "#1f2937",
+                        inputBackground: "#ffffff",
+                        inputBorder: "#d1d5db",
+                        inputBorderFocus: "#D4A574",
+                        inputBorderHover: "#9ca3af",
+                      },
+                    },
+                    dark: {
+                      colors: {
+                        brand: "#D4A574",
+                        brandAccent: "#C49660",
+                        messageText: "#f87171",
+                        messageTextDanger: "#f87171",
+                        inputText: "#f9fafb",
+                        inputBackground: "#374151",
+                        inputBorder: "#4b5563",
+                        inputBorderFocus: "#D4A574",
+                        inputBorderHover: "#6b7280",
+                      },
+                    },
+                  },
+                  style: {
+                    message: {
+                      color: "#ef4444",
+                      fontWeight: "500",
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      backgroundColor: "rgba(239, 68, 68, 0.1)",
+                      border: "1px solid rgba(239, 68, 68, 0.3)",
+                    },
+                  },
+                }}
                 theme="dark"
                 providers={[]}
                 redirectTo={`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`}

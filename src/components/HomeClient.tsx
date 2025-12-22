@@ -13,6 +13,8 @@ import { MobileJourneyLayout } from "@/components/MobileJourneyLayout";
 import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
 import AuthModal from "@/components/AuthModal";
 import SoftGateModal from "@/components/SoftGateModal";
+import WelcomeInfoModal from "@/components/WelcomeInfoModal";
+import ProfileSetupModal from "@/components/ProfileSetupModal";
 import { Button } from "@/components/ui/button";
 import { getBackgroundForStep } from "@/lib/pathway-data";
 import supabase from "@/lib/supabaseClient";
@@ -23,11 +25,13 @@ export default function HomeClient({ session }: { session: Session | null }) {
   const [currentBackground, setCurrentBackground] = useState(
     "/homepage-background.v3.jpg"
   );
-  const [isInitialized, setIsInitialized] = useState(false);
   const [liveSession, setLiveSession] = useState<Session | null>(session);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSoftGateModal, setShowSoftGateModal] = useState(false);
+  const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [showProfileSetupModal, setShowProfileSetupModal] = useState(false);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
+  const previousSessionRef = useRef<Session | null>(null);
 
   // Update anonymous status when session changes
   useEffect(() => {
@@ -40,13 +44,31 @@ export default function HomeClient({ session }: { session: Session | null }) {
 
     // Set initial session
     setLiveSession(session);
+    previousSessionRef.current = session;
 
     // Subscribe to auth state changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
-      (_event: unknown, newSession: Session | null) => {
+      (event: string, newSession: Session | null) => {
+        // Check if this is a new signup (user didn't have session before, now they do)
+        const isNewSignup =
+          !previousSessionRef.current && newSession && event === "SIGNED_IN";
+
         setLiveSession(newSession);
+        previousSessionRef.current = newSession;
+
+        // If new signup and user hasn't set their name, show profile setup modal
+        if (isNewSignup && newSession?.user) {
+          const userData = newSession.user.user_metadata;
+          const hasName = userData?.first_name || userData?.full_name;
+          if (!hasName) {
+            // Small delay to let other modals close first
+            setTimeout(() => {
+              setShowProfileSetupModal(true);
+            }, 500);
+          }
+        }
       }
     );
 
@@ -74,14 +96,6 @@ export default function HomeClient({ session }: { session: Session | null }) {
       setCurrentBackground(getBackgroundForStep(currentStep));
     }
   }, [currentStep, currentBackground]);
-
-  // Force homepage on first load to prevent jumping
-  useEffect(() => {
-    if (!isInitialized) {
-      setCurrentStep(-1);
-      setIsInitialized(true);
-    }
-  }, [isInitialized, setCurrentStep]);
 
   // Reset invalid step to landing page
   useEffect(() => {
@@ -151,7 +165,12 @@ export default function HomeClient({ session }: { session: Session | null }) {
 
   const renderCurrentScreen = () => {
     if (currentStep === -1) {
-      return <LandingPage onBeginClick={handleBeginClick} />;
+      return (
+        <LandingPage
+          onBeginClick={handleBeginClick}
+          onLearnMoreClick={() => setShowWelcomeModal(true)}
+        />
+      );
     }
 
     if (currentStep === 9) {
@@ -179,6 +198,24 @@ export default function HomeClient({ session }: { session: Session | null }) {
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Data loss prevention - warn users before leaving with unsaved changes
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      // Get current state directly from store to avoid stale closures
+      const { isDirty, currentStep: step, isSaved } = useStore.getState();
+
+      // Only warn if user is in journey (not landing or summary) and has unsaved changes
+      if (isDirty && !isSaved && step > -1 && step < 9) {
+        e.preventDefault();
+        // Modern browsers ignore custom messages, but this is required for the prompt to show
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
   return (
@@ -222,7 +259,10 @@ export default function HomeClient({ session }: { session: Session | null }) {
 
           {/* Content Layer */}
           <div className="relative z-10">
-            <LandingPage onBeginClick={handleBeginClick} />
+            <LandingPage
+              onBeginClick={handleBeginClick}
+              onLearnMoreClick={() => setShowWelcomeModal(true)}
+            />
           </div>
         </div>
       ) : (
@@ -284,6 +324,21 @@ export default function HomeClient({ session }: { session: Session | null }) {
         onOpenChange={setShowSoftGateModal}
         onContinueAsGuest={handleContinueAsGuest}
         onAuthComplete={handleAuthComplete}
+      />
+
+      {/* Welcome Info Modal for "Who is this for?" */}
+      <WelcomeInfoModal
+        open={showWelcomeModal}
+        onOpenChange={setShowWelcomeModal}
+      />
+
+      {/* Profile Setup Modal for new users */}
+      <ProfileSetupModal
+        open={showProfileSetupModal}
+        onOpenChange={setShowProfileSetupModal}
+        onComplete={() => {
+          // Profile setup complete, user can continue
+        }}
       />
     </div>
   );

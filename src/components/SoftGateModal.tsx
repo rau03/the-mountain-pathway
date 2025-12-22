@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Mountain, ArrowLeft } from "lucide-react";
+import { Mountain, ArrowLeft, Loader2 } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
 
 type SoftGateModalProps = {
@@ -32,10 +32,23 @@ export default function SoftGateModal({
   const [view, setView] = useState<ModalView>("choice");
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
 
-  // Reset view when modal opens
+  // Custom signup form state
+  const [firstName, setFirstName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [signupError, setSignupError] = useState<string | null>(null);
+  const [signupSuccess, setSignupSuccess] = useState(false);
+
+  // Reset form when modal opens
   useEffect(() => {
     if (open) {
       setView("choice");
+      setFirstName("");
+      setEmail("");
+      setPassword("");
+      setSignupError(null);
+      setSignupSuccess(false);
     }
   }, [open]);
 
@@ -77,6 +90,60 @@ export default function SoftGateModal({
 
   const handleBack = () => {
     setView("choice");
+    setSignupError(null);
+    setSignupSuccess(false);
+  };
+
+  // Custom signup handler
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!supabase) {
+      setSignupError("Authentication not configured");
+      return;
+    }
+
+    if (!firstName.trim()) {
+      setSignupError("Please enter your first name");
+      return;
+    }
+
+    if (!email.trim()) {
+      setSignupError("Please enter your email");
+      return;
+    }
+
+    if (password.length < 6) {
+      setSignupError("Password must be at least 6 characters");
+      return;
+    }
+
+    setSignupLoading(true);
+    setSignupError(null);
+
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+        options: {
+          data: {
+            first_name: firstName.trim(),
+            full_name: firstName.trim(),
+          },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        setSignupError(error.message);
+      } else {
+        setSignupSuccess(true);
+      }
+    } catch (err) {
+      setSignupError(err instanceof Error ? err.message : "Signup failed");
+    } finally {
+      setSignupLoading(false);
+    }
   };
 
   // If user is already authenticated, just start the journey
@@ -150,8 +217,8 @@ export default function SoftGateModal({
               </button>
             </div>
           </div>
-        ) : (
-          // Auth form (signup or login)
+        ) : view === "signup" ? (
+          // Custom Signup Form
           <div className="p-6 space-y-4">
             {/* Back button */}
             <button
@@ -165,16 +232,154 @@ export default function SoftGateModal({
             {/* Header */}
             <div className="text-center space-y-2">
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                {view === "signup" ? "Create Your Account" : "Welcome Back"}
+                Create Your Account
               </h2>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                {view === "signup"
-                  ? "Sign up to save your journey"
-                  : "Log in to continue your journey"}
+                Sign up to save your journey
               </p>
             </div>
 
-            {/* Auth UI */}
+            {signupSuccess ? (
+              // Success message
+              <div className="text-center space-y-4 py-4">
+                <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                  <p className="text-sm text-green-700 dark:text-green-300 font-medium">
+                    Check your email!
+                  </p>
+                  <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                    We&apos;ve sent a confirmation link to {email}
+                  </p>
+                </div>
+                <Button
+                  onClick={() => {
+                    setSignupSuccess(false);
+                    setView("login");
+                  }}
+                  variant="outline"
+                  className="w-full"
+                >
+                  Go to Login
+                </Button>
+              </div>
+            ) : (
+              // Signup form
+              <form onSubmit={handleSignup} className="space-y-4">
+                <div>
+                  <label
+                    htmlFor="signup-firstName"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    id="signup-firstName"
+                    type="text"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Your first name"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
+                    autoFocus
+                    disabled={signupLoading}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="signup-email"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Email
+                  </label>
+                  <input
+                    id="signup-email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="you@example.com"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
+                    disabled={signupLoading}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="signup-password"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  >
+                    Password
+                  </label>
+                  <input
+                    id="signup-password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="At least 6 characters"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
+                    disabled={signupLoading}
+                  />
+                </div>
+
+                {signupError && (
+                  <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                    <p className="text-sm text-red-600 dark:text-red-400">
+                      {signupError}
+                    </p>
+                  </div>
+                )}
+
+                <Button
+                  type="submit"
+                  disabled={signupLoading}
+                  className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                >
+                  {signupLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                      Creating account...
+                    </>
+                  ) : (
+                    "Create Account"
+                  )}
+                </Button>
+              </form>
+            )}
+
+            {/* Toggle to login */}
+            {!signupSuccess && (
+              <div className="text-center text-sm text-gray-500 dark:text-gray-400">
+                Already have an account?{" "}
+                <button
+                  onClick={() => setView("login")}
+                  className="text-brand-gold hover:text-brand-gold/80"
+                >
+                  Log in
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          // Login form (using Supabase Auth UI)
+          <div className="p-6 space-y-4">
+            {/* Back button */}
+            <button
+              onClick={handleBack}
+              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back
+            </button>
+
+            {/* Header */}
+            <div className="text-center space-y-2">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                Welcome Back
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                Log in to continue your journey
+              </p>
+            </div>
+
+            {/* Auth UI for Login */}
             {supabase ? (
               <Auth
                 supabaseClient={supabase}
@@ -185,13 +390,50 @@ export default function SoftGateModal({
                       colors: {
                         brand: "#D4A574",
                         brandAccent: "#C49660",
+                        messageText: "#ef4444",
+                        messageTextDanger: "#ef4444",
+                        inputText: "#1f2937",
+                        inputBackground: "#ffffff",
+                        inputBorder: "#d1d5db",
+                        inputBorderFocus: "#D4A574",
+                        inputBorderHover: "#9ca3af",
                       },
+                      borderWidths: {
+                        inputBorderWidth: "1px",
+                      },
+                      radii: {
+                        inputBorderRadius: "0.375rem",
+                        buttonBorderRadius: "0.375rem",
+                      },
+                    },
+                    dark: {
+                      colors: {
+                        brand: "#D4A574",
+                        brandAccent: "#C49660",
+                        messageText: "#f87171",
+                        messageTextDanger: "#f87171",
+                        inputText: "#f9fafb",
+                        inputBackground: "#374151",
+                        inputBorder: "#4b5563",
+                        inputBorderFocus: "#D4A574",
+                        inputBorderHover: "#6b7280",
+                      },
+                    },
+                  },
+                  style: {
+                    message: {
+                      color: "#ef4444",
+                      fontWeight: "500",
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                      backgroundColor: "rgba(239, 68, 68, 0.1)",
+                      border: "1px solid rgba(239, 68, 68, 0.3)",
                     },
                   },
                 }}
                 theme="dark"
                 providers={[]}
-                view={view === "signup" ? "sign_up" : "sign_in"}
+                view="sign_in"
                 redirectTo={`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`}
               />
             ) : (
@@ -205,29 +447,15 @@ export default function SoftGateModal({
               </div>
             )}
 
-            {/* Toggle between signup/login */}
+            {/* Toggle to signup */}
             <div className="text-center text-sm text-gray-500 dark:text-gray-400">
-              {view === "signup" ? (
-                <>
-                  Already have an account?{" "}
-                  <button
-                    onClick={() => setView("login")}
-                    className="text-brand-gold hover:text-brand-gold/80"
-                  >
-                    Log in
-                  </button>
-                </>
-              ) : (
-                <>
-                  Don&apos;t have an account?{" "}
-                  <button
-                    onClick={() => setView("signup")}
-                    className="text-brand-gold hover:text-brand-gold/80"
-                  >
-                    Sign up
-                  </button>
-                </>
-              )}
+              Don&apos;t have an account?{" "}
+              <button
+                onClick={() => setView("signup")}
+                className="text-brand-gold hover:text-brand-gold/80"
+              >
+                Sign up
+              </button>
             </div>
           </div>
         )}
