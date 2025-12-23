@@ -20,48 +20,112 @@ function ResetPasswordContent() {
   // Handle code exchange and session check
   useEffect(() => {
     const handleAuth = async () => {
-      if (!supabase) {
+      // Add a timeout to prevent infinite loading
+      const timeoutId = setTimeout(() => {
+        console.error("Auth check timed out");
         setIsValidSession(false);
-        return;
-      }
+        setIsExchangingCode(false);
+      }, 10000);
 
-      // Check if there's a code in the URL (from email link)
-      const code = searchParams.get("code");
+      try {
+        if (!supabase) {
+          console.error("Supabase client not available");
+          clearTimeout(timeoutId);
+          setIsValidSession(false);
+          return;
+        }
 
-      if (code) {
-        setIsExchangingCode(true);
-        try {
-          // Exchange the code for a session
-          const { error: exchangeError } =
-            await supabase.auth.exchangeCodeForSession(code);
+        // Check for hash fragment (older Supabase flow)
+        // The hash might contain access_token and type=recovery
+        if (typeof window !== "undefined" && window.location.hash) {
+          const hashParams = new URLSearchParams(
+            window.location.hash.substring(1)
+          );
+          const accessToken = hashParams.get("access_token");
+          const refreshToken = hashParams.get("refresh_token");
+          const type = hashParams.get("type");
 
-          if (exchangeError) {
-            console.error("Code exchange error:", exchangeError);
+          if (accessToken && type === "recovery") {
+            setIsExchangingCode(true);
+            try {
+              // Set the session from the hash tokens
+              const { error: sessionError } = await supabase.auth.setSession({
+                access_token: accessToken,
+                refresh_token: refreshToken || "",
+              });
+
+              if (sessionError) {
+                console.error("Session error:", sessionError);
+                clearTimeout(timeoutId);
+                setIsValidSession(false);
+                setIsExchangingCode(false);
+                return;
+              }
+
+              clearTimeout(timeoutId);
+              setIsValidSession(true);
+              setIsExchangingCode(false);
+              // Clean up URL
+              window.history.replaceState({}, "", "/reset-password");
+              return;
+            } catch (err) {
+              console.error("Hash token error:", err);
+            }
+          }
+        }
+
+        // Check if there's a code in the URL (PKCE flow)
+        const code = searchParams.get("code");
+
+        if (code) {
+          setIsExchangingCode(true);
+          try {
+            // Exchange the code for a session
+            const { error: exchangeError } =
+              await supabase.auth.exchangeCodeForSession(code);
+
+            if (exchangeError) {
+              console.error("Code exchange error:", exchangeError);
+              clearTimeout(timeoutId);
+              setIsValidSession(false);
+              setIsExchangingCode(false);
+              return;
+            }
+
+            // Code exchanged successfully, now check session
+            const {
+              data: { session },
+            } = await supabase.auth.getSession();
+            clearTimeout(timeoutId);
+            setIsValidSession(!!session);
+            setIsExchangingCode(false);
+
+            // Clean up URL by removing the code parameter
+            window.history.replaceState({}, "", "/reset-password");
+          } catch (err) {
+            console.error("Error exchanging code:", err);
+            clearTimeout(timeoutId);
             setIsValidSession(false);
             setIsExchangingCode(false);
-            return;
           }
-
-          // Code exchanged successfully, now check session
-          const {
-            data: { session },
-          } = await supabase.auth.getSession();
-          setIsValidSession(!!session);
-          setIsExchangingCode(false);
-
-          // Clean up URL by removing the code parameter
-          window.history.replaceState({}, "", "/reset-password");
-        } catch (err) {
-          console.error("Error exchanging code:", err);
-          setIsValidSession(false);
-          setIsExchangingCode(false);
+        } else {
+          // No code in URL, just check if there's an existing session
+          try {
+            const {
+              data: { session },
+            } = await supabase.auth.getSession();
+            clearTimeout(timeoutId);
+            setIsValidSession(!!session);
+          } catch (err) {
+            console.error("Error getting session:", err);
+            clearTimeout(timeoutId);
+            setIsValidSession(false);
+          }
         }
-      } else {
-        // No code in URL, just check if there's an existing session
-        const {
-          data: { session },
-        } = await supabase.auth.getSession();
-        setIsValidSession(!!session);
+      } catch (err) {
+        console.error("Auth handler error:", err);
+        setIsValidSession(false);
+        setIsExchangingCode(false);
       }
     };
 
