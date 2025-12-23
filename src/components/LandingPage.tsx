@@ -1,5 +1,5 @@
 import React from "react";
-import { Mountain, Play, HelpCircle, Coffee } from "lucide-react";
+import { Mountain, Play, HelpCircle, Coffee, Mail } from "lucide-react";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
 
@@ -69,16 +69,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </button>
         )}
 
-        {/* Support Link */}
-        <a
-          href="https://buymeacoffee.com/themountainpathway"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs text-white/60 hover:text-white/90 transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
-        >
-          <Coffee className="w-3.5 h-3.5" />
-          <span>Support this project</span>
-        </a>
+        {/* Support & Contact Links */}
+        <div className="flex flex-col items-center gap-2">
+          <a
+            href="https://buymeacoffee.com/themountainpathway"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
+          >
+            <Coffee className="w-4 h-4" />
+            <span>Support this project</span>
+          </a>
+          <a
+            href="mailto:hello@themountainpathway.com"
+            className="flex items-center gap-1.5 text-sm text-white/70 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
+          >
+            <Mail className="w-4 h-4" />
+            <span>Contact</span>
+          </a>
+        </div>
       </div>
     </div>
   );
