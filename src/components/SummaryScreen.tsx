@@ -418,20 +418,8 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         </div>
       )}
 
-      {/* Creator Attribution & Support */}
+      {/* Support & Legal */}
       <div className="text-center pt-8 space-y-3">
-        <p className="text-xs text-brand-slate/50">
-          The Mountain Pathway created by{" "}
-          <a
-            href="https://www.webdevbyrau.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-brand-gold transition-colors underline"
-          >
-            webdevbyrau
-          </a>
-        </p>
-
         {/* Buy Me a Coffee Link */}
         <a
           href="https://buymeacoffee.com/themountainpathway"
@@ -473,6 +461,19 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
             Contact
           </a>
         </div>
+
+        {/* Creator Attribution */}
+        <p className="text-xs text-brand-slate/40">
+          The Mountain Pathway created by{" "}
+          <a
+            href="https://www.webdevbyrau.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hover:text-brand-slate/70 transition-colors underline"
+          >
+            webdevbyrau
+          </a>
+        </p>
       </div>
 
       {/* Save Journey Modal */}
