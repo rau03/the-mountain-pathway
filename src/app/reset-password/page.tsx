@@ -1,36 +1,72 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Mountain, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
 
-export default function ResetPasswordPage() {
+function ResetPasswordContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [isValidSession, setIsValidSession] = useState<boolean | null>(null);
+  const [isExchangingCode, setIsExchangingCode] = useState(false);
 
-  // Check if user has a valid recovery session
+  // Handle code exchange and session check
   useEffect(() => {
-    const checkSession = async () => {
+    const handleAuth = async () => {
       if (!supabase) {
         setIsValidSession(false);
         return;
       }
 
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setIsValidSession(!!session);
+      // Check if there's a code in the URL (from email link)
+      const code = searchParams.get("code");
+
+      if (code) {
+        setIsExchangingCode(true);
+        try {
+          // Exchange the code for a session
+          const { error: exchangeError } =
+            await supabase.auth.exchangeCodeForSession(code);
+
+          if (exchangeError) {
+            console.error("Code exchange error:", exchangeError);
+            setIsValidSession(false);
+            setIsExchangingCode(false);
+            return;
+          }
+
+          // Code exchanged successfully, now check session
+          const {
+            data: { session },
+          } = await supabase.auth.getSession();
+          setIsValidSession(!!session);
+          setIsExchangingCode(false);
+
+          // Clean up URL by removing the code parameter
+          window.history.replaceState({}, "", "/reset-password");
+        } catch (err) {
+          console.error("Error exchanging code:", err);
+          setIsValidSession(false);
+          setIsExchangingCode(false);
+        }
+      } else {
+        // No code in URL, just check if there's an existing session
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
+        setIsValidSession(!!session);
+      }
     };
 
-    checkSession();
-  }, []);
+    handleAuth();
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -74,13 +110,15 @@ export default function ResetPasswordPage() {
     }
   };
 
-  // Loading state while checking session
-  if (isValidSession === null) {
+  // Loading state while checking session or exchanging code
+  if (isValidSession === null || isExchangingCode) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
         <div className="flex flex-col items-center">
           <Loader2 className="w-8 h-8 animate-spin text-brand-gold" />
-          <p className="mt-4 text-gray-400">Loading...</p>
+          <p className="mt-4 text-gray-400">
+            {isExchangingCode ? "Verifying your link..." : "Loading..."}
+          </p>
         </div>
       </div>
     );
@@ -227,5 +265,26 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Loading fallback for Suspense
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+      <div className="flex flex-col items-center">
+        <Loader2 className="w-8 h-8 animate-spin text-brand-gold" />
+        <p className="mt-4 text-gray-400">Loading...</p>
+      </div>
+    </div>
+  );
+}
+
+// Wrapper component with Suspense for useSearchParams
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <ResetPasswordContent />
+    </Suspense>
   );
 }

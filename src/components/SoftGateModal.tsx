@@ -177,7 +177,7 @@ export default function SoftGateModal({
       const { error } = await supabase.auth.resetPasswordForEmail(
         resetEmail.trim(),
         {
-          redirectTo: `${window.location.origin}/auth/callback?type=recovery`,
+          redirectTo: `${window.location.origin}/reset-password`,
         }
       );
 
