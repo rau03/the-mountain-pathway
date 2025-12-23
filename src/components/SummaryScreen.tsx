@@ -465,6 +465,13 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
           >
             Data Deletion
           </a>
+          <span>·</span>
+          <a
+            href="mailto:hello@themountainpathway.com"
+            className="hover:text-brand-slate/70 transition-colors"
+          >
+            Contact
+          </a>
         </div>
       </div>
 
