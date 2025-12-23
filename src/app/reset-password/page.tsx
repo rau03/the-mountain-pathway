@@ -162,6 +162,10 @@ function ResetPasswordContent() {
         setError(updateError.message);
       } else {
         setSuccess(true);
+        // Clear any persisted journey state so user starts fresh
+        if (typeof window !== "undefined") {
+          localStorage.removeItem("mountain-pathway-storage");
+        }
         // Redirect to home after 3 seconds
         setTimeout(() => {
           router.push("/");
