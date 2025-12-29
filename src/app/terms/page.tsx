@@ -24,89 +24,127 @@ export default function TermsOfService() {
         </h1>
 
         <div className="prose prose-slate max-w-none space-y-6">
-          <p className="text-brand-slate/70 italic">Last updated: [DATE]</p>
+          <p className="text-brand-slate/70 italic">Last Updated: December 28, 2025</p>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              1. Acceptance of Terms
+              Acceptance of Terms
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Add terms regarding acceptance of service terms,
-              eligibility requirements, and agreement to abide by guidelines.]
+              By visiting or using Mountain Pathway, you agree to these Terms of Service.
+              If you do not agree, please do not use the site.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              2. Description of Service
+              Use of the Service
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Describe The Mountain Pathway service - a guided
-              reflection and meditation experience that helps users engage in
-              mindful journaling and spiritual growth.]
+              You may use Mountain Pathway solely for:
+            </p>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li>Personal reflection</li>
+              <li>Journaling</li>
+              <li>Non-commercial use</li>
+            </ul>
+            <p className="text-brand-slate/80 leading-relaxed mt-4">
+              You agree not to:
+            </p>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li>Reverse engineer the platform</li>
+              <li>Attempt unauthorized access</li>
+              <li>Use the app in ways that may harm the service or other users</li>
+            </ul>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-xl font-semibold text-brand-slate">
+              Journaling Content
+            </h2>
+            <p className="text-brand-slate/80 leading-relaxed">
+              All journaling entries remain yours. We do not claim ownership of your content.
+              Your entries are stored locally on your device, unless you export them.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              3. User Accounts
+              Intellectual Property
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Add terms about account creation, responsibility for
-              account security, accurate information requirements, and account
-              termination.]
+              All images, UI layouts, visual designs, code, and written materials are property 
+              of Mountain Pathway and may not be copied or distributed without permission.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              4. User Content
+              No Guarantee of Availability
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Describe user ownership of their reflection content,
-              privacy of personal reflections, and how user data is handled.]
+              We may modify or discontinue parts of the service at any time.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              5. Intellectual Property
+              Limitation of Liability
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Add terms about ownership of The Mountain Pathway
-              content, scripture usage rights, and restrictions on
-              copying/distributing the service content.]
+              Mountain Pathway provides a reflective journaling experience for personal growth. 
+              We are not responsible for:
+            </p>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li>Data loss on your device</li>
+              <li>Damages arising from use of the platform</li>
+              <li>Emotional outcomes of the journaling process</li>
+            </ul>
+            <p className="text-brand-slate/80 leading-relaxed mt-4">
+              Use at your own discretion.
+            </p>
+          </section>
+
+          {/* Disclaimer Section */}
+          <section className="space-y-4 bg-amber-50 rounded-lg p-6 border border-amber-200 mt-8">
+            <h2 className="text-xl font-semibold text-brand-slate">
+              Disclaimer
+            </h2>
+            <p className="text-brand-slate/80 leading-relaxed">
+              Mountain Pathway is a reflective journaling experience designed for personal 
+              insight and spiritual development.
+            </p>
+            <p className="text-brand-slate/80 leading-relaxed">
+              <strong>It is not:</strong>
+            </p>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li>Medical advice</li>
+              <li>Mental health treatment</li>
+              <li>Therapy</li>
+              <li>Psychological counseling</li>
+              <li>Professional guidance</li>
+            </ul>
+            <p className="text-brand-slate/80 leading-relaxed mt-4">
+              If you are experiencing emotional distress or mental health challenges, 
+              please consult a licensed professional.
+            </p>
+            <p className="text-brand-slate/80 leading-relaxed">
+              Use Mountain Pathway at your own discretion.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              6. Limitation of Liability
+              Contact
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Add standard limitation of liability clauses,
-              disclaimer that the service is not a substitute for professional
-              mental health treatment, etc.]
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-brand-slate">
-              7. Changes to Terms
-            </h2>
-            <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Describe how and when terms may be updated, and how
-              users will be notified of changes.]
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-brand-slate">
-              8. Contact Information
-            </h2>
-            <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Add contact email or form for questions about these
-              terms.]
+              For questions:{" "}
+              <a
+                href="mailto:hello@themountainpathway.com"
+                className="text-brand-slate underline hover:text-brand-slate/70"
+              >
+                hello@themountainpathway.com
+              </a>
             </p>
           </section>
         </div>

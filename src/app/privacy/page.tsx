@@ -24,111 +24,177 @@ export default function PrivacyPolicy() {
         </h1>
 
         <div className="prose prose-slate max-w-none space-y-6">
-          <p className="text-brand-slate/70 italic">Last updated: [DATE]</p>
+          <p className="text-brand-slate/70 italic">Last Updated: December 28, 2025</p>
+          
+          <p className="text-brand-slate/80 leading-relaxed">
+            <strong>Website:</strong>{" "}
+            <a
+              href="https://www.themountainpathway.com"
+              className="text-brand-slate underline hover:text-brand-slate/70"
+            >
+              https://www.themountainpathway.com
+            </a>
+            <br />
+            <strong>Owner:</strong> Mountain Pathway (Christopher Rau)
+          </p>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              1. Introduction
+              Introduction
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Introduction about commitment to privacy and the
-              purpose of this policy. Emphasize that personal reflections are
-              private and not shared with third parties.]
+              Mountain Pathway (&quot;we,&quot; &quot;us,&quot; &quot;our&quot;) is committed to protecting 
+              your privacy. This Privacy Policy explains what information we collect, how we use it, 
+              and your rights when using our website and journaling experience.
+            </p>
+            <p className="text-brand-slate/80 leading-relaxed">
+              By using Mountain Pathway, you agree to the terms outlined here.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              2. Information We Collect
+              Information We Collect
             </h2>
+            
+            <h3 className="text-lg font-medium text-brand-slate">
+              1. Personal Information You Provide
+            </h3>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Detail what information is collected:]
+              We may collect:
             </p>
-            <ul className="list-disc list-inside text-brand-slate/80 space-y-2">
-              <li>Email address (for account creation)</li>
-              <li>First and last name (optional, for personalization)</li>
-              <li>
-                Journey reflections and responses (user-generated content)
-              </li>
-              <li>Journey completion dates and times</li>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li>Email address (if you create an account or contact us)</li>
+              <li>Feedback or messages you send us</li>
             </ul>
-          </section>
 
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-brand-slate">
-              3. How We Use Your Information
-            </h2>
-            <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Explain how information is used - account
-              management, saving journeys, providing the service, etc. Emphasize
-              that reflection content is never analyzed, sold, or shared.]
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-brand-slate">
-              4. Data Storage and Security
-            </h2>
-            <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Describe data storage (Supabase), security measures,
-              encryption, and how data is protected.]
-            </p>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-brand-slate">
-              5. Your Rights (GDPR/CCPA Compliance)
-            </h2>
-            <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Detail user rights including:]
-            </p>
-            <ul className="list-disc list-inside text-brand-slate/80 space-y-2">
-              <li>Right to access your data</li>
-              <li>Right to export your data (PDF download)</li>
-              <li>Right to delete your data</li>
-              <li>Right to correct inaccurate data</li>
-              <li>Right to withdraw consent</li>
+            <h3 className="text-lg font-medium text-brand-slate mt-4">
+              2. Journaling Data
+            </h3>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li>All journaling entries are stored locally on your device unless you choose to export them.</li>
+              <li>We do not store your journaling content on our servers.</li>
             </ul>
-          </section>
 
-          <section className="space-y-4">
-            <h2 className="text-xl font-semibold text-brand-slate">
-              6. Cookies and Tracking
-            </h2>
+            <h3 className="text-lg font-medium text-brand-slate mt-4">
+              3. Usage Data (Non-Personal)
+            </h3>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Describe any cookies used (essential cookies for
-              authentication only, no tracking cookies, etc.)]
+              We may collect anonymized data such as:
+            </p>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li>Pages visited</li>
+              <li>Browser type</li>
+              <li>Device type</li>
+              <li>Time spent in the app</li>
+            </ul>
+            <p className="text-brand-slate/80 leading-relaxed mt-2">
+              This helps us improve the experience and understand usage patterns.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              7. Third-Party Services
+              How We Use Your Information
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: List third-party services used (Supabase for
-              authentication and database, Vercel for hosting) and link to their
-              privacy policies.]
+              We use collected data to:
+            </p>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li>Provide and improve the Mountain Pathway experience</li>
+              <li>Respond to customer inquiries</li>
+              <li>Analyze anonymized usage patterns</li>
+              <li>Ensure app stability and performance</li>
+            </ul>
+            <p className="text-brand-slate/80 leading-relaxed mt-4 font-medium">
+              We do not sell or share your personal information with third parties for marketing.
+            </p>
+          </section>
+
+          {/* Cookie Policy Section */}
+          <section className="space-y-4 bg-slate-50 rounded-lg p-6 border border-slate-200">
+            <h2 className="text-xl font-semibold text-brand-slate">
+              Cookie Policy
+            </h2>
+            
+            <h3 className="text-lg font-medium text-brand-slate">
+              What Are Cookies?
+            </h3>
+            <p className="text-brand-slate/80 leading-relaxed">
+              Cookies are small text files stored on your device to help improve your experience.
+            </p>
+
+            <h3 className="text-lg font-medium text-brand-slate mt-4">
+              How We Use Cookies
+            </h3>
+            <p className="text-brand-slate/80 leading-relaxed">
+              Mountain Pathway may use:
+            </p>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li><strong>Essential cookies</strong> – required for basic functionality</li>
+              <li><strong>Analytics cookies</strong> – measure anonymized usage patterns</li>
+            </ul>
+            <p className="text-brand-slate/80 leading-relaxed mt-2">
+              We do not use advertising cookies.
+            </p>
+
+            <h3 className="text-lg font-medium text-brand-slate mt-4">
+              Managing Cookies
+            </h3>
+            <p className="text-brand-slate/80 leading-relaxed">
+              You can disable cookies in your browser settings. Note: disabling essential cookies 
+              may break site functionality.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              8. Data Retention
+              Data Security
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Explain how long data is kept, and what happens to
-              data when accounts are deleted.]
+              We take reasonable steps to protect your information. That said, no digital service 
+              can guarantee 100% security.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-xl font-semibold text-brand-slate">
-              9. Contact Us
+              Children&apos;s Privacy
             </h2>
             <p className="text-brand-slate/80 leading-relaxed">
-              [PLACEHOLDER: Add contact information for privacy-related
-              questions or data requests.]
+              Mountain Pathway is not intended for users under 13.
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-xl font-semibold text-brand-slate">
+              Your Rights
+            </h2>
+            <p className="text-brand-slate/80 leading-relaxed">
+              Depending on your region, you may request to:
+            </p>
+            <ul className="list-disc list-inside text-brand-slate/80 space-y-2 ml-4">
+              <li>Access the personal data we store</li>
+              <li>Request deletion of your data</li>
+              <li>Opt-out of analytics cookies</li>
+            </ul>
+            <p className="text-brand-slate/80 leading-relaxed mt-4">
+              Contact us at:{" "}
+              <a
+                href="mailto:hello@themountainpathway.com"
+                className="text-brand-slate underline hover:text-brand-slate/70"
+              >
+                hello@themountainpathway.com
+              </a>
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-xl font-semibold text-brand-slate">
+              Changes to This Policy
+            </h2>
+            <p className="text-brand-slate/80 leading-relaxed">
+              We may update this Privacy Policy from time to time. Updates will be posted on this page.
             </p>
           </section>
         </div>
