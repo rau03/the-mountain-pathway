@@ -115,7 +115,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
   };
 
   const generateSummaryText = () => {
-    const date = new Date(currentEntry.createdAt).toLocaleDateString("en-US", {
+    const date = new Date().toLocaleDateString("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
@@ -155,7 +155,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       pdf.setFontSize(20);
       pdf.text(pathwayContent.appTitle, 20, 30);
 
-      const date = new Date(currentEntry.createdAt).toLocaleDateString(
+      const date = new Date().toLocaleDateString(
         "en-US",
         {
           weekday: "long",
@@ -206,7 +206,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         yPosition += lines.length * 5 + 15; // 5mm per line + 15mm spacing
       });
 
-      const dateStr = new Date(currentEntry.createdAt)
+      const dateStr = new Date()
         .toISOString()
         .split("T")[0];
       pdf.save(`mountain-pathway-${dateStr}.pdf`);
@@ -296,7 +296,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
               {pathwayContent.appTitle}
             </h3>
             <p className="text-sm text-brand-slate/70">
-              {new Date(currentEntry.createdAt).toLocaleDateString("en-US", {
+              {new Date().toLocaleDateString("en-US", {
                 weekday: "long",
                 year: "numeric",
                 month: "long",
