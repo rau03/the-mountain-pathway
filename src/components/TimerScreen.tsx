@@ -55,9 +55,8 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
     setTimeLeft(silenceTimer * 60);
   }, [silenceTimer]);
 
-  // Timer effect with ref-based interval management to prevent 0:01 freeze
+  // Timer countdown effect
   useEffect(() => {
-    // Clear any existing interval when timer becomes inactive
     if (!isTimerActive) {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -66,17 +65,9 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
       return;
     }
 
-    // Start interval when timer is active
     intervalRef.current = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          // Clear interval immediately in the callback to prevent race condition
-          if (intervalRef.current) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-          }
-          // Stop the timer synchronously
-          stopTimer();
           return 0;
         }
         return prev - 1;
@@ -89,7 +80,14 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
         intervalRef.current = null;
       }
     };
-  }, [isTimerActive, stopTimer]);
+  }, [isTimerActive]);
+
+  // Separate effect to handle timer completion - prevents race condition
+  useEffect(() => {
+    if (timeLeft === 0 && isTimerActive) {
+      stopTimer();
+    }
+  }, [timeLeft, isTimerActive, stopTimer]);
 
   const handleStart = () => {
     setHasStarted(true);
