@@ -69,15 +69,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </button>
         )}
 
-        {/* Support Link */}
+        {/* Buy Me a Coffee Link */}
         <a
           href="https://buymeacoffee.com/themountainpathway"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
+          className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
         >
-          <Coffee className="w-4 h-4" />
-          <span>Support this project</span>
+          <Coffee className="w-5 h-5" />
+          <span>Buy me a Coffee</span>
         </a>
 
         {/* Contact Link */}

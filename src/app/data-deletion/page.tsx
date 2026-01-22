@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, Trash2, Mail, Clock, Shield, AlertTriangle } from "lucide-react";
+import { ArrowLeft, Trash2, Mail, Clock, Shield, AlertTriangle, Coffee } from "lucide-react";
 
 export const metadata = {
   title: "Data Deletion | The Mountain Pathway",
@@ -183,6 +183,19 @@ export default function DataDeletion() {
               </a>
             </p>
           </section>
+
+          {/* Buy Me a Coffee Link */}
+          <div className="text-center pt-8 border-t border-brand-slate/10 mt-8">
+            <a
+              href="https://buymeacoffee.com/themountainpathway"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
+            >
+              <Coffee className="w-4 h-4" />
+              <span>Buy me a Coffee</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>

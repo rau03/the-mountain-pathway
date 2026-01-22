@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Mountain, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Mountain, Loader2, CheckCircle, AlertCircle, Coffee } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
 
 function ResetPasswordContent() {
@@ -330,6 +330,19 @@ function ResetPasswordContent() {
           >
             ← Back to home
           </button>
+        </div>
+
+        {/* Buy Me a Coffee Link */}
+        <div className="mt-6 text-center">
+          <a
+            href="https://buymeacoffee.com/themountainpathway"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-300 transition-colors"
+          >
+            <Coffee className="w-4 h-4" />
+            <span>Buy me a Coffee</span>
+          </a>
         </div>
       </div>
     </div>

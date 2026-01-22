@@ -425,10 +425,10 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
           href="https://buymeacoffee.com/themountainpathway"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-xs text-brand-slate/60 hover:text-brand-slate transition-colors"
+          className="inline-flex items-center gap-2 text-sm text-brand-slate/60 hover:text-brand-slate transition-colors"
         >
-          <Coffee className="w-3.5 h-3.5" />
-          <span>Support The Mountain Pathway</span>
+          <Coffee className="w-4 h-4" />
+          <span>Buy me a Coffee</span>
         </a>
 
         {/* Legal Links */}

@@ -34,6 +34,7 @@ export default function LoginPage() {
       style={{
         minHeight: "100vh",
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
         padding: "2rem",
@@ -49,6 +50,43 @@ export default function LoginPage() {
           onlyThirdPartyProviders={false}
         />
       </div>
+
+      {/* Buy Me a Coffee Link */}
+      <a
+        href="https://buymeacoffee.com/themountainpathway"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          marginTop: "2rem",
+          fontSize: "0.875rem",
+          color: "rgba(255, 255, 255, 0.5)",
+          textDecoration: "none",
+          transition: "color 0.2s",
+        }}
+        onMouseOver={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.7)")}
+        onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.5)")}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M10 2v2" />
+          <path d="M14 2v2" />
+          <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" />
+          <path d="M6 2v2" />
+        </svg>
+        Buy me a Coffee
+      </a>
     </div>
   );
 }

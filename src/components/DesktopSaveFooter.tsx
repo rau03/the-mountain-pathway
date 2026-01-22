@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Session } from "@supabase/supabase-js";
-import { ArrowLeft, ArrowRight, Save } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, Coffee } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
 import { Button } from "./ui/button";
@@ -194,6 +194,19 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
           </Button>
         </div>
       </footer>
+
+      {/* Buy Me a Coffee Link */}
+      <div className="text-center pt-3">
+        <a
+          href="https://buymeacoffee.com/themountainpathway"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-sm text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
+        >
+          <Coffee className="w-4 h-4" />
+          <span>Buy me a Coffee</span>
+        </a>
+      </div>
 
       <AuthModal
         open={showAuthModal}
