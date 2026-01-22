@@ -115,9 +115,9 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
           {quickSaveError}
         </div>
       )}
-      <footer className="w-full flex items-center pt-1 gap-4">
+      <footer className="w-full grid grid-cols-[1fr_auto_1fr] items-center pt-1 gap-4">
         {/* Left Side: Back Button + Quick Save */}
-        <div className="flex-1 flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <Button
             onClick={prevStep}
             disabled={isFirstStep}
@@ -133,8 +133,8 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
               onClick={handleQuickSave}
               disabled={saveLoading}
               variant="ghost"
-              size="lg"
-              className="bg-green-600/80 backdrop-blur-sm text-white hover:bg-green-600 px-4 py-2 rounded-md border border-green-500/30 font-medium"
+              size="sm"
+              className="bg-green-600/80 backdrop-blur-sm text-white hover:bg-green-600 px-3 py-1.5 rounded-md border border-green-500/30 font-medium text-sm"
             >
               {saveLoading ? (
                 <div className="flex items-center gap-2">
@@ -151,29 +151,40 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
           )}
         </div>
 
-        {/* Center: Step Counter */}
-        <p className="text-sm text-brand-slate/70 flex-shrink-0">
-          {currentStep === 9 ? (
-            "Complete"
-          ) : (
-            <>
-              Step {currentStep + 1} of {pathwayData.length}
-            </>
-          )}
-        </p>
+        {/* Center: Step Counter + Coffee Link */}
+        <div className="flex flex-col items-center gap-2">
+          <p className="text-sm text-brand-slate/70">
+            {currentStep === 9 ? (
+              "Complete"
+            ) : (
+              <>
+                Step {currentStep + 1} of {pathwayData.length}
+              </>
+            )}
+          </p>
+          <a
+            href="https://buymeacoffee.com/themountainpathway"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 text-sm text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
+          >
+            <Coffee className="w-4 h-4" />
+            <span>Buy me a Coffee</span>
+          </a>
+        </div>
 
         {/* Right Side: Save Journey Button + Next Button */}
-        <div className="flex-1 flex items-center justify-end gap-2">
+        <div className="flex items-center justify-end gap-2">
           {/* Main Save/Login button */}
           {isAuthenticated && (
             <Button
               onClick={handleFooterButtonClick}
               disabled={saveLoading}
               variant="ghost"
-              size="lg"
-              className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 px-4 py-2 rounded-md border border-brand-slate/20 font-medium"
+              size="sm"
+              className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 px-3 py-1.5 rounded-md border border-brand-slate/20 font-medium text-sm"
             >
-              {isSaved ? "Save As New" : "Save Journey"}
+              {isSaved ? "Save As New" : "Save"}
             </Button>
           )}
 
@@ -182,10 +193,10 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
               onClick={handleFooterButtonClick}
               disabled={saveLoading}
               variant="ghost"
-              size="lg"
-              className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 px-4 py-2 rounded-md border border-brand-slate/20 font-medium"
+              size="sm"
+              className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 px-3 py-1.5 rounded-md border border-brand-slate/20 font-medium text-sm"
             >
-              Save Journey
+              Save
             </Button>
           )}
 
@@ -194,19 +205,6 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
           </Button>
         </div>
       </footer>
-
-      {/* Buy Me a Coffee Link */}
-      <div className="w-full flex justify-center pt-3">
-        <a
-          href="https://buymeacoffee.com/themountainpathway"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-sm text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
-        >
-          <Coffee className="w-4 h-4" />
-          <span>Buy me a Coffee</span>
-        </a>
-      </div>
 
       <AuthModal
         open={showAuthModal}

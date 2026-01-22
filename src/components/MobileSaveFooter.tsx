@@ -141,10 +141,10 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
           </div>
         )}
 
-        {/* Navigation Controls - Single Row with Save Buttons */}
-        <div className="flex items-center gap-2">
+        {/* Navigation Controls - Grid Layout for True Centering */}
+        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
           {/* Left Side: Back Button + Quick Save (if applicable) */}
-          <div className="flex items-center gap-2 flex-1 justify-start">
+          <div className="flex items-center gap-2">
             <Button
               onClick={prevStep}
               disabled={isFirstStep}
@@ -180,35 +180,46 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
             )}
           </div>
 
-          {/* Center: Step Counter + Account Button */}
-          <div className="flex items-center gap-2 flex-shrink-0 justify-center">
-            <p className="text-xs text-brand-slate/70 font-medium whitespace-nowrap">
-              {currentStep === 9 ? (
-                "Complete"
-              ) : (
-                <>
-                  Step {currentStep + 1} of {pathwayData.length}
-                </>
-              )}
-            </p>
+          {/* Center: Step Counter + Account Button + Coffee Link */}
+          <div className="flex flex-col items-center gap-1">
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-brand-slate/70 font-medium whitespace-nowrap">
+                {currentStep === 9 ? (
+                  "Complete"
+                ) : (
+                  <>
+                    Step {currentStep + 1} of {pathwayData.length}
+                  </>
+                )}
+              </p>
 
-            {/* Account Button - Only show when authenticated */}
-            {isAuthenticated && (
-              <Button
-                onClick={() => setShowAuthModal(true)}
-                variant="ghost"
-                size="sm"
-                className="h-6 w-6 p-0"
-                aria-label="Account"
-                title="Account settings"
-              >
-                <User className="h-3.5 w-3.5" />
-              </Button>
-            )}
+              {/* Account Button - Only show when authenticated */}
+              {isAuthenticated && (
+                <Button
+                  onClick={() => setShowAuthModal(true)}
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0"
+                  aria-label="Account"
+                  title="Account settings"
+                >
+                  <User className="h-3.5 w-3.5" />
+                </Button>
+              )}
+            </div>
+            <a
+              href="https://buymeacoffee.com/themountainpathway"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
+            >
+              <Coffee className="w-3.5 h-3.5" />
+              <span>Buy me a Coffee</span>
+            </a>
           </div>
 
           {/* Right Side: Save Journey Button + Next Button */}
-          <div className="flex items-center gap-2 flex-1 justify-end">
+          <div className="flex items-center gap-2 justify-end">
             {/* Main Save/Login button */}
             {isAuthenticated && (
               <Button
@@ -243,19 +254,6 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
-        </div>
-
-        {/* Buy Me a Coffee Link */}
-        <div className="w-full flex justify-center pt-2 pb-1">
-          <a
-            href="https://buymeacoffee.com/themountainpathway"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
-          >
-            <Coffee className="w-3.5 h-3.5" />
-            <span>Buy me a Coffee</span>
-          </a>
         </div>
       </footer>
 
