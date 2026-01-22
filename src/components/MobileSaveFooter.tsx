@@ -142,7 +142,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
         )}
 
         {/* Navigation Controls - Single Row with Save Buttons */}
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
           {/* Left Side: Back Button + Quick Save (if applicable) */}
           <div className="flex items-center gap-2 flex-1 justify-start">
             <Button
@@ -246,7 +246,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
         </div>
 
         {/* Buy Me a Coffee Link */}
-        <div className="text-center pt-2 pb-1">
+        <div className="w-full flex justify-center pt-2 pb-1">
           <a
             href="https://buymeacoffee.com/themountainpathway"
             target="_blank"

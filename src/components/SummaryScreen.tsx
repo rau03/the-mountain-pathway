@@ -419,7 +419,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       )}
 
       {/* Support & Legal */}
-      <div className="text-center pt-8 space-y-3">
+      <div className="w-full flex flex-col items-center pt-8 space-y-3">
         {/* Buy Me a Coffee Link */}
         <a
           href="https://buymeacoffee.com/themountainpathway"

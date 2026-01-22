@@ -115,9 +115,9 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
           {quickSaveError}
         </div>
       )}
-      <footer className="w-full flex items-center justify-between pt-1 gap-4">
+      <footer className="w-full flex items-center pt-1 gap-4">
         {/* Left Side: Back Button + Quick Save */}
-        <div className="flex items-center gap-2">
+        <div className="flex-1 flex items-center gap-2">
           <Button
             onClick={prevStep}
             disabled={isFirstStep}
@@ -163,7 +163,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
         </p>
 
         {/* Right Side: Save Journey Button + Next Button */}
-        <div className="flex items-center gap-2">
+        <div className="flex-1 flex items-center justify-end gap-2">
           {/* Main Save/Login button */}
           {isAuthenticated && (
             <Button
@@ -196,7 +196,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
       </footer>
 
       {/* Buy Me a Coffee Link */}
-      <div className="text-center pt-3">
+      <div className="w-full flex justify-center pt-3">
         <a
           href="https://buymeacoffee.com/themountainpathway"
           target="_blank"
