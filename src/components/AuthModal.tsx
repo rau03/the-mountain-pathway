@@ -125,6 +125,10 @@ export default function AuthModal({
       await supabase.auth.signOut();
       setCurrentSession(null);
       resetJourney(); // Clear the journey data
+      // Clear persisted data from localStorage to prevent sensitive data leakage
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("mountain-pathway-storage");
+      }
       onOpenChange(false);
       setSigningOut(false);
     } catch (error) {
