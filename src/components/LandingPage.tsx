@@ -2,6 +2,7 @@ import React from "react";
 import { Mountain, Play, HelpCircle, Coffee, Mail } from "lucide-react";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
+import { openEmail } from "@/lib/capacitorUtils";
 
 type LandingPageProps = {
   onBeginClick: () => void;
@@ -81,13 +82,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </a>
 
         {/* Contact Link */}
-        <a
-          href="mailto:hello@themountainpathway.com"
+        <button
+          onClick={() => openEmail("hello@themountainpathway.com")}
           className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
         >
           <Mail className="w-4 h-4" />
           <span>Contact</span>
-        </a>
+        </button>
       </div>
     </div>
   );

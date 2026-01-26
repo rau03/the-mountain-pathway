@@ -69,9 +69,9 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
 
       {/* Mobile Content Layout - Full Height Flex Container */}
       <div className="relative z-10 h-full flex flex-col">
-        {/* Mobile Header at Top */}
+        {/* Mobile Header at Top - with iOS safe area */}
         {isJourneyScreen && (
-          <div className="flex-shrink-0 px-4 pt-4 pb-2">
+          <div className="flex-shrink-0 px-4 pt-4 pb-2 safe-area-top">
             <HeaderMobile />
           </div>
         )}

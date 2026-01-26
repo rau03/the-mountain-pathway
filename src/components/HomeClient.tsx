@@ -234,9 +234,9 @@ export default function HomeClient({ session }: { session: Session | null }) {
             backgroundPosition: "center 65%",
           }}
         >
-          {/* Mobile Controls - Top Right */}
+          {/* Mobile Controls - Top Right with iOS safe area */}
           {isMobile && (
-            <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+            <div className="absolute safe-top-4 right-4 z-50 flex items-center gap-2">
               {/* Account Button - Only show for authenticated users on landing page */}
               {/* Non-authenticated users will use the soft gate modal */}
               {liveSession && (

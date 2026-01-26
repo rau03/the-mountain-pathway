@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Note: For Capacitor builds, use "npm run build:capacitor" which handles static export
   async headers() {
     return [
       {
