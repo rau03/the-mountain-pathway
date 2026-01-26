@@ -16,7 +16,8 @@ export async function GET(request: NextRequest) {
   }
 
   // Handle custom next parameter (e.g., from password reset)
-  if (next) {
+  // Validate to prevent open redirect attacks
+  if (next && next.startsWith('/') && !next.startsWith('//')) {
     return NextResponse.redirect(`${requestUrl.origin}${next}`);
   }
 
