@@ -2,6 +2,10 @@
 @import "tw-animate-css";
 
 /* Prevent flash of blank page on initial load */
+html {
+  background-color: #d6d3d1; /* brand-stone for iOS overscroll */
+}
+
 body {
   background-color: #d6d3d1; /* brand-stone shows immediately */
   /* Add multiple background layers for complete homepage effect */
@@ -23,7 +27,7 @@ body {
 /* Override body background when in journey mode */
 body.journey-mode {
   background-image: none;
-  background-color: transparent;
+  background-color: #d6d3d1; /* brand-stone for iOS overscroll */
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -160,7 +164,7 @@ body.journey-mode {
 
 /* iOS Safe Area Support */
 .safe-area-top {
-  padding-top: env(safe-area-inset-top, 0px);
+  margin-top: env(safe-area-inset-top, 0px);
 }
 
 .safe-area-bottom {

@@ -10,6 +10,8 @@ import {
   Coffee,
 } from "lucide-react";
 import { Session } from "@supabase/supabase-js";
+import { Capacitor } from "@capacitor/core";
+import { Share } from "@capacitor/share";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData, pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
@@ -209,8 +211,28 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       const dateStr = new Date()
         .toISOString()
         .split("T")[0];
-      pdf.save(`mountain-pathway-${dateStr}.pdf`);
+      const filename = `mountain-pathway-${dateStr}.pdf`;
+
+      // Check if running in native app (Capacitor)
+      if (Capacitor.isNativePlatform()) {
+        // For native apps, use Share to let user save/share the PDF
+        const pdfBase64 = pdf.output("datauristring");
+        
+        await Share.share({
+          title: "Mountain Pathway Journey",
+          text: "My Mountain Pathway journey summary",
+          url: pdfBase64,
+          dialogTitle: "Save or Share your Journey PDF",
+        });
+      } else {
+        // For web, use standard download
+        pdf.save(filename);
+      }
     } catch (err) {
+      // Don't show error if user just cancelled the share dialog
+      if (err instanceof Error && err.message.includes("cancelled")) {
+        return;
+      }
       alert(
         `Failed to generate PDF: ${
           err instanceof Error ? err.message : "Unknown error"

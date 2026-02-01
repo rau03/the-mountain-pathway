@@ -37,12 +37,12 @@ export const HeaderMobile: React.FC = () => {
           return (
             <div
               key={step.stepIndex}
-              className={`h-2 rounded-full transition-all duration-300 ${
+              className={`h-2 rounded-full transition-all duration-300 shadow-sm shadow-black/40 ${
                 isActive
                   ? "w-6 bg-brand-gold"
                   : isCompleted
-                  ? "w-2 bg-brand-gold/70"
-                  : "w-2 bg-white/30"
+                  ? "w-2 bg-brand-gold/90"
+                  : "w-2 bg-white/60"
               }`}
             />
           );

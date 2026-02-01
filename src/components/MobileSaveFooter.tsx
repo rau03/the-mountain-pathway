@@ -133,7 +133,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
 
   return (
     <>
-      <footer className="w-full bg-brand-stone pb-4 pt-1 px-4 border-t border-brand-stone/20">
+      <footer className="w-full bg-brand-stone pt-2 pb-6 px-5 border-t border-brand-stone/20">
         {/* Quick Save Error Message */}
         {quickSaveError && (
           <div className="mb-2 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
@@ -227,7 +227,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                 disabled={saveLoading}
                 variant="ghost"
                 size="sm"
-                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2.5 py-1.5 rounded-md border border-brand-slate/20 hover:bg-black/20 text-xs"
+                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2 py-1 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[10px]"
               >
                 {isSaved ? "Save As New" : "Save"}
               </Button>
@@ -239,7 +239,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                 disabled={saveLoading}
                 variant="ghost"
                 size="sm"
-                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2.5 py-1.5 rounded-md border border-brand-slate/20 hover:bg-black/20 text-xs"
+                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2 py-1 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[10px]"
               >
                 Save
               </Button>

@@ -79,7 +79,7 @@ export const pathwayData: PathwayStep[] = [
     isInput: false,
     isTimer: true,
     key: "begin",
-    mobileAlignment: "[background-position:center_40%]",
+    mobileAlignment: "[background-position:center_50%]",
   },
   {
     stepIndex: 1,
@@ -145,7 +145,7 @@ and lead me in the way everlasting!
     },
     isInput: false,
     key: "reflect",
-    mobileAlignment: "[background-position:center_80%]",
+    mobileAlignment: "[background-position:center_50%]",
   },
   {
     stepIndex: 2,
@@ -158,7 +158,7 @@ and lead me in the way everlasting!
     icon: "PenLine",
     isInput: true,
     key: "respond",
-    mobileAlignment: "[background-position:center_80%]",
+    mobileAlignment: "[background-position:center_50%]",
   },
   {
     stepIndex: 3,
@@ -171,7 +171,7 @@ and lead me in the way everlasting!
     icon: "Lightbulb",
     isInput: true,
     key: "thoughts",
-    mobileAlignment: "[background-position:center_40%]",
+    mobileAlignment: "[background-position:center_50%]",
   },
   {
     stepIndex: 4,
@@ -184,7 +184,7 @@ and lead me in the way everlasting!
     icon: "Heart",
     isInput: true,
     key: "emotions",
-    mobileAlignment: "[background-position:center_40%]",
+    mobileAlignment: "[background-position:center_70%]",
   },
   {
     stepIndex: 5,
@@ -197,7 +197,7 @@ and lead me in the way everlasting!
     icon: "Star",
     isInput: true,
     key: "desire",
-    mobileAlignment: "[background-position:center_40%]",
+    mobileAlignment: "[background-position:center_70%]",
   },
   {
     stepIndex: 6,
@@ -210,7 +210,7 @@ and lead me in the way everlasting!
     icon: "DoorOpen",
     isInput: true,
     key: "pause",
-    mobileAlignment: "[background-position:center_40%]",
+    mobileAlignment: "[background-position:center_50%]",
   },
   {
     stepIndex: 7,
@@ -223,7 +223,7 @@ and lead me in the way everlasting!
     icon: "Compass",
     isInput: true,
     key: "choices",
-    mobileAlignment: "[background-position:center_40%]",
+    mobileAlignment: "[background-position:center_50%]",
   },
   {
     stepIndex: 8,
@@ -241,7 +241,7 @@ and lead me in the way everlasting!
     isInput: true,
     isSummary: true,
     key: "prayer",
-    mobileAlignment: "[background-position:center_40%]",
+    mobileAlignment: "[background-position:center_50%]",
   },
 ];
 

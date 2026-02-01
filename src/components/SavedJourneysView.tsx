@@ -215,87 +215,86 @@ export default function SavedJourneysView({
               </p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-6">
               {journeys.map((journey) => (
                 <div
                   key={journey.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-brand-gold/30 transition-colors"
+                  className="border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:border-brand-gold/30 transition-colors"
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-lg truncate">
-                        {journey.title}
-                      </h3>
+                  {/* Title */}
+                  <h3 className="font-semibold text-xl mb-4">
+                    {journey.title}
+                  </h3>
 
-                      <div className="flex items-center gap-4 mt-2 text-sm text-gray-600 dark:text-gray-400">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          {formatDate(journey.created_at)}
-                        </div>
-
-                        <div className="flex items-center gap-1">
-                          {journey.is_completed ? (
-                            <>
-                              <CheckCircle className="w-4 h-4 text-green-600" />
-                              <span className="text-green-600">Completed</span>
-                            </>
-                          ) : (
-                            <>
-                              <Clock className="w-4 h-4" />
-                              <span>{getProgressText(journey)}</span>
-                            </>
-                          )}
-                        </div>
-                      </div>
+                  {/* Date and Status - stacked on mobile */}
+                  <div className="flex flex-col gap-3 mb-6 text-base text-gray-600 dark:text-gray-400">
+                    <div className="flex items-center gap-3">
+                      <Calendar className="w-5 h-5" />
+                      <span>{formatDate(journey.created_at)}</span>
                     </div>
 
-                    <div className="flex items-center gap-2 ml-4">
-                      {!journey.is_completed && (
-                        <Button
-                          size="sm"
-                          onClick={() => handleContinue(journey)}
-                          disabled={viewLoading === journey.id}
-                          className="flex items-center gap-1 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
-                        >
-                          {viewLoading === journey.id ? (
-                            <Loader2 className="w-3 h-3 animate-spin" />
-                          ) : (
-                            <Play className="w-3 h-3" />
-                          )}
-                          Continue
-                        </Button>
+                    <div className="flex items-center gap-3">
+                      {journey.is_completed ? (
+                        <>
+                          <CheckCircle className="w-5 h-5 text-green-600" />
+                          <span className="text-green-600 font-medium">Completed</span>
+                        </>
+                      ) : (
+                        <>
+                          <Clock className="w-5 h-5" />
+                          <span>{getProgressText(journey)}</span>
+                        </>
                       )}
+                    </div>
+                  </div>
 
+                  {/* Buttons - full width stacked */}
+                  <div className="flex flex-col gap-3">
+                    {!journey.is_completed && (
                       <Button
-                        size="sm"
-                        variant="outline"
+                        size="lg"
                         onClick={() => handleContinue(journey)}
                         disabled={viewLoading === journey.id}
-                        className="flex items-center gap-1 border-gray-300 dark:border-gray-600"
+                        className="flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold/90 text-slate-900 w-full h-12"
                       >
                         {viewLoading === journey.id ? (
-                          <Loader2 className="w-3 h-3 animate-spin" />
+                          <Loader2 className="w-5 h-5 animate-spin" />
                         ) : (
-                          <Eye className="w-3 h-3" />
+                          <Play className="w-5 h-5" />
                         )}
-                        View
+                        Continue
                       </Button>
+                    )}
 
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDelete(journey.id)}
-                        disabled={deleteLoading === journey.id}
-                        className="flex items-center gap-1 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
-                      >
-                        {deleteLoading === journey.id ? (
-                          <Loader2 className="w-3 h-3 animate-spin" />
-                        ) : (
-                          <Trash2 className="w-3 h-3" />
-                        )}
-                        Delete
-                      </Button>
-                    </div>
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      onClick={() => handleContinue(journey)}
+                      disabled={viewLoading === journey.id}
+                      className="flex items-center justify-center gap-2 border-gray-300 dark:border-gray-600 w-full h-12"
+                    >
+                      {viewLoading === journey.id ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <Eye className="w-5 h-5" />
+                      )}
+                      View
+                    </Button>
+
+                    <Button
+                      size="lg"
+                      variant="outline"
+                      onClick={() => handleDelete(journey.id)}
+                      disabled={deleteLoading === journey.id}
+                      className="flex items-center justify-center gap-2 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20 w-full h-12"
+                    >
+                      {deleteLoading === journey.id ? (
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-5 h-5" />
+                      )}
+                      Delete
+                    </Button>
                   </div>
                 </div>
               ))}
