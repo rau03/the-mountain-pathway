@@ -4,6 +4,13 @@
 /* Prevent flash of blank page on initial load */
 html {
   background-color: #d6d3d1; /* brand-stone for iOS overscroll */
+  min-height: 100%;
+  min-width: 100%;
+}
+
+/* Ensure full coverage in all orientations */
+html, body {
+  overflow-x: hidden;
 }
 
 body {

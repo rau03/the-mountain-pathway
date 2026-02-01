@@ -77,7 +77,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
   // Summary screen has its own rendering
   if (isSummaryScreen) {
     return (
-      <div className="relative min-h-screen bg-brand-stone">
+      <div className="relative min-h-screen w-full min-w-full bg-brand-stone">
         {/* Dark gradient overlay at top for better logo contrast */}
         <div className="absolute inset-0 z-5 bg-gradient-to-b from-brand-slate/40 via-brand-slate/20 to-transparent h-32" />
         <div className="relative z-10 px-6 py-8">
@@ -88,9 +88,9 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
   }
 
   return (
-    <div className="relative h-[100dvh] flex flex-col">
+    <div className="relative h-[100dvh] w-full min-w-full bg-brand-stone flex flex-col">
       {/* Background Image Crossfade Container */}
-      <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute inset-0 overflow-hidden bg-brand-stone">
         {/* Current background (always visible underneath) */}
         <div
           className={`absolute inset-0 bg-cover ${mobileAlignment}`}
