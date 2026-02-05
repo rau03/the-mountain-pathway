@@ -74,10 +74,10 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
       )}
 
       {step.content?.instructions && (
-        <div className="pt-4">
+        <div className="pt-4 text-center">
           <p className="text-sm text-brand-slate/70 italic">
             {step.content.instructions}
-          </p>{" "}
+          </p>
         </div>
       )}
     </motion.div>
