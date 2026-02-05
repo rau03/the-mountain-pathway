@@ -59,36 +59,39 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           {pathwayContent.landingPage.footerText}
         </p>
 
-        {/* Learn More Link */}
-        {onLearnMoreClick && (
+        {/* Footer Links - Tighter spacing */}
+        <div className="flex flex-col items-center gap-2">
+          {/* Learn More Link */}
+          {onLearnMoreClick && (
+            <button
+              onClick={onLearnMoreClick}
+              className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
+            >
+              <HelpCircle className="w-4 h-4" />
+              <span>Who is this for?</span>
+            </button>
+          )}
+
+          {/* Buy Me a Coffee Link */}
+          <a
+            href="https://buymeacoffee.com/themountainpathway"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
+          >
+            <Coffee className="w-5 h-5" />
+            <span>Buy me a Coffee</span>
+          </a>
+
+          {/* Contact Link */}
           <button
-            onClick={onLearnMoreClick}
+            onClick={() => openEmail("hello@themountainpathway.com")}
             className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
           >
-            <HelpCircle className="w-4 h-4" />
-            <span>Who is this for?</span>
+            <Mail className="w-4 h-4" />
+            <span>Contact</span>
           </button>
-        )}
-
-        {/* Buy Me a Coffee Link */}
-        <a
-          href="https://buymeacoffee.com/themountainpathway"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
-        >
-          <Coffee className="w-5 h-5" />
-          <span>Buy me a Coffee</span>
-        </a>
-
-        {/* Contact Link */}
-        <button
-          onClick={() => openEmail("hello@themountainpathway.com")}
-          className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
-        >
-          <Mail className="w-4 h-4" />
-          <span>Contact</span>
-        </button>
+        </div>
       </div>
     </div>
   );
