@@ -16,14 +16,13 @@ export const HeaderMobile: React.FC = () => {
         aria-label="Return to home"
       >
         <Image
-          src="/mountain-icon.svg"
+          src="/gold_line_mountain_pathway.png"
           alt="Mountain Pathway Logo"
-          width={24}
-          height={24}
-          className="w-6 h-6"
+          width={64}
+          height={64}
+          className="w-16 h-16 object-contain drop-shadow-[0_0_6px_rgba(251,191,36,1)]"
           style={{
-            filter:
-              "brightness(0) saturate(100%) invert(75%) sepia(95%) saturate(1352%) hue-rotate(1deg) brightness(102%) contrast(101%)",
+            filter: "brightness(0) saturate(100%) invert(70%) sepia(60%) saturate(2000%) hue-rotate(360deg) brightness(95%) contrast(110%)"
           }}
         />
       </button>
@@ -41,8 +40,8 @@ export const HeaderMobile: React.FC = () => {
                 isActive
                   ? "w-6 bg-brand-gold"
                   : isCompleted
-                  ? "w-2 bg-brand-gold/90"
-                  : "w-2 bg-white/60"
+                    ? "w-2 bg-brand-gold/90"
+                    : "w-2 bg-white/60"
               }`}
             />
           );
