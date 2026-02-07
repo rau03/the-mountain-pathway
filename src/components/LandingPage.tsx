@@ -1,5 +1,6 @@
 import React from "react";
-import { Mountain, Play, HelpCircle, Coffee, Mail } from "lucide-react";
+import Image from "next/image";
+import { Play, HelpCircle, Coffee, Mail } from "lucide-react";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
 import { openEmail } from "@/lib/capacitorUtils";
@@ -18,8 +19,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
       <div className="flex flex-col items-center gap-6 md:gap-8">
         {/* Hero Icon */}
-        <div className="p-6 bg-brand-gold/20 backdrop-blur-sm rounded-full border border-brand-gold/30">
-          <Mountain className="w-16 h-16 text-brand-gold drop-shadow-lg" />
+        <div className="p-0.5 bg-black/20 backdrop-blur-[2px] rounded-full border border-brand-gold/40 drop-shadow-[0_0_25px_rgba(251,191,36,0.6)]">
+          <Image
+            src="/gold_line_mountain_pathway.png"
+            alt="The Mountain Pathway"
+            width={160}
+            height={160}
+            className="w-32 h-32 md:w-36 md:h-36 object-contain brightness-110 contrast-125 saturate-150"
+            priority
+          />
         </div>
 
         {/* Main Content with Text Protection */}
