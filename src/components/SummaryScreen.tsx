@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import {
   Download,
   Copy,
@@ -254,40 +253,20 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         <div className="absolute top-0 left-0 p-4 z-20 -ml-6 -mt-8">
           <button
             onClick={resetJourney}
-            className="bg-transparent border-none p-0 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 relative"
+            className="bg-transparent border-none p-1 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 relative"
             aria-label="Return to home"
+            data-testid="summary-mountain-icon"
           >
-            <div className="relative inline-block">
-              {/* Bolder layer - slightly larger golden version behind */}
-              <Image
-                src="/mountain-icon.svg"
-                alt=""
-                width={24}
-                height={24}
-                className="w-6 h-6 absolute pointer-events-none"
-                style={{
-                  filter:
-                    "brightness(0) saturate(100%) invert(75%) sepia(95%) saturate(1352%) hue-rotate(1deg) brightness(102%) contrast(101%)",
-                  transform: "scale(1.08) translate(-50%, -50%)",
-                  top: "50%",
-                  left: "50%",
-                  zIndex: 0,
-                }}
-              />
-              {/* Main golden logo on top */}
-              <Image
-                src="/mountain-icon.svg"
+            <span className="inline-flex w-8 h-8 overflow-hidden">
+              <img
+                src="/gold_lines_no%20background_mp.png"
                 alt="Mountain Pathway Logo"
-                width={24}
-                height={24}
-                className="w-6 h-6 relative"
-                style={{
-                  filter:
-                    "brightness(0) saturate(100%) invert(75%) sepia(95%) saturate(1352%) hue-rotate(1deg) brightness(102%) contrast(101%)",
-                  zIndex: 1,
-                }}
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain scale-[1.75]"
+                style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
               />
-            </div>
+            </span>
           </button>
         </div>
       )}

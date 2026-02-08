@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { AppState, JournalEntry } from "../../types";
+import { isNativeApp } from "@/lib/capacitorUtils";
 
 const createNewEntry = (): JournalEntry => ({
   id: Date.now().toString(),
@@ -144,6 +145,18 @@ export const useStore = create<AppState>()(
     {
       name: "mountain-pathway-storage",
       version: 3,
+      merge: (persistedState, currentState) => {
+        const merged = { ...currentState, ...(persistedState as object) } as AppState;
+        // On native app, always open at landing page (don't restore step position)
+        try {
+          if (isNativeApp()) {
+            merged.currentStep = -1;
+          }
+        } catch {
+          // Capacitor may not be available (e.g. in tests)
+        }
+        return merged;
+      },
       partialize: (state) => ({
         // Persist journey data and preferences
         currentStep: state.currentStep,

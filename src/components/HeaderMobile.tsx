@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { SimpleAudioPlayer } from "./SimpleAudioPlayer";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
@@ -12,20 +11,20 @@ export const HeaderMobile: React.FC = () => {
       {/* Mobile Logo - Icon Only, Clickable to return home */}
       <button
         onClick={resetJourney}
-        className="bg-transparent border-none p-0 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
+        className="bg-transparent border-none p-1 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 -m-1"
         aria-label="Return to home"
+        data-testid="header-mountain-icon"
       >
-        <Image
-          src="/mountain-icon.svg"
-          alt="Mountain Pathway Logo"
-          width={24}
-          height={24}
-          className="w-6 h-6"
-          style={{
-            filter:
-              "brightness(0) saturate(100%) invert(75%) sepia(95%) saturate(1352%) hue-rotate(1deg) brightness(102%) contrast(101%)",
-          }}
-        />
+        <span className="inline-flex w-8 h-8 overflow-hidden">
+          <img
+            src="/gold_lines_no%20background_mp.png"
+            alt="Mountain Pathway Logo"
+            width={32}
+            height={32}
+            className="w-8 h-8 object-contain scale-[1.75]"
+            style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
+          />
+        </span>
       </button>
 
       {/* Mobile Progress: Simple Dots */}
