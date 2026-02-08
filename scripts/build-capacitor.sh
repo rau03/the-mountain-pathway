@@ -40,6 +40,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   output: "export",
+  trailingSlash: true, // Generates index.html at root for Capacitor
   // Headers don't work with static export, handled by hosting platform
 };
 

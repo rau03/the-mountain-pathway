@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { ProgressPath } from "./ProgressPath";
 import { useStore } from "@/lib/store/useStore";
 
@@ -13,16 +12,16 @@ export const HeaderDesktop: React.FC = () => {
         onClick={resetJourney}
         className="flex items-center gap-3 bg-transparent border-none p-0 text-left cursor-pointer hover:opacity-80 transition-opacity"
       >
-        <Image
-          src="/gold_line_mountain_pathway.png"
-          alt="Mountain Pathway Logo"
-          width={88}
-          height={88}
-          className="w-[88px] h-[88px] object-contain drop-shadow-[0_0_6px_rgba(251,191,36,1)]"
-          style={{
-            filter: "brightness(0) saturate(100%) invert(70%) sepia(60%) saturate(2000%) hue-rotate(360deg) brightness(95%) contrast(110%)"
-          }}
-        />
+        <span className="inline-flex w-10 h-10 overflow-hidden">
+          <img
+            src="/gold_lines_no%20background_mp.png"
+            alt="Mountain Pathway"
+            width={40}
+            height={40}
+            className="w-10 h-10 object-contain scale-[1.75]"
+            style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
+          />
+        </span>
         <div className="flex flex-col">
           <h1 className="text-2xl font-bold text-brand-slate leading-tight">
             The Mountain Pathway

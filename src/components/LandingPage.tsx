@@ -1,5 +1,4 @@
 import React from "react";
-import Image from "next/image";
 import { Play, HelpCircle, Coffee, Mail } from "lucide-react";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
@@ -18,15 +17,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     <div className="min-h-[100dvh] flex flex-col items-center justify-between md:justify-center p-8 pt-16 pb-8 md:gap-8">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
       <div className="flex flex-col items-center gap-6 md:gap-8">
-        {/* Hero Icon */}
-        <div className="p-0.5 bg-black/20 backdrop-blur-[2px] rounded-full border border-brand-gold/40 drop-shadow-[0_0_25px_rgba(251,191,36,0.6)]">
-          <Image
-            src="/gold_line_mountain_pathway.png"
-            alt="The Mountain Pathway"
-            width={160}
-            height={160}
-            className="w-32 h-32 md:w-36 md:h-36 object-contain brightness-110 contrast-125 saturate-150"
-            priority
+        {/* Hero Icon - gold_lines with subtle translucent blurred background */}
+        <div className="p-6 bg-black/15 backdrop-blur-md rounded-full border border-white/5 overflow-hidden">
+          <img
+            src="/gold_lines_no%20background_mp.png"
+            alt="Mountain Pathway"
+            width={64}
+            height={64}
+            className="w-16 h-16 object-contain scale-[1.75]"
+            style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
           />
         </div>
 

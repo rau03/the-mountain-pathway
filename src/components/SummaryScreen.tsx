@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import {
   Download,
   Copy,
@@ -254,19 +253,20 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         <div className="absolute top-0 left-0 p-4 z-20 -ml-6 -mt-8">
           <button
             onClick={resetJourney}
-            className="bg-transparent border-none p-0 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 relative"
+            className="bg-transparent border-none p-1 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 relative"
             aria-label="Return to home"
+            data-testid="summary-mountain-icon"
           >
-            <Image
-              src="/gold_line_mountain_pathway.png"
-              alt="Mountain Pathway Logo"
-              width={64}
-              height={64}
-              className="w-14 h-14 object-contain drop-shadow-[0_0_8px_rgba(251,191,36,1)] drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]"
-              style={{
-                filter: "brightness(0) saturate(100%) invert(60%) sepia(80%) saturate(3000%) hue-rotate(360deg) brightness(85%) contrast(130%)"
-              }}
-            />
+            <span className="inline-flex w-8 h-8 overflow-hidden">
+              <img
+                src="/gold_lines_no%20background_mp.png"
+                alt="Mountain Pathway Logo"
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain scale-[1.75]"
+                style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
+              />
+            </span>
           </button>
         </div>
       )}
