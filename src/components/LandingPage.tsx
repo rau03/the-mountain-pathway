@@ -18,7 +18,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
       <div className="flex flex-col items-center gap-6 md:gap-8">
         {/* Hero Icon - gold_lines with subtle translucent blurred background */}
-        <div className="p-6 bg-black/15 backdrop-blur-md rounded-full border border-white/5 overflow-hidden">
+        <div className="p-6 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden">
           <img
             src="/gold_lines_no%20background_mp.png"
             alt="Mountain Pathway"

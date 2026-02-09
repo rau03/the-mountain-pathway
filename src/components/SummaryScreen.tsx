@@ -253,17 +253,17 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         <div className="absolute top-0 left-0 p-4 z-20 -ml-6 -mt-8">
           <button
             onClick={resetJourney}
-            className="bg-transparent border-none p-1 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 relative"
+            className="bg-black/10 backdrop-blur-sm border border-brand-slate/20 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 relative"
             aria-label="Return to home"
             data-testid="summary-mountain-icon"
           >
-            <span className="inline-flex w-8 h-8 overflow-hidden">
+            <span className="inline-flex w-6 h-6 overflow-hidden">
               <img
                 src="/gold_lines_no%20background_mp.png"
                 alt="Mountain Pathway Logo"
                 width={32}
                 height={32}
-                className="w-8 h-8 object-contain scale-[1.75]"
+                className="w-6 h-6 object-contain scale-[1.75]"
                 style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
               />
             </span>
