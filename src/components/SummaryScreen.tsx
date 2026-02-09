@@ -258,6 +258,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
             data-testid="summary-mountain-icon"
           >
             <span className="inline-flex w-6 h-6 overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/gold_lines_no%20background_mp.png"
                 alt="Mountain Pathway Logo"

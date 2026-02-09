@@ -13,6 +13,7 @@ export const HeaderDesktop: React.FC = () => {
         className="flex items-center gap-3 bg-transparent border-none p-0 text-left cursor-pointer hover:opacity-80 transition-opacity"
       >
         <span className="inline-flex w-10 h-10 overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/gold_lines_no%20background_mp.png"
             alt="Mountain Pathway"
