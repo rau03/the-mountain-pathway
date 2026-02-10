@@ -11,17 +11,17 @@ export const HeaderMobile: React.FC = () => {
       {/* Mobile Logo - Icon Only, Clickable to return home */}
       <button
         onClick={resetJourney}
-        className="bg-transparent border-none p-1 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 -m-1"
+        className="bg-black/10 backdrop-blur-sm border border-brand-slate/20 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0"
         aria-label="Return to home"
         data-testid="header-mountain-icon"
       >
-        <span className="inline-flex w-8 h-8 overflow-hidden">
+        <span className="inline-flex w-6 h-6 overflow-hidden">
           <img
             src="/gold_lines_no%20background_mp.png"
             alt="Mountain Pathway Logo"
             width={32}
             height={32}
-            className="w-8 h-8 object-contain scale-[1.75]"
+            className="w-6 h-6 object-contain scale-[1.75]"
             style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
           />
         </span>
