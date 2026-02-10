@@ -16,7 +16,6 @@ export const HeaderMobile: React.FC = () => {
         data-testid="header-mountain-icon"
       >
         <span className="inline-flex w-6 h-6 overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/gold_lines_no%20background_mp.png"
             alt="Mountain Pathway Logo"
@@ -41,8 +40,8 @@ export const HeaderMobile: React.FC = () => {
                 isActive
                   ? "w-6 bg-brand-gold"
                   : isCompleted
-                    ? "w-2 bg-brand-gold/90"
-                    : "w-2 bg-white/60"
+                  ? "w-2 bg-brand-gold/90"
+                  : "w-2 bg-white/60"
               }`}
             />
           );
