@@ -9,6 +9,7 @@ import AuthModal from "./AuthModal";
 import SaveJourneyModal from "./SaveJourneyModal";
 import { Button } from "./ui/button";
 import { saveJourney, updateJourney } from "@/lib/journeyApi";
+import { openExternalUrl } from "@/lib/capacitorUtils";
 
 interface MobileSaveFooterProps {
   session: Session | null;
@@ -211,6 +212,12 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
               href="https://buymeacoffee.com/themountainpathway"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => {
+                e.preventDefault();
+                void openExternalUrl(
+                  "https://buymeacoffee.com/themountainpathway"
+                );
+              }}
               className="inline-flex items-center gap-1.5 text-xs text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
             >
               <Coffee className="w-3.5 h-3.5" />

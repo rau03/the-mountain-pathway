@@ -129,13 +129,13 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
         )}
 
         <div>
-          <h2 className="text-3xl font-bold text-brand-slate mb-2">
+          <h2 className="text-3xl font-bold text-slate-900 mb-2">
             {step.title}
           </h2>
-          <p className="text-brand-slate/90 text-lg">{step.subtitle}</p>
+          <p className="text-slate-800 text-lg">{step.subtitle}</p>
         </div>
 
-        <p className="text-brand-slate/80 leading-relaxed max-w-md mx-auto">
+        <p className="text-slate-800 leading-relaxed max-w-md mx-auto">
           {step.prompt}
         </p>
       </div>

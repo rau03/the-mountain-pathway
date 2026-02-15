@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Mountain, Loader2, CheckCircle, AlertCircle, Coffee } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
+import { openExternalUrl } from "@/lib/capacitorUtils";
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -338,6 +339,12 @@ function ResetPasswordContent() {
             href="https://buymeacoffee.com/themountainpathway"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              void openExternalUrl(
+                "https://buymeacoffee.com/themountainpathway"
+              );
+            }}
             className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-300 transition-colors"
           >
             <Coffee className="w-4 h-4" />

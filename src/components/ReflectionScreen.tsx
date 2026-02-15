@@ -49,13 +49,13 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
           </div>
         )}
 
-        <h2 className="text-3xl font-bold mb-2 text-brand-slate">
+        <h2 className="text-3xl font-bold mb-2 text-slate-900">
           {step.title}
         </h2>
-        <p className="text-lg text-brand-slate/90">{step.subtitle}</p>
+        <p className="text-lg text-slate-800">{step.subtitle}</p>
       </div>
 
-      <p className="leading-relaxed text-center text-brand-slate/80">
+      <p className="leading-relaxed text-center text-slate-800">
         {step.prompt}
       </p>
 

@@ -19,6 +19,7 @@ import {
 import supabase from "@/lib/supabaseClient";
 import SavedJourneysView from "@/components/SavedJourneysView";
 import { useStore } from "@/lib/store/useStore";
+import { isNativeApp } from "@/lib/capacitorUtils";
 
 type AuthModalProps = {
   open: boolean;
@@ -181,6 +182,10 @@ export default function AuthModal({
     setAuthError(null);
 
     try {
+      const emailRedirectTo = isNativeApp()
+        ? "themountainpathway://auth/callback"
+        : `${window.location.origin}/auth/callback`;
+
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
@@ -189,7 +194,7 @@ export default function AuthModal({
             first_name: firstName.trim(),
             full_name: firstName.trim(),
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo,
         },
       });
 

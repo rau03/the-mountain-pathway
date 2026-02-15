@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import SaveJourneyModal from "@/components/SaveJourneyModal";
 import AuthModal from "@/components/AuthModal";
 import { saveJourney, updateJourney } from "@/lib/journeyApi";
+import { openEmail, openExternalUrl } from "@/lib/capacitorUtils";
 
 export const SummaryScreen: React.FC<{ session: Session | null }> = ({
   session,
@@ -29,7 +30,6 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
     savedJourneyId,
     savedJourneyTitle,
     markSaved,
-    resetJourney,
   } = useStore();
   const [copied, setCopied] = React.useState(false);
   const [downloading, setDownloading] = React.useState(false);
@@ -248,29 +248,6 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col gap-4 w-full relative"
     >
-      {/* Mobile Logo - Upper Left Corner */}
-      {isMobile && (
-        <div className="absolute top-0 left-0 p-4 z-20 -ml-6 -mt-8">
-          <button
-            onClick={resetJourney}
-            className="bg-black/10 backdrop-blur-sm border border-brand-slate/20 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 relative"
-            aria-label="Return to home"
-            data-testid="summary-mountain-icon"
-          >
-            <span className="inline-flex w-6 h-6 overflow-hidden">
-              <img
-                src="/gold_lines_no%20background_mp.png"
-                alt="Mountain Pathway Logo"
-                width={32}
-                height={32}
-                className="w-6 h-6 object-contain scale-[1.75]"
-                style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
-              />
-            </span>
-          </button>
-        </div>
-      )}
-
       {/* Header */}
       <div className="text-center">
         <div className="flex justify-center mb-4">
@@ -426,6 +403,10 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
           href="https://buymeacoffee.com/themountainpathway"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={(e) => {
+            e.preventDefault();
+            void openExternalUrl("https://buymeacoffee.com/themountainpathway");
+          }}
           className="inline-flex items-center gap-2 text-sm text-brand-slate/60 hover:text-brand-slate transition-colors"
         >
           <Coffee className="w-4 h-4" />
@@ -435,32 +416,51 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         {/* Legal Links */}
         <div className="flex items-center justify-center gap-3 text-xs text-brand-slate/40">
           <a
-            href="/terms"
+            href="https://themountainpathway.com/terms"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              void openExternalUrl("https://themountainpathway.com/terms");
+            }}
             className="hover:text-brand-slate/70 transition-colors"
           >
             Terms
           </a>
           <span>·</span>
           <a
-            href="/privacy"
+            href="https://themountainpathway.com/privacy"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              void openExternalUrl("https://themountainpathway.com/privacy");
+            }}
             className="hover:text-brand-slate/70 transition-colors"
           >
             Privacy
           </a>
           <span>·</span>
           <a
-            href="/data-deletion"
+            href="https://themountainpathway.com/data-deletion"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              void openExternalUrl("https://themountainpathway.com/data-deletion");
+            }}
             className="hover:text-brand-slate/70 transition-colors"
           >
             Data Deletion
           </a>
           <span>·</span>
-          <a
-            href="mailto:hello@themountainpathway.com"
+          <button
+            type="button"
+            onClick={() => void openEmail("hello@themountainpathway.com")}
             className="hover:text-brand-slate/70 transition-colors"
           >
             Contact
-          </a>
+          </button>
         </div>
 
         {/* Creator Attribution */}

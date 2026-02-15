@@ -2,7 +2,7 @@ import React from "react";
 import { Play, HelpCircle, Coffee, Mail } from "lucide-react";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
-import { openEmail } from "@/lib/capacitorUtils";
+import { openEmail, openExternalUrl } from "@/lib/capacitorUtils";
 
 type LandingPageProps = {
   onBeginClick: () => void;
@@ -14,7 +14,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLearnMoreClick,
 }) => {
   return (
-    <div className="min-h-[100dvh] flex flex-col items-center justify-between md:justify-center p-8 pt-16 pb-8 md:gap-8">
+    <div className="min-h-[100svh] flex flex-col items-center justify-between md:justify-center p-8 pt-16 pb-8 md:gap-8">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
       <div className="flex flex-col items-center gap-6 md:gap-8">
         {/* Hero Icon - gold_lines with subtle translucent blurred background */}
@@ -85,6 +85,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             href="https://buymeacoffee.com/themountainpathway"
             target="_blank"
             rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              void openExternalUrl("https://buymeacoffee.com/themountainpathway");
+            }}
             className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
           >
             <Coffee className="w-5 h-5" />

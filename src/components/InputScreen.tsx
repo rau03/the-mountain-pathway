@@ -60,8 +60,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
   };
 
   const handleBlur = () => {
-    // Force browser to repaint and remove keyboard white space
-    window.scrollTo(0, 0);
+    // Avoid forcing scroll-to-top on iOS; it can fight user scroll and feel "locked"
   };
 
   // Get the icon component for this step
@@ -112,10 +111,10 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
           </div>
         )}
 
-        <h2 className="text-3xl font-bold mb-2 text-brand-slate">
+        <h2 className="text-3xl font-bold mb-2 text-slate-900">
           {step.title}
         </h2>
-        <p className="text-lg text-brand-slate/90">{step.subtitle}</p>
+        <p className="text-lg text-slate-800">{step.subtitle}</p>
       </div>
 
       {/* Step 9 Prayer Guidance Accordion - Moved above textarea */}
@@ -151,7 +150,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
         </Accordion>
       )}
 
-      <p className="leading-relaxed text-center text-brand-slate/80 pr-2">
+      <p className="leading-relaxed text-center text-slate-800 pr-2">
         {step.prompt}
       </p>
 

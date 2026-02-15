@@ -88,7 +88,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
   }
 
   return (
-    <div className="relative h-[100dvh] w-full min-w-full bg-brand-stone flex flex-col">
+    <div className="relative h-[100svh] w-full min-w-full bg-brand-stone flex flex-col">
       {/* Background Image Crossfade Container */}
       <div className="absolute inset-0 overflow-hidden bg-brand-stone">
         {/* Current background (always visible underneath) */}
@@ -112,7 +112,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
       <div className="absolute inset-0 z-5 bg-gradient-to-t from-brand-stone/40 to-transparent" />
 
       {/* Mobile Content Layout - Full Height Flex Container */}
-      <div className="relative z-10 h-full flex flex-col">
+      <div className="relative z-10 h-full flex flex-col min-h-0">
         {/* Mobile Header at Top - with iOS safe area */}
         {isJourneyScreen && (
           <div className="flex-shrink-0 px-4 pt-4 pb-2 safe-area-top">
@@ -124,11 +124,11 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         <div className="flex-shrink-0 min-h-[20dvh]" />
 
         {/* Bottom Sheet - Fixed Height Container with Gradient */}
-        <div className="flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8">
+        <div className="flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 min-h-0">
           {/* Scrollable Content Area */}
           <div
             ref={scrollContainerRef}
-            className="flex-grow overflow-y-auto px-6"
+            className="flex-grow overflow-y-auto px-6 min-h-0 pb-6"
           >
             <JourneyScreen />
           </div>

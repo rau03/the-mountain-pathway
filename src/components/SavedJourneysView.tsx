@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -96,7 +96,7 @@ export default function SavedJourneysView({
     }
   };
 
-  const handleContinue = async (journey: SavedJourney) => {
+  const loadAndRestore = async (journey: SavedJourney, targetStep: number) => {
     setViewLoading(journey.id);
     setError(null);
 
@@ -123,21 +123,26 @@ export default function SavedJourneysView({
         completed: journey.is_completed,
       };
 
-      // Restore the journey entry to the store (including title for updates)
-      restoreJourneyEntry(
-        restoredEntry,
-        journey.current_step,
-        journey.id,
-        journey.title
-      );
-
-      // Close the modal
+      restoreJourneyEntry(restoredEntry, targetStep, journey.id, journey.title);
       onOpenChange(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to load journey");
     } finally {
       setViewLoading(null);
     }
+  };
+
+  const handleContinue = async (journey: SavedJourney) => {
+    // Continue button: take user to the step they left off on (incomplete only)
+    await loadAndRestore(journey, journey.current_step);
+  };
+
+  const handleView = async (journey: SavedJourney) => {
+    // View rules:
+    // - Incomplete: always start at Step 1 (index 0)
+    // - Completed: open Journey Complete screen (index 9)
+    const viewStep = journey.is_completed ? 9 : 0;
+    await loadAndRestore(journey, viewStep);
   };
 
   const formatDate = (dateString: string) => {
@@ -269,7 +274,7 @@ export default function SavedJourneysView({
                     <Button
                       size="lg"
                       variant="outline"
-                      onClick={() => handleContinue(journey)}
+                      onClick={() => handleView(journey)}
                       disabled={viewLoading === journey.id}
                       className="flex items-center justify-center gap-2 border-gray-300 dark:border-gray-600 w-full h-12"
                     >

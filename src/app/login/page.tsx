@@ -6,6 +6,7 @@ import supabase from "../../lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
+import { openExternalUrl } from "@/lib/capacitorUtils";
 
 // Prevent static generation of this page
 export const dynamic = "force-dynamic";
@@ -56,6 +57,10 @@ export default function LoginPage() {
         href="https://buymeacoffee.com/themountainpathway"
         target="_blank"
         rel="noopener noreferrer"
+        onClick={(e) => {
+          e.preventDefault();
+          void openExternalUrl("https://buymeacoffee.com/themountainpathway");
+        }}
         style={{
           display: "inline-flex",
           alignItems: "center",
