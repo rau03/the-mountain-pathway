@@ -20,6 +20,10 @@ import supabase from "@/lib/supabaseClient";
 import SavedJourneysView from "@/components/SavedJourneysView";
 import { useStore } from "@/lib/store/useStore";
 import { isNativeApp } from "@/lib/capacitorUtils";
+import {
+  getPublicSiteUrl,
+  getSupabaseAuthCallbackRedirectTo,
+} from "@/lib/authRedirect";
 
 type AuthModalProps = {
   open: boolean;
@@ -50,6 +54,9 @@ export default function AuthModal({
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [authSuccess, setAuthSuccess] = useState<string | null>(null);
+  const [resendLoading, setResendLoading] = useState(false);
+  const [resendError, setResendError] = useState<string | null>(null);
+  const [resendSuccess, setResendSuccess] = useState<string | null>(null);
 
   // Get journey state to check for unsaved work
   const { isDirty, currentStep, isSaved, resetJourney } = useStore();
@@ -63,6 +70,9 @@ export default function AuthModal({
       setFirstName("");
       setAuthError(null);
       setAuthSuccess(null);
+      setResendLoading(false);
+      setResendError(null);
+      setResendSuccess(null);
     }
   }, [open]);
 
@@ -180,11 +190,14 @@ export default function AuthModal({
 
     setAuthLoading(true);
     setAuthError(null);
+    setResendError(null);
+    setResendSuccess(null);
 
     try {
-      const emailRedirectTo = isNativeApp()
-        ? "themountainpathway://auth/callback"
-        : `${window.location.origin}/auth/callback`;
+      const emailRedirectTo = getSupabaseAuthCallbackRedirectTo({
+        isNative: isNativeApp(),
+        webOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
+      });
 
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
@@ -210,6 +223,36 @@ export default function AuthModal({
     }
   };
 
+  const handleResendConfirmation = async () => {
+    if (!supabase) return;
+    const trimmed = email.trim();
+    if (!trimmed) {
+      setResendError("Please enter your email first");
+      return;
+    }
+
+    setResendLoading(true);
+    setResendError(null);
+    setResendSuccess(null);
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: trimmed,
+      });
+      if (error) {
+        setResendError(error.message);
+      } else {
+        setResendSuccess("Confirmation email resent. Please check your inbox.");
+      }
+    } catch (err) {
+      setResendError(
+        err instanceof Error ? err.message : "Failed to resend confirmation email"
+      );
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
   // Handle forgot password
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -224,10 +267,15 @@ export default function AuthModal({
     setAuthError(null);
 
     try {
+      const native = isNativeApp();
+      const redirectTo = native
+        ? `${getPublicSiteUrl()}/auth/callback?native=1&next=/reset-password`
+        : `${window.location.origin}/reset-password`;
+
       const { error } = await supabase.auth.resetPasswordForEmail(
         email.trim(),
         {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo,
         }
       );
 
@@ -342,10 +390,63 @@ export default function AuthModal({
 
                 {/* Success message */}
                 {authSuccess && (
-                  <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-                    <p className="text-sm text-green-700 dark:text-green-300 text-center">
-                      {authSuccess}
-                    </p>
+                  <div className="space-y-3">
+                    <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                      <p className="text-sm text-green-700 dark:text-green-300 text-center">
+                        {authSuccess}
+                      </p>
+                    </div>
+
+                    {authView === "signup" && (
+                      <div className="space-y-2">
+                        {resendSuccess && (
+                          <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                            <p className="text-sm text-green-700 dark:text-green-300 text-center">
+                              {resendSuccess}
+                            </p>
+                          </div>
+                        )}
+
+                        {resendError && (
+                          <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                            <p className="text-sm text-red-600 dark:text-red-400 text-center">
+                              {resendError}
+                            </p>
+                          </div>
+                        )}
+
+                        <Button
+                          type="button"
+                          onClick={handleResendConfirmation}
+                          disabled={resendLoading}
+                          variant="outline"
+                          className="w-full border-gray-300 dark:border-gray-600"
+                        >
+                          {resendLoading ? (
+                            <>
+                              <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                              Resending...
+                            </>
+                          ) : (
+                            "Resend confirmation email"
+                          )}
+                        </Button>
+
+                        <Button
+                          type="button"
+                          onClick={() => {
+                            setAuthView("login");
+                            setAuthError(null);
+                            setAuthSuccess(null);
+                            setResendError(null);
+                            setResendSuccess(null);
+                          }}
+                          className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                        >
+                          Back to login
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
 

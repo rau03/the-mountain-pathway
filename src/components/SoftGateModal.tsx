@@ -11,6 +11,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { Mountain, ArrowLeft, Loader2 } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
+import { isNativeApp } from "@/lib/capacitorUtils";
+import {
+  getPublicSiteUrl,
+  getSupabaseAuthCallbackRedirectTo,
+} from "@/lib/authRedirect";
 
 type SoftGateModalProps = {
   open: boolean;
@@ -174,10 +179,15 @@ export default function SoftGateModal({
     setResetError(null);
 
     try {
+      const native = isNativeApp();
+      const redirectTo = native
+        ? `${getPublicSiteUrl()}/auth/callback?native=1&next=/reset-password`
+        : `${window.location.origin}/reset-password`;
+
       const { error } = await supabase.auth.resetPasswordForEmail(
         resetEmail.trim(),
         {
-          redirectTo: `${window.location.origin}/reset-password`,
+          redirectTo,
         }
       );
 
@@ -229,7 +239,10 @@ export default function SoftGateModal({
             first_name: firstName.trim(),
             full_name: firstName.trim(),
           },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: getSupabaseAuthCallbackRedirectTo({
+            isNative: isNativeApp(),
+            webOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
+          }),
         },
       });
 

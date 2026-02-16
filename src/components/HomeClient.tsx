@@ -22,10 +22,12 @@ import { getBackgroundForStep } from "@/lib/pathway-data";
 import supabase from "@/lib/supabaseClient";
 import { isNativeApp } from "@/lib/capacitorUtils";
 import { parseSupabaseAuthRedirect } from "@/lib/deepLink";
+import { useRouter } from "next/navigation";
 
 export default function HomeClient({ session }: { session: Session | null }) {
   const { currentStep, setCurrentStep, setAnonymous, startJourney } =
     useStore();
+  const router = useRouter();
   const [currentBackground, setCurrentBackground] = useState(
     "/homepage-background.v3.jpg"
   );
@@ -91,11 +93,17 @@ export default function HomeClient({ session }: { session: Session | null }) {
       try {
         if (parsed.kind === "pkce") {
           await sb.auth.exchangeCodeForSession(parsed.code);
+          if (parsed.next && parsed.next.startsWith("/") && !parsed.next.startsWith("//")) {
+            router.push(parsed.next);
+          }
         } else if (parsed.kind === "hash") {
           await sb.auth.setSession({
             access_token: parsed.access_token,
             refresh_token: parsed.refresh_token || "",
           });
+          if (parsed.next && parsed.next.startsWith("/") && !parsed.next.startsWith("//")) {
+            router.push(parsed.next);
+          }
         } else {
           return;
         }
@@ -129,7 +137,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
     return () => {
       listener?.remove();
     };
-  }, []);
+  }, [router]);
 
   // Update background when step changes
   useEffect(() => {
