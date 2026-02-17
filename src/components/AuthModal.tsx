@@ -258,7 +258,12 @@ export default function AuthModal({
     setAuthError(null);
 
     try {
-      const redirectTo = `${getPublicSiteUrl()}/auth/callback?next=/reset-password`;
+      // Store a flag so the deep link handler knows to navigate to
+      // /reset-password after the code exchange. Supabase strips query
+      // params from redirect_to, so we can't rely on ?next= surviving.
+      localStorage.setItem("pendingPasswordReset", Date.now().toString());
+
+      const redirectTo = `${getPublicSiteUrl()}/auth/callback`;
 
       const { error } = await supabase.auth.resetPasswordForEmail(
         email.trim(),

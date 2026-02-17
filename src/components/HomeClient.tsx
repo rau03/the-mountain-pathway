@@ -55,15 +55,6 @@ export default function HomeClient({ session }: { session: Session | null }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (event: string, newSession: Session | null) => {
-        // Password recovery: Supabase fires this event when a recovery
-        // code/token is exchanged. Navigate to the reset-password page
-        // immediately -- this is more reliable than passing ?next= through
-        // Supabase's redirect chain (which can strip query params).
-        if (event === "PASSWORD_RECOVERY" && isNativeApp()) {
-          window.location.href = "/reset-password";
-          return;
-        }
-
         // Check if this is a new signup (user didn't have session before, now they do)
         const isNewSignup =
           !previousSessionRef.current && newSession && event === "SIGNED_IN";
@@ -109,11 +100,21 @@ export default function HomeClient({ session }: { session: Session | null }) {
           return;
         }
 
-        // Navigate to the target page (e.g. /reset-password).
-        // Use window.location instead of router.push because the
-        // Next.js client-side router is unreliable in Capacitor's
-        // static-export webview -- the onAuthStateChange re-render
-        // can swallow a soft push.
+        // Check for a pending password-reset flag set before the email
+        // was sent. Supabase strips query params from redirect_to and
+        // PKCE code exchange fires SIGNED_IN (not PASSWORD_RECOVERY),
+        // so a localStorage flag is the most reliable signal.
+        const pendingReset = localStorage.getItem("pendingPasswordReset");
+        if (pendingReset) {
+          localStorage.removeItem("pendingPasswordReset");
+          const elapsed = Date.now() - parseInt(pendingReset, 10);
+          if (elapsed < 30 * 60 * 1000) {
+            window.location.href = "/reset-password";
+            return;
+          }
+        }
+
+        // Navigate to any explicit next path from the deep link.
         const next = parsed.next;
         if (next && next.startsWith("/") && !next.startsWith("//")) {
           window.location.href = next;
