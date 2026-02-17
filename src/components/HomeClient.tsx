@@ -42,6 +42,23 @@ export default function HomeClient({ session }: { session: Session | null }) {
     setAnonymous(!liveSession);
   }, [liveSession, setAnonymous]);
 
+  // After a deep-link code exchange signs the user in, check whether
+  // a password reset was pending and navigate to /reset-password.
+  // This runs after React settles with the new session, avoiding the
+  // race between window.location.href and React re-renders.
+  useEffect(() => {
+    if (!liveSession || !isNativeApp()) return;
+
+    const pendingReset = localStorage.getItem("pendingPasswordReset");
+    if (pendingReset) {
+      localStorage.removeItem("pendingPasswordReset");
+      const elapsed = Date.now() - parseInt(pendingReset, 10);
+      if (elapsed < 30 * 60 * 1000) {
+        window.location.href = "/reset-password";
+      }
+    }
+  }, [liveSession]);
+
   // Listen for real-time session changes
   useEffect(() => {
     if (!supabase) return;
@@ -100,25 +117,9 @@ export default function HomeClient({ session }: { session: Session | null }) {
           return;
         }
 
-        // Check for a pending password-reset flag set before the email
-        // was sent. Supabase strips query params from redirect_to and
-        // PKCE code exchange fires SIGNED_IN (not PASSWORD_RECOVERY),
-        // so a localStorage flag is the most reliable signal.
-        const pendingReset = localStorage.getItem("pendingPasswordReset");
-        if (pendingReset) {
-          localStorage.removeItem("pendingPasswordReset");
-          const elapsed = Date.now() - parseInt(pendingReset, 10);
-          if (elapsed < 30 * 60 * 1000) {
-            window.location.href = "/reset-password";
-            return;
-          }
-        }
-
-        // Navigate to any explicit next path from the deep link.
-        const next = parsed.next;
-        if (next && next.startsWith("/") && !next.startsWith("//")) {
-          window.location.href = next;
-        }
+        // Password-reset navigation is handled by the liveSession
+        // useEffect above (checks localStorage pendingPasswordReset flag).
+        // Any explicit next path from the deep link is also handled there.
       } catch (err) {
         console.error("Deep link auth handling failed:", err);
         return;
