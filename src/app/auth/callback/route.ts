@@ -30,19 +30,28 @@ export async function GET(request: NextRequest) {
   const next = requestUrl.searchParams.get("next");
   const native = requestUrl.searchParams.get("native") === "1";
 
+  const shouldServeOpenAppPage =
+    native || isMobileUserAgent(request.headers.get("user-agent"));
+
   // Native app flow:
   // Supabase sends the user here (HTTPS allowlisted), then we immediately deep-link back
   // into the app *without* consuming the PKCE code on the server.
-  if (code && (native || isMobileUserAgent(request.headers.get("user-agent")))) {
+  //
+  // NOTE: Supabase may return either:
+  // - PKCE: ?code=...
+  // - Implicit: #access_token=...&refresh_token=...&type=...
+  //
+  // The URL fragment/hash is not sent to the server, so on mobile we always serve an
+  // HTML handoff page that can read window.location.hash and deep-link accordingly.
+  if (shouldServeOpenAppPage) {
     const deepLink = new URL("themountainpathway://auth/callback");
-    deepLink.searchParams.set("code", code);
+    if (code) deepLink.searchParams.set("code", code);
     if (type) deepLink.searchParams.set("type", type);
     if (isSafeNextPath(next)) deepLink.searchParams.set("next", next);
 
-    // Some iOS versions may block an immediate 302 redirect to a custom scheme.
-    // Serve a minimal HTML page that attempts to open the app and provides a fallback link.
     const deepLinkString = deepLink.toString();
     const safeDeepLink = htmlEscape(deepLinkString);
+
     const html = `<!doctype html>
 <html lang="en">
   <head>
@@ -54,17 +63,49 @@ export async function GET(request: NextRequest) {
     <h1 style="font-size: 18px; margin: 0 0 12px;">Opening the app…</h1>
     <p style="margin: 0 0 16px; color: #444;">If nothing happens, tap the button below.</p>
     <p style="margin: 0 0 16px;">
-      <a href="${safeDeepLink}" style="display:inline-block;padding:12px 14px;border-radius:10px;background:#b8860b;color:#111;text-decoration:none;font-weight:600;">
+      <a id="openAppLink" href="${safeDeepLink}" style="display:inline-block;padding:12px 14px;border-radius:10px;background:#b8860b;color:#111;text-decoration:none;font-weight:600;">
         Open The Mountain Pathway
       </a>
     </p>
     <p style="margin: 0; color: #666; font-size: 13px;">You can close this tab after the app opens.</p>
     <script>
-      // Try immediately, then again shortly after to handle browser timing.
-      window.location.href = ${JSON.stringify(deepLinkString)};
-      setTimeout(function () { window.location.href = ${JSON.stringify(
-        deepLinkString
-      )}; }, 350);
+      (function () {
+        // If Supabase used the implicit flow, tokens will be in the URL hash fragment.
+        // We can't see them server-side, so build the deep link client-side.
+        var hash = window.location.hash && window.location.hash.startsWith('#')
+          ? window.location.hash.substring(1)
+          : '';
+        var hashParams = new URLSearchParams(hash);
+        var accessToken = hashParams.get('access_token');
+
+        var deepLink = ${JSON.stringify(deepLinkString)};
+
+        if (accessToken) {
+          // Preserve only the expected supabase fields + optional next path.
+          var outHash = new URLSearchParams();
+          ['access_token','refresh_token','type'].forEach(function (k) {
+            var v = hashParams.get(k);
+            if (v) outHash.set(k, v);
+          });
+
+          // Carry next from query param if present.
+          var search = new URLSearchParams(window.location.search);
+          var next = search.get('next');
+          if (next && next.startsWith('/') && !next.startsWith('//')) {
+            outHash.set('next', next);
+          }
+
+          deepLink = 'themountainpathway://auth/callback#' + outHash.toString();
+        }
+
+        // Update the button href to match the computed deep link.
+        var a = document.getElementById('openAppLink');
+        if (a) a.setAttribute('href', deepLink);
+
+        // Try immediately, then again shortly after to handle browser timing.
+        window.location.href = deepLink;
+        setTimeout(function () { window.location.href = deepLink; }, 350);
+      })();
     </script>
   </body>
 </html>`;

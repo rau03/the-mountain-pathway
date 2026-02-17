@@ -19,11 +19,7 @@ import {
 import supabase from "@/lib/supabaseClient";
 import SavedJourneysView from "@/components/SavedJourneysView";
 import { useStore } from "@/lib/store/useStore";
-import { isNativeApp } from "@/lib/capacitorUtils";
-import {
-  getPublicSiteUrl,
-  getSupabaseAuthCallbackRedirectTo,
-} from "@/lib/authRedirect";
+import { getPublicSiteUrl, getEmailRedirectTo } from "@/lib/authRedirect";
 
 type AuthModalProps = {
   open: boolean;
@@ -194,11 +190,6 @@ export default function AuthModal({
     setResendSuccess(null);
 
     try {
-      const emailRedirectTo = getSupabaseAuthCallbackRedirectTo({
-        isNative: isNativeApp(),
-        webOrigin: typeof window !== "undefined" ? window.location.origin : undefined,
-      });
-
       const { error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
@@ -207,7 +198,7 @@ export default function AuthModal({
             first_name: firstName.trim(),
             full_name: firstName.trim(),
           },
-          emailRedirectTo,
+          emailRedirectTo: getEmailRedirectTo(),
         },
       });
 
@@ -267,10 +258,7 @@ export default function AuthModal({
     setAuthError(null);
 
     try {
-      const native = isNativeApp();
-      const redirectTo = native
-        ? `${getPublicSiteUrl()}/auth/callback?native=1&next=/reset-password`
-        : `${window.location.origin}/reset-password`;
+      const redirectTo = `${getPublicSiteUrl()}/auth/callback?next=/reset-password`;
 
       const { error } = await supabase.auth.resetPasswordForEmail(
         email.trim(),

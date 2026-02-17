@@ -19,21 +19,14 @@ export function getPublicSiteUrl(): string {
 /**
  * Supabase signup/password-recovery redirect target.
  *
- * - Web: uses the current origin.
- * - Native: uses the public HTTPS site + `native=1` so the callback route can deep-link.
+ * Always uses the public HTTPS site URL so that Supabase's redirect-URL
+ * allowlist check passes reliably. In Capacitor, `window.location.origin`
+ * is `capacitor://localhost` which Supabase rejects.
+ *
+ * The server-side callback route detects mobile via User-Agent and shows
+ * the "Open the app" deep-link handoff page automatically.
  */
-export function getSupabaseAuthCallbackRedirectTo(params: {
-  isNative: boolean;
-  webOrigin?: string;
-}): string {
-  if (params.isNative) {
-    return `${getPublicSiteUrl()}/auth/callback?native=1`;
-  }
-
-  if (!params.webOrigin) {
-    throw new Error("webOrigin is required when isNative=false");
-  }
-
-  return `${stripTrailingSlash(params.webOrigin)}/auth/callback`;
+export function getEmailRedirectTo(): string {
+  return `${getPublicSiteUrl()}/auth/callback`;
 }
 

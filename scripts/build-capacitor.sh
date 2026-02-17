@@ -178,8 +178,11 @@ export default function LoginPage() {
 EOF
 
 # Run the Next.js build
+# Override NEXT_PUBLIC_SITE_URL for Capacitor builds — .env.local has
+# localhost which Supabase rejects.  The production HTTPS URL ensures
+# email confirmation redirect_to values land on the real site.
 echo "🏗️  Building Next.js static export..."
-npm run build
+NEXT_PUBLIC_SITE_URL=https://themountainpathway.com npm run build
 
 # Check if build succeeded
 if [ -d "out" ]; then

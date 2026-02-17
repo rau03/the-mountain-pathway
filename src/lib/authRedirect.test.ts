@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-import { getPublicSiteUrl, getSupabaseAuthCallbackRedirectTo } from "./authRedirect";
+import { getPublicSiteUrl, getEmailRedirectTo } from "./authRedirect";
 
 describe("authRedirect", () => {
   it("uses NEXT_PUBLIC_SITE_URL when present (strips trailing slash)", () => {
@@ -8,18 +8,17 @@ describe("authRedirect", () => {
     expect(getPublicSiteUrl()).toBe("https://example.com");
   });
 
-  it("builds native callback redirect with native=1", () => {
+  it("always returns HTTPS public URL for email redirect", () => {
     vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://themountainpathway.com");
-    const url = getSupabaseAuthCallbackRedirectTo({ isNative: true });
-    expect(url).toBe("https://themountainpathway.com/auth/callback?native=1");
+    expect(getEmailRedirectTo()).toBe(
+      "https://themountainpathway.com/auth/callback"
+    );
   });
 
-  it("builds web callback redirect using provided origin (strips trailing slash)", () => {
-    const url = getSupabaseAuthCallbackRedirectTo({
-      isNative: false,
-      webOrigin: "https://www.themountainpathway.com/",
-    });
-    expect(url).toBe("https://www.themountainpathway.com/auth/callback");
+  it("falls back to hardcoded site URL when env var is missing", () => {
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "");
+    expect(getEmailRedirectTo()).toBe(
+      "https://themountainpathway.com/auth/callback"
+    );
   });
 });
-
