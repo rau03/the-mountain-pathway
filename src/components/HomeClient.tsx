@@ -55,6 +55,15 @@ export default function HomeClient({ session }: { session: Session | null }) {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (event: string, newSession: Session | null) => {
+        // Password recovery: Supabase fires this event when a recovery
+        // code/token is exchanged. Navigate to the reset-password page
+        // immediately -- this is more reliable than passing ?next= through
+        // Supabase's redirect chain (which can strip query params).
+        if (event === "PASSWORD_RECOVERY" && isNativeApp()) {
+          window.location.href = "/reset-password";
+          return;
+        }
+
         // Check if this is a new signup (user didn't have session before, now they do)
         const isNewSignup =
           !previousSessionRef.current && newSession && event === "SIGNED_IN";
