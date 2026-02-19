@@ -22,6 +22,7 @@ import { getBackgroundForStep } from "@/lib/pathway-data";
 import supabase from "@/lib/supabaseClient";
 import { isNativeApp } from "@/lib/capacitorUtils";
 import { parseSupabaseAuthRedirect } from "@/lib/deepLink";
+import NativeResetPassword from "@/components/NativeResetPassword";
 
 export default function HomeClient({ session }: { session: Session | null }) {
   const { currentStep, setCurrentStep, setAnonymous, startJourney } =
@@ -34,6 +35,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
   const [showSoftGateModal, setShowSoftGateModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [showProfileSetupModal, setShowProfileSetupModal] = useState(false);
+  const [showNativeResetPassword, setShowNativeResetPassword] = useState(false);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
   const previousSessionRef = useRef<Session | null>(null);
 
@@ -43,9 +45,10 @@ export default function HomeClient({ session }: { session: Session | null }) {
   }, [liveSession, setAnonymous]);
 
   // After a deep-link code exchange signs the user in, check whether
-  // a password reset was pending and navigate to /reset-password.
-  // Uses setTimeout to let the current render cycle complete, and
-  // trailing slash to match the static-export file structure.
+  // a password reset was pending and show the reset form inline.
+  // Rendering inline avoids Capacitor WKWebView navigation issues
+  // (window.location.replace/href doesn't work reliably for inter-page
+  // navigation in Capacitor static-export builds).
   useEffect(() => {
     if (!liveSession || !isNativeApp()) return;
 
@@ -54,9 +57,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
       localStorage.removeItem("pendingPasswordReset");
       const elapsed = Date.now() - parseInt(pendingReset, 10);
       if (elapsed < 30 * 60 * 1000) {
-        setTimeout(() => {
-          window.location.replace("/reset-password/");
-        }, 500);
+        setShowNativeResetPassword(true);
       }
     }
   }, [liveSession]);
@@ -119,26 +120,20 @@ export default function HomeClient({ session }: { session: Session | null }) {
           return;
         }
 
-        // Check for explicit next path in the deep link (e.g. from
-        // /auth/callback/recovery which injects next=/reset-password).
+        // Show inline reset form if this is a recovery deep link or
+        // the localStorage flag was set before the reset email.
         const next = parsed.next;
-        if (next && next.startsWith("/") && !next.startsWith("//")) {
-          const target = next.endsWith("/") ? next : next + "/";
-          setTimeout(() => {
-            window.location.replace(target);
-          }, 500);
+        if (next === "/reset-password") {
+          setShowNativeResetPassword(true);
           return;
         }
 
-        // Backup: check localStorage flag set before the reset email.
         const pendingReset = localStorage.getItem("pendingPasswordReset");
         if (pendingReset) {
           localStorage.removeItem("pendingPasswordReset");
           const elapsed = Date.now() - parseInt(pendingReset, 10);
           if (elapsed < 30 * 60 * 1000) {
-            setTimeout(() => {
-              window.location.replace("/reset-password/");
-            }, 500);
+            setShowNativeResetPassword(true);
             return;
           }
         }
@@ -315,6 +310,12 @@ export default function HomeClient({ session }: { session: Session | null }) {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
+
+  if (showNativeResetPassword) {
+    return (
+      <NativeResetPassword onDone={() => setShowNativeResetPassword(false)} />
+    );
+  }
 
   return (
     <div className="relative min-h-screen">
