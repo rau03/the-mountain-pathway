@@ -14,7 +14,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLearnMoreClick,
 }) => {
   return (
-    <div className="h-[100svh] flex flex-col items-center justify-between md:justify-center px-6 pt-12 pb-16 md:gap-8 overflow-hidden">
+    <div className="h-[100svh] flex flex-col items-center justify-between md:justify-center px-6 pt-10 pb-24 md:gap-8 overflow-hidden">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
       <div className="flex flex-col items-center gap-4 md:gap-8">
         {/* Hero Icon - gold_lines with subtle translucent blurred background */}
