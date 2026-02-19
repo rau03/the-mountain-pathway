@@ -134,7 +134,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
 
   return (
     <>
-      <footer className="flex-shrink-0 w-full bg-brand-stone pt-2 pb-6 px-5 border-t border-brand-stone/20 safe-area-bottom">
+      <footer className="flex-shrink-0 w-full bg-brand-stone pt-2 pb-2 px-5 border-t border-brand-stone/20">
         {/* Quick Save Error Message */}
         {quickSaveError && (
           <div className="mb-2 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
