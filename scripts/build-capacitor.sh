@@ -15,7 +15,7 @@ cd "$PROJECT_ROOT"
 echo "📦 Backing up files..."
 cp next.config.ts next.config.ts.backup
 cp src/app/auth/callback/route.ts src/app/auth/callback/route.ts.backup
-cp -r src/app/auth/callback/recovery src/app/auth/callback/recovery.backup
+cp -r src/app/auth/callback/recovery /tmp/capacitor-build-recovery-backup
 cp src/app/auth/confirm/route.ts src/app/auth/confirm/route.ts.backup
 cp src/app/page.tsx src/app/page.tsx.backup
 cp src/app/login/page.tsx src/app/login/page.tsx.backup
@@ -26,7 +26,7 @@ cleanup() {
     mv next.config.ts.backup next.config.ts
     mv src/app/auth/callback/route.ts.backup src/app/auth/callback/route.ts
     rm -rf src/app/auth/callback/recovery
-    mv src/app/auth/callback/recovery.backup src/app/auth/callback/recovery
+    mv /tmp/capacitor-build-recovery-backup src/app/auth/callback/recovery
     mv src/app/auth/confirm/route.ts.backup src/app/auth/confirm/route.ts
     mv src/app/page.tsx.backup src/app/page.tsx
     mv src/app/login/page.tsx.backup src/app/login/page.tsx
