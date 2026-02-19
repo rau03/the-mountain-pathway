@@ -88,7 +88,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
   }
 
   return (
-    <div className="relative h-[100svh] w-full min-w-full bg-brand-stone flex flex-col">
+    <div className="relative h-[100svh] w-full min-w-full bg-brand-stone flex flex-col overflow-hidden">
       {/* Background Image Crossfade Container */}
       <div className="absolute inset-0 overflow-hidden bg-brand-stone">
         {/* Current background (always visible underneath) */}
@@ -120,8 +120,8 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
           </div>
         )}
 
-        {/* Spacer - Visual Area Above Content */}
-        <div className="flex-shrink-0 min-h-[20dvh]" />
+        {/* Spacer - Visual Area Above Content (shrinkable so footer stays visible) */}
+        <div className="min-h-[10dvh] h-[20dvh]" />
 
         {/* Bottom Sheet - Fixed Height Container with Gradient */}
         <div className="flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 min-h-0">
