@@ -44,8 +44,8 @@ export default function HomeClient({ session }: { session: Session | null }) {
 
   // After a deep-link code exchange signs the user in, check whether
   // a password reset was pending and navigate to /reset-password.
-  // This runs after React settles with the new session, avoiding the
-  // race between window.location.href and React re-renders.
+  // Uses setTimeout to let the current render cycle complete, and
+  // trailing slash to match the static-export file structure.
   useEffect(() => {
     if (!liveSession || !isNativeApp()) return;
 
@@ -54,7 +54,9 @@ export default function HomeClient({ session }: { session: Session | null }) {
       localStorage.removeItem("pendingPasswordReset");
       const elapsed = Date.now() - parseInt(pendingReset, 10);
       if (elapsed < 30 * 60 * 1000) {
-        window.location.href = "/reset-password";
+        setTimeout(() => {
+          window.location.replace("/reset-password/");
+        }, 500);
       }
     }
   }, [liveSession]);
@@ -117,9 +119,29 @@ export default function HomeClient({ session }: { session: Session | null }) {
           return;
         }
 
-        // Password-reset navigation is handled by the liveSession
-        // useEffect above (checks localStorage pendingPasswordReset flag).
-        // Any explicit next path from the deep link is also handled there.
+        // Check for explicit next path in the deep link (e.g. from
+        // /auth/callback/recovery which injects next=/reset-password).
+        const next = parsed.next;
+        if (next && next.startsWith("/") && !next.startsWith("//")) {
+          const target = next.endsWith("/") ? next : next + "/";
+          setTimeout(() => {
+            window.location.replace(target);
+          }, 500);
+          return;
+        }
+
+        // Backup: check localStorage flag set before the reset email.
+        const pendingReset = localStorage.getItem("pendingPasswordReset");
+        if (pendingReset) {
+          localStorage.removeItem("pendingPasswordReset");
+          const elapsed = Date.now() - parseInt(pendingReset, 10);
+          if (elapsed < 30 * 60 * 1000) {
+            setTimeout(() => {
+              window.location.replace("/reset-password/");
+            }, 500);
+            return;
+          }
+        }
       } catch (err) {
         console.error("Deep link auth handling failed:", err);
         return;

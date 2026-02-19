@@ -258,12 +258,13 @@ export default function AuthModal({
     setAuthError(null);
 
     try {
-      // Store a flag so the deep link handler knows to navigate to
-      // /reset-password after the code exchange. Supabase strips query
-      // params from redirect_to, so we can't rely on ?next= surviving.
+      // Use /auth/callback/recovery which server-side redirects to
+      // /auth/callback?next=/reset-password. This is the only reliable
+      // way to carry the recovery signal — Supabase strips query params
+      // from redirect_to but preserves the full path.
       localStorage.setItem("pendingPasswordReset", Date.now().toString());
 
-      const redirectTo = `${getPublicSiteUrl()}/auth/callback`;
+      const redirectTo = `${getPublicSiteUrl()}/auth/callback/recovery`;
 
       const { error } = await supabase.auth.resetPasswordForEmail(
         email.trim(),
