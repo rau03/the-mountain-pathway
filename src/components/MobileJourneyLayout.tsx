@@ -121,10 +121,10 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         )}
 
         {/* Spacer - Visual Area Above Content (shrinkable so footer stays visible) */}
-        <div className="min-h-[10dvh] h-[20dvh]" />
+        <div className="min-h-[5dvh] h-[15dvh]" />
 
         {/* Bottom Sheet - Fixed Height Container with Gradient */}
-        <div className="flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 pb-4 min-h-0 safe-area-bottom">
+        <div className="flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 pb-8 min-h-0">
           {/* Scrollable Content Area */}
           <div
             ref={scrollContainerRef}
