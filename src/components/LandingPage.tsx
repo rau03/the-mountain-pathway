@@ -14,9 +14,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLearnMoreClick,
 }) => {
   return (
-    <div className="min-h-[100svh] flex flex-col items-center justify-between md:justify-center p-8 pt-16 pb-8 md:gap-8">
+    <div className="h-[100svh] flex flex-col items-center justify-between md:justify-center p-6 pt-10 pb-4 md:gap-8 overflow-hidden safe-area-bottom">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
-      <div className="flex flex-col items-center gap-6 md:gap-8">
+      <div className="flex flex-col items-center gap-4 md:gap-8">
         {/* Hero Icon - gold_lines with subtle translucent blurred background */}
         <div className="p-6 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -36,7 +36,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20 rounded-lg" />
 
           {/* Text Content */}
-          <div className="relative z-10 max-w-2xl space-y-4 md:space-y-6 text-center p-6 md:p-8">
+          <div className="relative z-10 max-w-2xl space-y-3 md:space-y-6 text-center p-4 md:p-8">
             <h1 className="text-4xl md:text-5xl font-bold leading-tight text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.6),0_1px_3px_rgba(0,0,0,0.4)]">
               {pathwayContent.landingPage.heroTitle}
             </h1>
@@ -51,7 +51,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </div>
 
       {/* Bottom Section: CTA & Footer (Mobile: Anchored at Bottom, Desktop: Centered) */}
-      <div className="flex flex-col items-center gap-4 md:gap-6 md:pt-8">
+      <div className="flex flex-col items-center gap-3 md:gap-6 md:pt-8">
         {/* Call to Action */}
         <Button
           onClick={onBeginClick}
