@@ -66,8 +66,22 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
             <h3 className="text-xl font-semibold text-brand-gold mb-4">
               Psalm 139
             </h3>
-            <div className="text-slate-700 leading-relaxed whitespace-pre-line">
-              {step.content.scripture}
+            <div className="text-slate-700 leading-relaxed">
+              {step.content.scripture.split("\n\n").map((paragraph, i, arr) => {
+                const isAttribution = i === arr.length - 1 && paragraph.startsWith("—");
+                return (
+                  <p
+                    key={i}
+                    className={
+                      isAttribution
+                        ? "mt-6 text-sm italic text-slate-500 text-right"
+                        : "mb-4"
+                    }
+                  >
+                    {paragraph}
+                  </p>
+                );
+              })}
             </div>
           </div>
         </div>
