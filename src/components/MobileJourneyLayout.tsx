@@ -17,14 +17,32 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
 }) => {
   const { currentStep } = useStore();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  
-  // For smooth crossfade transitions
-  const [displayedBackground, setDisplayedBackground] = useState(() => getBackgroundForStep(currentStep));
-  const [previousBackground, setPreviousBackground] = useState<string | null>(null);
+
+  const currentBackground = getBackgroundForStep(currentStep);
+
+  // Crossfade: ref tracks what's currently shown (avoids re-render that cancels timers)
+  const shownBgRef = useRef(currentBackground);
+  const [prevBackground, setPrevBackground] = useState<string | null>(null);
   const [fadeOut, setFadeOut] = useState(false);
 
-  // Get the current background image
-  const currentBackground = getBackgroundForStep(currentStep);
+  useEffect(() => {
+    if (currentBackground === shownBgRef.current) return;
+
+    setPrevBackground(shownBgRef.current);
+    shownBgRef.current = currentBackground;
+    setFadeOut(false);
+
+    const fadeTimer = setTimeout(() => setFadeOut(true), 50);
+    const cleanupTimer = setTimeout(() => {
+      setPrevBackground(null);
+      setFadeOut(false);
+    }, 850);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(cleanupTimer);
+    };
+  }, [currentBackground]);
 
   // Get mobile alignment for current step (default to center 50%)
   const currentStepData =
@@ -33,32 +51,6 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
       : null;
   const mobileAlignment =
     currentStepData?.mobileAlignment || "[background-position:center_50%]";
-
-  // Handle background crossfade when step changes
-  useEffect(() => {
-    if (currentBackground !== displayedBackground) {
-      // Set up the previous background (starts visible)
-      setPreviousBackground(displayedBackground);
-      setDisplayedBackground(currentBackground);
-      setFadeOut(false);
-      
-      // Trigger fade out after a tiny delay (allows element to mount at opacity-100)
-      const fadeTimer = setTimeout(() => {
-        setFadeOut(true);
-      }, 50);
-      
-      // Clean up after animation completes
-      const cleanupTimer = setTimeout(() => {
-        setPreviousBackground(null);
-        setFadeOut(false);
-      }, 850); // 50ms delay + 800ms transition
-      
-      return () => {
-        clearTimeout(fadeTimer);
-        clearTimeout(cleanupTimer);
-      };
-    }
-  }, [currentBackground, displayedBackground]);
 
   // Reset scroll position when step changes
   useEffect(() => {
@@ -94,16 +86,15 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         {/* Current background (always visible underneath) */}
         <div
           className={`absolute inset-0 bg-cover ${mobileAlignment}`}
-          style={{ backgroundImage: `url('${displayedBackground}')` }}
+          style={{ backgroundImage: `url('${currentBackground}')` }}
         />
-        
-        {/* Previous background (fades out on top) */}
-        {previousBackground && (
+        {/* Previous background (fades out on top to reveal new image) */}
+        {prevBackground && (
           <div
             className={`absolute inset-0 bg-cover ${mobileAlignment} transition-opacity duration-[800ms] ease-in-out ${
-              fadeOut ? 'opacity-0' : 'opacity-100'
+              fadeOut ? "opacity-0" : "opacity-100"
             }`}
-            style={{ backgroundImage: `url('${previousBackground}')` }}
+            style={{ backgroundImage: `url('${prevBackground}')` }}
           />
         )}
       </div>
