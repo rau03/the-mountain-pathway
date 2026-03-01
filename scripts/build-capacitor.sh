@@ -11,25 +11,45 @@ echo "🔧 Preparing Capacitor build..."
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+# Use a per-run temp directory so concurrent/interrupted runs don't collide.
+BACKUP_DIR="$(mktemp -d /tmp/capacitor-build-backup.XXXXXX)"
+HAS_RECOVERY_BACKUP=0
+
 # Backup files that need modification
 echo "📦 Backing up files..."
-cp next.config.ts next.config.ts.backup
-cp src/app/auth/callback/route.ts src/app/auth/callback/route.ts.backup
-cp -r src/app/auth/callback/recovery /tmp/capacitor-build-recovery-backup
-cp src/app/auth/confirm/route.ts src/app/auth/confirm/route.ts.backup
-cp src/app/page.tsx src/app/page.tsx.backup
-cp src/app/login/page.tsx src/app/login/page.tsx.backup
+cp next.config.ts "$BACKUP_DIR/next.config.ts.backup"
+cp src/app/auth/callback/route.ts "$BACKUP_DIR/callback.route.ts.backup"
+if [ -d src/app/auth/callback/recovery ]; then
+    cp -r src/app/auth/callback/recovery "$BACKUP_DIR/recovery.backup"
+    HAS_RECOVERY_BACKUP=1
+fi
+cp src/app/auth/confirm/route.ts "$BACKUP_DIR/confirm.route.ts.backup"
+cp src/app/page.tsx "$BACKUP_DIR/page.tsx.backup"
+cp src/app/login/page.tsx "$BACKUP_DIR/login.page.tsx.backup"
 
 # Function to restore files on exit (success or failure)
 cleanup() {
     echo "🔄 Restoring original files..."
-    mv next.config.ts.backup next.config.ts
-    mv src/app/auth/callback/route.ts.backup src/app/auth/callback/route.ts
-    rm -rf src/app/auth/callback/recovery
-    mv /tmp/capacitor-build-recovery-backup src/app/auth/callback/recovery
-    mv src/app/auth/confirm/route.ts.backup src/app/auth/confirm/route.ts
-    mv src/app/page.tsx.backup src/app/page.tsx
-    mv src/app/login/page.tsx.backup src/app/login/page.tsx
+    if [ -f "$BACKUP_DIR/next.config.ts.backup" ]; then
+        cp "$BACKUP_DIR/next.config.ts.backup" next.config.ts
+    fi
+    if [ -f "$BACKUP_DIR/callback.route.ts.backup" ]; then
+        cp "$BACKUP_DIR/callback.route.ts.backup" src/app/auth/callback/route.ts
+    fi
+    if [ "$HAS_RECOVERY_BACKUP" -eq 1 ] && [ -d "$BACKUP_DIR/recovery.backup" ]; then
+        rm -rf src/app/auth/callback/recovery
+        cp -R "$BACKUP_DIR/recovery.backup" src/app/auth/callback/recovery
+    fi
+    if [ -f "$BACKUP_DIR/confirm.route.ts.backup" ]; then
+        cp "$BACKUP_DIR/confirm.route.ts.backup" src/app/auth/confirm/route.ts
+    fi
+    if [ -f "$BACKUP_DIR/page.tsx.backup" ]; then
+        cp "$BACKUP_DIR/page.tsx.backup" src/app/page.tsx
+    fi
+    if [ -f "$BACKUP_DIR/login.page.tsx.backup" ]; then
+        cp "$BACKUP_DIR/login.page.tsx.backup" src/app/login/page.tsx
+    fi
+    rm -rf "$BACKUP_DIR"
     echo "✅ Files restored"
 }
 
@@ -188,10 +208,13 @@ EOF
 # localhost which Supabase rejects.  The production HTTPS URL ensures
 # email confirmation redirect_to values land on the real site.
 echo "🏗️  Building Next.js static export..."
-NEXT_PUBLIC_SITE_URL=https://themountainpathway.com npm run build
+# Use non-Turbopack build for Capacitor export reliability.
+# Turbopack can complete "Exporting" while omitting root out/index.html.
+rm -rf .next out
+NEXT_PUBLIC_SITE_URL=https://themountainpathway.com npx next build
 
 # Check if build succeeded
-if [ -d "out" ]; then
+if [ -d "out" ] && [ -f "out/index.html" ]; then
     echo "✅ Static export created in /out folder"
     
     # Sync with Capacitor
@@ -205,6 +228,8 @@ if [ -d "out" ]; then
     echo "  npx cap open ios      # Open in Xcode"
     echo "  npx cap open android  # Open in Android Studio"
 else
-    echo "❌ Build failed - /out folder not created"
+    echo "❌ Build failed - /out/index.html was not created"
+    echo "   Contents of /out for debugging:"
+    ls -la out || true
     exit 1
 fi

@@ -11,6 +11,8 @@ html {
 /* Ensure full coverage in all orientations */
 html, body {
   overflow-x: hidden;
+  overscroll-behavior-y: none;
+  background-color: #d6d3d1;
 }
 
 body {

@@ -79,7 +79,7 @@ export const pathwayData: PathwayStep[] = [
     isInput: false,
     isTimer: true,
     key: "begin",
-    mobileAlignment: "[background-position:center_50%]",
+    mobileAlignment: "[background-position:center_30%]",
   },
   {
     stepIndex: 1,

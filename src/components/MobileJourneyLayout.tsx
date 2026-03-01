@@ -65,6 +65,41 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
 
   const isJourneyScreen = currentStep > -1 && currentStep < 9;
   const isSummaryScreen = currentStep === 9;
+  const isTrailheadStep = currentStep === 0;
+  const isScriptureStep = currentStep === 1;
+  const isNameIssueStep = currentStep === 2;
+  const isThoughtsStep = currentStep === 3;
+  const isFeelingsStep = currentStep === 4;
+  const isHopeStep = currentStep === 5;
+  const isPauseStep = currentStep === 6;
+  const isDiscernStep = currentStep === 7;
+  const isPrayerStep = currentStep === 8;
+
+  const screenOverlayClass =
+    isTrailheadStep ||
+    isScriptureStep ||
+    isNameIssueStep ||
+    isThoughtsStep ||
+    isFeelingsStep ||
+    isHopeStep ||
+    isPauseStep ||
+    isDiscernStep ||
+    isPrayerStep
+      ? "absolute inset-0 z-5 bg-brand-stone/28 backdrop-blur-[1px]"
+      : "absolute inset-0 z-5 bg-gradient-to-t from-brand-stone/40 to-transparent";
+
+  const bottomSheetClass =
+    isTrailheadStep ||
+    isScriptureStep ||
+    isNameIssueStep ||
+    isThoughtsStep ||
+    isFeelingsStep ||
+    isHopeStep ||
+    isPauseStep ||
+    isDiscernStep ||
+    isPrayerStep
+    ? "flex-grow flex flex-col bg-transparent pt-8 min-h-0"
+    : "flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 min-h-0";
 
   // Summary screen has its own rendering
   if (isSummaryScreen) {
@@ -80,9 +115,9 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
   }
 
   return (
-    <div className="relative h-[100svh] w-full min-w-full bg-brand-stone flex flex-col overflow-hidden">
+    <div className="relative h-[100svh] w-full min-w-full bg-brand-stone flex flex-col overflow-hidden overscroll-none">
       {/* Background Image Crossfade Container */}
-      <div className="absolute inset-0 overflow-hidden bg-brand-stone">
+      <div className="absolute inset-0 z-0 overflow-hidden bg-brand-stone">
         {/* Current background (always visible underneath) */}
         <div
           className={`absolute inset-0 bg-cover ${mobileAlignment}`}
@@ -99,8 +134,8 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         )}
       </div>
 
-      {/* Top-Fade Vignette - Reveals more of background at top */}
-      <div className="absolute inset-0 z-5 bg-gradient-to-t from-brand-stone/40 to-transparent" />
+      {/* Screen overlay - Step 1 uses a light full-screen scrim */}
+      <div className={screenOverlayClass} />
 
       {/* Mobile Content Layout - Full Height Flex Container */}
       <div className="relative z-10 h-full flex flex-col min-h-0">
@@ -114,26 +149,27 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         {/* Spacer - Visual Area Above Content (shrinkable so footer stays visible) */}
         <div className="min-h-[5dvh] h-[15dvh]" />
 
-        {/* Bottom Sheet - Fixed Height Container with Gradient */}
-        <div className="flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 pb-14 min-h-0">
-          {/* Scrollable Content Area */}
-          <div
-            ref={scrollContainerRef}
-            className="flex-grow overflow-y-auto px-6 min-h-0 pb-6"
-          >
-            <JourneyScreen />
-          </div>
-
-          {/* Mobile Save Footer - Always Visible at Bottom */}
-          {isJourneyScreen && <MobileSaveFooter session={session} />}
-
-          {/* Legacy Footer Mobile - Hidden for now */}
-          {isJourneyScreen && false && (
-            <div className="flex-shrink-0 px-6 py-4 bg-brand-stone border-t border-brand-stone/20">
-              <FooterMobile />
-            </div>
-          )}
+        {/* Bottom Sheet - Scrollable content region */}
+        <div
+          ref={scrollContainerRef}
+          className={`${bottomSheetClass} overflow-y-auto overscroll-y-contain px-6 pb-36`}
+        >
+          <JourneyScreen />
         </div>
+
+        {/* Mobile Save Footer - Fixed to device viewport bottom */}
+        {isJourneyScreen && (
+          <div className="fixed inset-x-0 bottom-0 z-20 bg-brand-stone safe-area-bottom">
+            <MobileSaveFooter session={session} />
+          </div>
+        )}
+
+        {/* Legacy Footer Mobile - Hidden for now */}
+        {isJourneyScreen && false && (
+          <div className="flex-shrink-0 px-6 py-4 bg-brand-stone border-t border-brand-stone/20">
+            <FooterMobile />
+          </div>
+        )}
       </div>
     </div>
   );

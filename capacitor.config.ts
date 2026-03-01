@@ -5,8 +5,8 @@ const config: CapacitorConfig = {
   appName: 'The Mountain Pathway',
   webDir: 'out',
   ios: {
-    // Content inset behavior - adjusts for safe areas
-    contentInset: 'always',
+    // Let web layer control safe-area spacing to avoid iOS inset gaps
+    contentInset: 'never',
     // Allow link previews
     allowsLinkPreview: true,
     // Scroll to accommodate keyboard
