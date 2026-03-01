@@ -141,7 +141,13 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
       <div className="relative z-10 h-full flex flex-col min-h-0">
         {/* Mobile Header at Top - with iOS safe area */}
         {isJourneyScreen && (
-          <div className="flex-shrink-0 px-4 pt-4 pb-2 safe-area-top">
+          <div
+            className="flex-shrink-0 px-4 pb-2"
+            style={{
+              paddingTop:
+                "max(calc(env(safe-area-inset-top, 0px) + 1rem), 3.25rem)",
+            }}
+          >
             <HeaderMobile />
           </div>
         )}

@@ -335,7 +335,12 @@ export default function HomeClient({ session }: { session: Session | null }) {
         >
           {/* Mobile Controls - Top Right with iOS safe area */}
           {isMobile && (
-            <div className="absolute safe-top-4 right-4 z-50 flex items-center gap-2">
+            <div
+              className="absolute right-4 z-50 flex items-center gap-2"
+              style={{
+                top: "max(calc(env(safe-area-inset-top, 0px) + 1rem), 3.25rem)",
+              }}
+            >
               {/* Account Button - Only show for authenticated users on landing page */}
               {/* Non-authenticated users will use the soft gate modal */}
               {liveSession && (
