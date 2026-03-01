@@ -65,6 +65,30 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
 
   // Get the icon component for this step
   const IconComponent = iconMap[step.icon];
+  const isImageFirstInputStep =
+    step.stepIndex === 2 ||
+    step.stepIndex === 3 ||
+    step.stepIndex === 4 ||
+    step.stepIndex === 5 ||
+    step.stepIndex === 6 ||
+    step.stepIndex === 7 ||
+    step.stepIndex === 8;
+
+  const titleClass = isImageFirstInputStep
+    ? "text-3xl font-bold mb-2 text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.65)]"
+    : "text-3xl font-bold mb-2 text-slate-900";
+  const subtitleClass = isImageFirstInputStep
+    ? "text-lg text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
+    : "text-lg text-slate-800";
+  const promptClass = isImageFirstInputStep
+    ? "leading-relaxed text-center text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] pr-2"
+    : "leading-relaxed text-center text-slate-800 pr-2";
+  const inputCardClass = isImageFirstInputStep
+    ? "w-full h-48 bg-white/65 rounded-lg p-6 shadow-lg border border-white/40 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed"
+    : "w-full h-48 bg-white/50 rounded-lg p-6 shadow-md border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed";
+  const countTextClass = isImageFirstInputStep
+    ? "text-xs text-white/95 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]"
+    : "text-xs text-slate-600";
 
   // Prayer guidance points for Step 9
   const prayerGuidance = [
@@ -101,7 +125,9 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col gap-6 w-full"
     >
-      <div className="text-center">
+      <div
+        className={`text-center ${isImageFirstInputStep ? "bg-black/12 rounded-2xl px-4 py-5" : ""}`}
+      >
         {/* Step Icon */}
         {IconComponent && (
           <div className="flex justify-center mb-4">
@@ -111,10 +137,10 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
           </div>
         )}
 
-        <h2 className="text-3xl font-bold mb-2 text-slate-900">
+        <h2 className={titleClass}>
           {step.title}
         </h2>
-        <p className="text-lg text-slate-800">{step.subtitle}</p>
+        <p className={subtitleClass}>{step.subtitle}</p>
       </div>
 
       {/* Step 9 Prayer Guidance Accordion - Moved above textarea */}
@@ -150,7 +176,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
         </Accordion>
       )}
 
-      <p className="leading-relaxed text-center text-slate-800 pr-2">
+      <p className={promptClass}>
         {step.prompt}
       </p>
 
@@ -162,11 +188,11 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
           onFocus={handleTextareaFocus}
           onBlur={handleBlur}
           placeholder={pathwayContent.general.textareaPlaceholder}
-          className="w-full h-48 bg-white/50 rounded-lg p-6 shadow-md border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed"
+          className={inputCardClass}
         />
 
         <div className="text-right">
-          <p className="text-xs text-slate-600">
+          <p className={countTextClass}>
             {pathwayContent.general.characterCountText.replace(
               "{count}",
               currentValue.length.toString()
