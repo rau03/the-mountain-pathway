@@ -14,7 +14,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLearnMoreClick,
 }) => {
   return (
-    <div className="h-[100svh] flex flex-col items-center justify-between md:justify-center px-6 pt-[calc(env(safe-area-inset-top,0px)+3.75rem)] md:pt-10 pb-24 md:gap-8 overflow-hidden">
+    <div className="h-[100svh] flex flex-col items-center justify-between md:justify-center px-6 pt-[calc(env(safe-area-inset-top,0px)+6.25rem)] md:pt-10 pb-16 md:gap-8 overflow-hidden">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
       <div className="flex flex-col items-center gap-4 md:gap-8">
         {/* Hero Icon - gold_lines with subtle translucent blurred background */}
@@ -31,7 +31,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
 
         {/* Main Content with Text Protection */}
-        <div className="relative">
+        <div className="relative mt-5 md:mt-6">
           {/* Text Protection Gradient Overlay - Enhanced for better readability */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20 rounded-lg" />
 
