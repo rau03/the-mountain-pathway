@@ -107,7 +107,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
       <div className="relative min-h-screen w-full min-w-full bg-brand-stone">
         {/* Dark gradient overlay at top for better logo contrast */}
         <div className="absolute inset-0 z-5 bg-gradient-to-b from-brand-slate/40 via-brand-slate/20 to-transparent h-32" />
-        <div className="relative z-10 px-6 py-8">
+        <div className="relative z-10 px-6 pt-[calc(env(safe-area-inset-top,0px)+3.25rem)] pb-10">
           <SummaryScreen session={session} />
         </div>
       </div>

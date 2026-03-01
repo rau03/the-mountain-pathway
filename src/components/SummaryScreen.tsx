@@ -246,7 +246,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col gap-4 w-full relative"
+      className={`flex flex-col w-full relative ${isMobile ? "gap-6" : "gap-4"}`}
     >
       {/* Header */}
       <div className="text-center">
@@ -305,7 +305,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       </div>
 
       {/* Action Buttons - All buttons with consistent spacing */}
-      <div className="flex flex-col gap-3 justify-center items-center mt-6">
+      <div className={`flex flex-col gap-3 justify-center items-center ${isMobile ? "mt-8" : "mt-6"}`}>
         {/* Save Journey Button - Only show if authenticated and on desktop (mobile has button in footer) */}
         {session && !isMobile && (
           <Button
@@ -370,7 +370,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
       {/* Mobile Save Button - Only show on mobile */}
       {isMobile && (
-        <div className="text-center mt-4">
+        <div className="text-center mt-6">
           <Button
             onClick={handleSaveClick}
             disabled={saveLoading}
@@ -397,7 +397,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       )}
 
       {/* Support & Legal */}
-      <div className="w-full flex flex-col items-center pt-8 space-y-3">
+      <div className={`w-full flex flex-col items-center space-y-3 ${isMobile ? "pt-10" : "pt-8"}`}>
         {/* Buy Me a Coffee Link */}
         <a
           href="https://buymeacoffee.com/themountainpathway"
