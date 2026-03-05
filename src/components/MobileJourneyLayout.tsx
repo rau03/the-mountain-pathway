@@ -85,7 +85,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
     isPauseStep ||
     isDiscernStep ||
     isPrayerStep
-      ? "absolute inset-0 z-5 bg-brand-stone/28 backdrop-blur-[1px]"
+      ? "absolute inset-0 z-5 bg-transparent"
       : "absolute inset-0 z-5 bg-gradient-to-t from-brand-stone/40 to-transparent";
 
   const bottomSheetClass =
@@ -134,7 +134,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         )}
       </div>
 
-      {/* Screen overlay - Step 1 uses a light full-screen scrim */}
+      {/* Screen overlay - Journey steps use clear image view */}
       <div className={screenOverlayClass} />
 
       {/* Mobile Content Layout - Full Height Flex Container */}

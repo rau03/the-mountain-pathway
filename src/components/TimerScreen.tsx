@@ -53,7 +53,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
   const isTrailheadStep = step.stepIndex === 0;
 
   const textBlockClass = isTrailheadStep
-    ? "text-center space-y-4 bg-black/16 rounded-2xl px-4 py-5"
+    ? "relative text-center rounded-2xl overflow-hidden"
     : "text-center space-y-4";
   const titleClass = isTrailheadStep
     ? "text-3xl font-bold text-white mb-2 [text-shadow:0_2px_8px_rgba(0,0,0,0.65)]"
@@ -162,25 +162,36 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
       className={containerClass}
     >
       <div className={textBlockClass}>
-        {/* Step Icon */}
-        {IconComponent && (
-          <div className="flex justify-center mb-4">
-            <div className="p-4 bg-amber-100 rounded-full">
-              <IconComponent className="w-8 h-8 text-brand-gold" />
-            </div>
-          </div>
+        {isTrailheadStep && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
         )}
+        <div className={isTrailheadStep ? "relative z-10 space-y-4 px-4 py-5" : ""}>
+          {/* Step Icon */}
+          {IconComponent && (
+            <div className="flex justify-center mb-4">
+              <div
+                className={
+                  isTrailheadStep
+                    ? "p-4 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden"
+                    : "p-4 bg-amber-100 rounded-full"
+                }
+              >
+                <IconComponent className="w-8 h-8 text-brand-gold" />
+              </div>
+            </div>
+          )}
 
-        <div>
-          <h2 className={titleClass}>
-            {step.title}
-          </h2>
-          <p className={subtitleClass}>{step.subtitle}</p>
+          <div>
+            <h2 className={titleClass}>
+              {step.title}
+            </h2>
+            <p className={subtitleClass}>{step.subtitle}</p>
+          </div>
+
+          <p className={promptClass}>
+            {step.prompt}
+          </p>
         </div>
-
-        <p className={promptClass}>
-          {step.prompt}
-        </p>
       </div>
 
       {!hasStarted && (

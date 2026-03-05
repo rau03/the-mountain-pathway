@@ -43,6 +43,15 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
   const promptClass = isScriptureStep
     ? "leading-relaxed text-center text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
     : "leading-relaxed text-center text-slate-800";
+  const textCardClass = isScriptureStep
+    ? "relative text-center rounded-2xl overflow-hidden"
+    : "text-center";
+  const textCardInnerClass = isScriptureStep
+    ? "relative z-10 space-y-4 px-4 py-5"
+    : "";
+  const iconWrapClass = isScriptureStep
+    ? "p-4 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden"
+    : "p-4 bg-amber-100 rounded-full";
   const scriptureCardClass = isScriptureStep
     ? "w-full h-[42vh] bg-white/75 rounded-lg p-6 overflow-y-auto border border-white/40 shadow-lg backdrop-blur-[2px] scrollbar-thin scrollbar-thumb-brand-slate/30"
     : "w-full h-[40vh] bg-white/50 rounded-lg p-6 overflow-y-auto scrollbar-thin scrollbar-thumb-brand-slate/30";
@@ -56,27 +65,29 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col gap-6 w-full"
     >
-      <div
-        className={`text-center ${isScriptureStep ? "bg-black/12 rounded-2xl px-4 py-5" : ""}`}
-      >
-        {/* Step Icon */}
-        {IconComponent && (
-          <div className="flex justify-center mb-4">
-            <div className="p-4 bg-amber-100 rounded-full">
-              <IconComponent className="w-8 h-8 text-brand-gold" />
-            </div>
-          </div>
+      <div className={textCardClass}>
+        {isScriptureStep && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
         )}
+        <div className={textCardInnerClass}>
+          {/* Step Icon */}
+          {IconComponent && (
+            <div className="flex justify-center mb-4">
+              <div className={iconWrapClass}>
+                <IconComponent className="w-8 h-8 text-brand-gold" />
+              </div>
+            </div>
+          )}
 
-        <h2 className={titleClass}>
-          {step.title}
-        </h2>
-        <p className={subtitleClass}>{step.subtitle}</p>
+          <h2 className={titleClass}>
+            {step.title}
+          </h2>
+          <p className={subtitleClass}>{step.subtitle}</p>
+          <p className={promptClass}>
+            {step.prompt}
+          </p>
+        </div>
       </div>
-
-      <p className={promptClass}>
-        {step.prompt}
-      </p>
 
       {/* Scripture Text - Integrated Scrolling Card */}
       {step.content?.scripture && (

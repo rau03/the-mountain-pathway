@@ -83,6 +83,15 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
   const promptClass = isImageFirstInputStep
     ? "leading-relaxed text-center text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] pr-2"
     : "leading-relaxed text-center text-slate-800 pr-2";
+  const textCardClass = isImageFirstInputStep
+    ? "relative text-center rounded-2xl overflow-hidden"
+    : "text-center";
+  const textCardInnerClass = isImageFirstInputStep
+    ? "relative z-10 space-y-4 px-4 py-5"
+    : "";
+  const iconWrapClass = isImageFirstInputStep
+    ? "p-4 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden"
+    : "p-4 bg-amber-100 rounded-full";
   const inputCardClass = isImageFirstInputStep
     ? "w-full h-48 bg-white/65 rounded-lg p-6 shadow-lg border border-white/40 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed"
     : "w-full h-48 bg-white/50 rounded-lg p-6 shadow-md border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed";
@@ -125,22 +134,28 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col gap-6 w-full"
     >
-      <div
-        className={`text-center ${isImageFirstInputStep ? "bg-black/12 rounded-2xl px-4 py-5" : ""}`}
-      >
-        {/* Step Icon */}
-        {IconComponent && (
-          <div className="flex justify-center mb-4">
-            <div className="p-4 bg-amber-100 rounded-full">
-              <IconComponent className="w-8 h-8 text-brand-gold" />
-            </div>
-          </div>
+      <div className={textCardClass}>
+        {isImageFirstInputStep && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
         )}
+        <div className={textCardInnerClass}>
+          {/* Step Icon */}
+          {IconComponent && (
+            <div className="flex justify-center mb-4">
+              <div className={iconWrapClass}>
+                <IconComponent className="w-8 h-8 text-brand-gold" />
+              </div>
+            </div>
+          )}
 
-        <h2 className={titleClass}>
-          {step.title}
-        </h2>
-        <p className={subtitleClass}>{step.subtitle}</p>
+          <h2 className={titleClass}>
+            {step.title}
+          </h2>
+          <p className={subtitleClass}>{step.subtitle}</p>
+          <p className={promptClass}>
+            {step.prompt}
+          </p>
+        </div>
       </div>
 
       {/* Step 9 Prayer Guidance Accordion - Moved above textarea */}
@@ -175,10 +190,6 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
           </AccordionItem>
         </Accordion>
       )}
-
-      <p className={promptClass}>
-        {step.prompt}
-      </p>
 
       <div className="space-y-4 pr-2">
         <textarea
