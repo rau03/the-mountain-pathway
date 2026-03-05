@@ -98,6 +98,31 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
   const countTextClass = isImageFirstInputStep
     ? "text-xs text-white/95 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]"
     : "text-xs text-slate-600";
+  const prayerGuideCardClass = isImageFirstInputStep
+    ? "relative rounded-2xl overflow-hidden"
+    : "space-y-4 bg-white/50 rounded-lg p-6 shadow-md border border-slate-300 text-slate-900";
+  const prayerGuideInnerClass = isImageFirstInputStep
+    ? "relative z-10 space-y-4 px-4 py-5"
+    : "";
+  const prayerGuideIntroClass = isImageFirstInputStep
+    ? "text-sm text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] mb-4"
+    : "text-sm text-slate-800 mb-4";
+  const prayerGuideTitleClass = isImageFirstInputStep
+    ? "font-semibold text-white text-sm mb-1 [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
+    : "font-semibold text-slate-900 text-sm mb-1";
+  const prayerGuideContentClass = isImageFirstInputStep
+    ? "text-sm text-white leading-relaxed [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
+    : "text-sm text-slate-800 leading-relaxed";
+  const prayerGuideButtonClass = isImageFirstInputStep
+    ? "px-4 py-2 bg-black/25 hover:bg-black/35 border border-white/30 rounded-lg text-sm text-white font-semibold transition-colors shadow-sm [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
+    : "px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-sm text-slate-900 font-semibold transition-colors shadow-sm";
+  const summaryCardClass = isImageFirstInputStep
+    ? "relative rounded-2xl overflow-hidden"
+    : "bg-white/50 border border-slate-300 rounded-lg p-4 shadow-sm";
+  const summaryInnerClass = isImageFirstInputStep ? "relative z-10 px-4 py-5" : "";
+  const summaryTextClass = isImageFirstInputStep
+    ? "text-white text-sm text-center [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
+    : "text-brand-slate text-sm text-center";
 
   // Prayer guidance points for Step 9
   const prayerGuidance = [
@@ -163,28 +188,33 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
         <Accordion type="single" collapsible className="w-full">
           <AccordionItem value="prayer-guide" className="border-none">
             <AccordionTrigger className="hover:no-underline [&>svg]:hidden">
-              <span className="px-4 py-2 bg-white/50 hover:bg-white/70 border border-slate-300 rounded-lg text-sm text-brand-slate font-medium transition-colors shadow-sm">
+              <span className={prayerGuideButtonClass}>
                 Need a guide for prayer?
               </span>
             </AccordionTrigger>
-            <AccordionContent>
-              <div className="space-y-4 pt-2">
-                <p className="text-sm text-brand-slate/80 mb-4">
-                  Here&apos;s a simple framework to help structure your prayer:
-                </p>
-                {prayerGuidance.map((guide, index) => (
-                  <div
-                    key={index}
-                    className="border-l-2 border-brand-gold/30 pl-4"
-                  >
-                    <h4 className="font-semibold text-brand-slate text-sm mb-1">
-                      {guide.title}
-                    </h4>
-                    <p className="text-sm text-brand-slate/80 leading-relaxed">
-                      {guide.content}
-                    </p>
-                  </div>
-                ))}
+            <AccordionContent className="pt-2">
+              <div className={prayerGuideCardClass}>
+                {isImageFirstInputStep && (
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
+                )}
+                <div className={prayerGuideInnerClass}>
+                  <p className={prayerGuideIntroClass}>
+                    Here&apos;s a simple framework to help structure your prayer:
+                  </p>
+                  {prayerGuidance.map((guide, index) => (
+                    <div
+                      key={index}
+                      className="border-l-2 border-brand-gold/50 pl-4"
+                    >
+                      <h4 className={prayerGuideTitleClass}>
+                        {guide.title}
+                      </h4>
+                      <p className={prayerGuideContentClass}>
+                        {guide.content}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </AccordionContent>
           </AccordionItem>
@@ -214,10 +244,15 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
 
       {step.isSummary && step.content?.specialMessage && (
         <div className="pr-2">
-          <div className="bg-white/50 border border-slate-300 rounded-lg p-4 shadow-sm">
-            <p className="text-brand-slate text-sm text-center">
-              {step.content.specialMessage}
-            </p>
+          <div className={summaryCardClass}>
+            {isImageFirstInputStep && (
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
+            )}
+            <div className={summaryInnerClass}>
+              <p className={summaryTextClass}>
+                {step.content.specialMessage}
+              </p>
+            </div>
           </div>
         </div>
       )}
