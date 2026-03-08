@@ -373,8 +373,8 @@ export default function HomeClient({ session }: { session: Session | null }) {
         // Journey Screen - Clean Layout Swap
         <>
           {/* DESKTOP LAYOUT: Stable split-screen (visible ≥ 768px) */}
-          <div className="hidden md:block">
-            <main className="flex flex-row h-screen overflow-hidden">
+          <div className="hidden md:block bg-brand-stone">
+            <main className="flex flex-row h-screen overflow-hidden bg-brand-stone">
               {/* Visual Pane - Left side with background image */}
               <div
                 className={`w-[45%] h-screen bg-cover ${backgroundPositionClass} transition-all duration-1000`}
@@ -393,7 +393,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
                 {/* Main Content - Scrollable */}
                 <div
                   ref={desktopScrollRef}
-                  className="flex-grow flex flex-col py-6 pr-2 overflow-y-auto scrollbar-thin"
+                  className="flex-grow flex flex-col py-6 pr-2 overflow-y-auto scrollbar-thin bg-brand-stone"
                 >
                   {renderCurrentScreen()}
                 </div>
