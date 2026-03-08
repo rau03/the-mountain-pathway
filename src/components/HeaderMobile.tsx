@@ -11,7 +11,7 @@ export const HeaderMobile: React.FC = () => {
       {/* Mobile Logo - Icon Only, Clickable to return home */}
       <button
         onClick={resetJourney}
-        className="bg-black/25 backdrop-blur-md border border-white/10 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 overflow-hidden"
+        className="bg-black/10 backdrop-blur-sm border border-brand-slate/20 rounded-full w-10 h-10 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0 overflow-hidden"
         aria-label="Return to home"
         data-testid="header-mountain-icon"
       >

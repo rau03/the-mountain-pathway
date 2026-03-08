@@ -400,7 +400,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
 
                 {/* Footer */}
                 {isJourneyScreen && (
-                  <div className="flex-shrink-0 pt-6 pb-4">
+                  <div className="flex-shrink-0 pt-5 pb-1">
                     <DesktopSaveFooter session={liveSession} />
                   </div>
                 )}

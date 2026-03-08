@@ -56,13 +56,13 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
     ? "relative text-center rounded-2xl overflow-hidden"
     : "text-center space-y-4";
   const titleClass = isTrailheadStep
-    ? "text-3xl font-bold text-white mb-2 [text-shadow:0_2px_8px_rgba(0,0,0,0.65)]"
+    ? "text-3xl font-bold text-white mb-2 [text-shadow:0_2px_8px_rgba(0,0,0,0.65)] md:text-slate-900 md:[text-shadow:none]"
     : "text-3xl font-bold text-slate-900 mb-2";
   const subtitleClass = isTrailheadStep
-    ? "text-white text-lg [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
+    ? "text-white text-lg [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] md:text-slate-800 md:[text-shadow:none]"
     : "text-slate-800 text-lg";
   const promptClass = isTrailheadStep
-    ? "text-white leading-relaxed max-w-md mx-auto [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
+    ? "text-white leading-relaxed max-w-md mx-auto [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] md:text-slate-800 md:[text-shadow:none]"
     : "text-slate-800 leading-relaxed max-w-md mx-auto";
   const containerClass = "flex flex-col items-center space-y-4 w-full";
   const preStartControlsClass = "space-y-4 -mt-3";
@@ -163,7 +163,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
     >
       <div className={textBlockClass}>
         {isTrailheadStep && (
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20 md:bg-none md:bg-brand-stone/85" />
         )}
         <div className={isTrailheadStep ? "relative z-10 space-y-4 px-4 py-5" : ""}>
           {/* Step Icon */}
@@ -172,7 +172,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
               <div
                 className={
                   isTrailheadStep
-                    ? "p-4 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden"
+                    ? "p-4 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden md:bg-amber-100 md:border-transparent md:backdrop-blur-none"
                     : "p-4 bg-amber-100 rounded-full"
                 }
               >
