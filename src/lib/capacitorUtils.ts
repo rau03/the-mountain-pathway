@@ -1,6 +1,7 @@
 // Utility functions for Capacitor native app functionality
 import { Capacitor } from '@capacitor/core';
 import { Browser } from '@capacitor/browser';
+import { Haptics, NotificationType } from '@capacitor/haptics';
 
 /**
  * Check if running in a native Capacitor app
@@ -59,4 +60,16 @@ export async function openEmail(email: string, subject?: string, body?: string):
   }
   
   await openExternalUrl(mailtoUrl);
+}
+
+/**
+ * Trigger a success notification haptic (native only).
+ */
+export async function triggerSuccessHaptic(): Promise<void> {
+  if (!isNativeApp()) return;
+  try {
+    await Haptics.notification({ type: NotificationType.Success });
+  } catch (error) {
+    console.error('Failed to trigger success haptic:', error);
+  }
 }

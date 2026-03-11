@@ -69,6 +69,22 @@ export default function AuthModal({
     return message;
   };
 
+  const isExistingAccountSignupResponse = (
+    user: { identities?: Array<{ id?: string }> | null } | null | undefined
+  ) => {
+    // Supabase can return no error for existing confirmed users.
+    // In that case identities is usually an empty array.
+    return Array.isArray(user?.identities) && user.identities.length === 0;
+  };
+
+  const routeToLoginWithMessage = (message: string, emailToPrefill: string) => {
+    setPassword("");
+    setEmail(emailToPrefill.trim());
+    setAuthSuccess(null);
+    setAuthError(message);
+    setAuthView("login");
+  };
+
   // Get journey state to check for unsaved work
   const { isDirty, currentStep, isSaved, resetJourney } = useStore();
 
@@ -205,7 +221,7 @@ export default function AuthModal({
     setResendSuccess(null);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
@@ -218,7 +234,14 @@ export default function AuthModal({
       });
 
       if (error) {
-        setAuthError(mapSignupErrorMessage(error.message));
+        const mappedMessage = mapSignupErrorMessage(error.message);
+        if (mappedMessage === DUPLICATE_EMAIL_ERROR_MESSAGE) {
+          routeToLoginWithMessage(mappedMessage, email);
+        } else {
+          setAuthError(mappedMessage);
+        }
+      } else if (isExistingAccountSignupResponse(data?.user)) {
+        routeToLoginWithMessage(DUPLICATE_EMAIL_ERROR_MESSAGE, email);
       } else {
         setAuthSuccess("Check your email for a confirmation link!");
       }
@@ -607,7 +630,7 @@ export default function AuthModal({
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="At least 8 characters"
+                        placeholder="at least 8 characters."
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         disabled={authLoading}
                         autoComplete="new-password"

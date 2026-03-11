@@ -17,7 +17,11 @@ import { Button } from "@/components/ui/button";
 import SaveJourneyModal from "@/components/SaveJourneyModal";
 import AuthModal from "@/components/AuthModal";
 import { saveJourney, updateJourney } from "@/lib/journeyApi";
-import { openEmail, openExternalUrl } from "@/lib/capacitorUtils";
+import {
+  openEmail,
+  openExternalUrl,
+  triggerSuccessHaptic,
+} from "@/lib/capacitorUtils";
 
 export const SummaryScreen: React.FC<{ session: Session | null }> = ({
   session,
@@ -96,7 +100,8 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
     }
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = async () => {
+    await triggerSuccessHaptic();
     if (!session) {
       setShowAuthModal(true);
       return;

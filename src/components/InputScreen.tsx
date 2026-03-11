@@ -117,8 +117,8 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
     ? "text-sm text-white leading-relaxed [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] md:text-slate-800 md:[text-shadow:none]"
     : "text-sm text-slate-800 leading-relaxed";
   const prayerGuideButtonClass = isImageFirstInputStep
-    ? "px-4 py-2 bg-stone-200/90 hover:bg-stone-300 border border-stone-300 rounded-lg text-sm text-slate-800 font-semibold transition-colors shadow-sm md:bg-stone-200/90 md:hover:bg-stone-300 md:border-stone-300 md:text-slate-800"
-    : "px-4 py-2 bg-stone-200/90 hover:bg-stone-300 border border-stone-300 rounded-lg text-sm text-slate-800 font-semibold transition-colors shadow-sm";
+    ? "px-4 py-2 bg-black/25 hover:bg-black/30 backdrop-blur-md border border-white/10 rounded-lg text-sm text-white font-semibold transition-colors shadow-sm md:bg-white/50 md:hover:bg-white/60 md:border-slate-300 md:text-slate-800 md:backdrop-blur-none"
+    : "px-4 py-2 bg-white/50 hover:bg-white/60 border border-slate-300 rounded-lg text-sm text-slate-800 font-semibold transition-colors shadow-sm";
   const summaryCardClass = isImageFirstInputStep
     ? "relative rounded-2xl overflow-hidden"
     : "bg-white/50 border border-slate-300 rounded-lg p-4 shadow-sm";
