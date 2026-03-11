@@ -14,7 +14,7 @@ export const HeaderDesktop: React.FC = () => {
         className="flex items-center gap-3 bg-transparent border-none p-0 text-left cursor-pointer hover:opacity-80 transition-opacity"
       >
         {showBrandIcon && (
-          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-black/10 backdrop-blur-sm border border-brand-slate/20 overflow-hidden">
+          <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-black/20 backdrop-blur-sm border border-white/15 shadow-sm overflow-hidden">
             <img
               src="/gold_lines_no%20background_mp.png"
               alt="Mountain Pathway"

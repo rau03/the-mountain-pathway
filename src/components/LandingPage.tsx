@@ -17,8 +17,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     <div className="h-[100svh] flex flex-col items-center justify-between md:justify-center px-6 pt-[calc(env(safe-area-inset-top,0px)+6.25rem)] md:pt-10 pb-16 md:gap-8 overflow-hidden">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
       <div className="flex flex-col items-center gap-4 md:gap-8">
-        {/* Hero Icon - gold_lines with subtle translucent blurred background */}
-        <div className="p-4 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden">
+        {/* Hero Icon - aligned with iOS dark translucent chip */}
+        <div className="p-4 bg-black/35 backdrop-blur-md rounded-full border border-white/10 shadow-lg overflow-hidden">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/gold_lines_no%20background_mp.png"
