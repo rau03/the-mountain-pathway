@@ -66,18 +66,63 @@ export interface PathwayContent {
   };
 }
 
-const psalm139Nlt = `O Lord, you have examined my heart and know everything about me.
-You know when I sit down or stand up.
-You know my thoughts even when I am far away.
-You see me when I travel and when I rest at home.
-You know everything I do.
-
-Search me, O God, and know my heart;
-test me and know my anxious thoughts.
-Point out anything in me that offends you,
-and lead me along the path of everlasting life.
-
--- Psalm 139 (NLT)`;
+const psalm139Nlt =
+  "For the choir director: A psalm of David.\n\n" +
+  "O Lord, you have examined my heart\n" +
+  "and know everything about me.\n" +
+  "You know when I sit down or stand up.\n" +
+  "You know my thoughts even when I'm far away.\n" +
+  "You see me when I travel\n" +
+  "and when I rest at home.\n" +
+  "You know everything I do.\n" +
+  "You know what I am going to say\n" +
+  "even before I say it, Lord.\n" +
+  "You go before me and follow me.\n" +
+  "You place your hand of blessing on my head.\n" +
+  "Such knowledge is too wonderful for me,\n" +
+  "too great for me to understand!\n\n" +
+  "I can never escape from your Spirit!\n" +
+  "I can never get away from your presence!\n" +
+  "If I go up to heaven, you are there;\n" +
+  "if I go down to the grave, you are there.\n" +
+  "If I ride the wings of the morning,\n" +
+  "if I dwell by the farthest oceans,\n" +
+  "even there your hand will guide me,\n" +
+  "and your strength will support me.\n" +
+  "I could ask the darkness to hide me\n" +
+  "and the light around me to become night--\n" +
+  "but even in darkness I cannot hide from you.\n" +
+  "To you the night shines as bright as day.\n" +
+  "Darkness and light are the same to you.\n\n" +
+  "You made all the delicate, inner parts of my body\n" +
+  "and knit me together in my mother's womb.\n" +
+  "Thank you for making me so wonderfully complex!\n" +
+  "Your workmanship is marvelous--how well I know it.\n" +
+  "You watched me as I was being formed in utter seclusion,\n" +
+  "as I was woven together in the dark of the womb.\n" +
+  "You saw me before I was born.\n" +
+  "Every day of my life was recorded in your book.\n" +
+  "Every moment was laid out\n" +
+  "before a single day had passed.\n\n" +
+  "How precious are your thoughts about me, O God.\n" +
+  "They cannot be numbered!\n" +
+  "I can't even count them;\n" +
+  "they outnumber the grains of sand!\n" +
+  "And when I wake up,\n" +
+  "you are still with me!\n\n" +
+  "O God, if only you would destroy the wicked!\n" +
+  "Get out of my life, you murderers!\n" +
+  "They blaspheme you;\n" +
+  "your enemies misuse your name.\n" +
+  "O Lord, shouldn't I hate those who hate you?\n" +
+  "Shouldn't I despise those who oppose you?\n" +
+  "Yes, I hate them with total hatred,\n" +
+  "for your enemies are my enemies.\n\n" +
+  "Search me, O God, and know my heart;\n" +
+  "test me and know my anxious thoughts.\n" +
+  "Point out anything in me that offends you,\n" +
+  "and lead me along the path of everlasting life.\n\n" +
+  "-- Psalm 139 (New Living Translation)";
 
 export const pathwayData: PathwayStep[] = [
   {
