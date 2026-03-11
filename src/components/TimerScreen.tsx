@@ -66,8 +66,9 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
     : "text-slate-800 leading-relaxed max-w-md mx-auto";
   const containerClass = "flex flex-col items-center space-y-4 w-full";
   const preStartControlsClass = "space-y-4 -mt-3";
-  const durationLabelClass =
-    "block text-sm !text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.45)] mb-4 font-semibold text-center tracking-wide";
+  const durationLabelClass = isTrailheadStep
+    ? "block text-sm !text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.45)] mb-4 font-semibold text-center tracking-wide md:!text-slate-900 md:[text-shadow:none]"
+    : "block text-sm text-slate-900 mb-4 font-semibold text-center tracking-wide";
   const beginButtonWrapClass = "flex justify-center w-full mt-2";
   const getDurationButtonClass = (isSelected: boolean) =>
     isTrailheadStep
