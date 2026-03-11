@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { ArrowLeft, ArrowRight, User, Save, Coffee } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
@@ -19,6 +19,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
+  const [autoSaveLoading, setAutoSaveLoading] = useState(false);
   const [quickSaveError, setQuickSaveError] = useState<string | null>(null);
 
   const {
@@ -131,6 +132,52 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
   // Check if this is an existing journey that can be quick-saved
   const canQuickSave =
     isSaved && savedJourneyId && savedJourneyTitle && isDirty;
+
+  const handleNextStep = () => {
+    if (currentStep >= 9) {
+      nextStep();
+      return;
+    }
+
+    const targetStep = currentStep + 1;
+    nextStep();
+
+    if (!session?.user || autoSaveLoading) {
+      return;
+    }
+
+    setAutoSaveLoading(true);
+    const fallbackTitle = `Journey ${new Date().toLocaleDateString("en-US")}`;
+    const title = savedJourneyTitle || fallbackTitle;
+    const journeyData = {
+      title,
+      currentEntry,
+      currentStep: targetStep,
+      isCompleted: targetStep >= 9,
+    };
+
+    const autoSaveRequest =
+      isSaved && savedJourneyId
+        ? updateJourney(savedJourneyId, journeyData).then(() => ({
+            id: savedJourneyId,
+            title,
+          }))
+        : saveJourney(journeyData).then((savedJourney) => ({
+            id: savedJourney.id,
+            title,
+          }));
+
+    void autoSaveRequest
+      .then(({ id, title: savedTitle }) => {
+        markSaved(id, savedTitle);
+      })
+      .catch((error) => {
+        console.error("Auto-save on next step failed:", error);
+      })
+      .finally(() => {
+        setAutoSaveLoading(false);
+      });
+  };
 
   return (
     <>
@@ -253,10 +300,11 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
             )}
 
             <Button
-              onClick={nextStep}
+              onClick={handleNextStep}
               size="sm"
               className="h-9 w-9 p-0"
               aria-label="Next step"
+              disabled={autoSaveLoading}
             >
               <ArrowRight className="h-4 w-4" />
             </Button>

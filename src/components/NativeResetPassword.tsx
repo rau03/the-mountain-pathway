@@ -25,8 +25,8 @@ export default function NativeResetPassword({ onDone }: Props) {
       return;
     }
 
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
       return;
     }
 
@@ -103,10 +103,11 @@ export default function NativeResetPassword({ onDone }: Props) {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="At least 6 characters"
+              placeholder="At least 8 characters"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
               autoFocus
               disabled={loading}
+              autoComplete="new-password"
             />
           </div>
 
@@ -125,6 +126,7 @@ export default function NativeResetPassword({ onDone }: Props) {
               placeholder="Re-enter your password"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
               disabled={loading}
+              autoComplete="new-password"
             />
           </div>
 

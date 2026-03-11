@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Session } from "@supabase/supabase-js";
 import {
   Dialog,
@@ -28,6 +28,8 @@ type AuthModalProps = {
 };
 
 type AuthView = "login" | "signup" | "forgot";
+const DUPLICATE_EMAIL_ERROR_MESSAGE =
+  "This email address is already connected to an account.";
 
 export default function AuthModal({
   open,
@@ -53,6 +55,19 @@ export default function AuthModal({
   const [resendLoading, setResendLoading] = useState(false);
   const [resendError, setResendError] = useState<string | null>(null);
   const [resendSuccess, setResendSuccess] = useState<string | null>(null);
+
+  const mapSignupErrorMessage = (message: string) => {
+    const normalizedMessage = message.toLowerCase();
+    if (
+      normalizedMessage.includes("email-already-in-use") ||
+      normalizedMessage.includes("already registered") ||
+      normalizedMessage.includes("already in use")
+    ) {
+      return DUPLICATE_EMAIL_ERROR_MESSAGE;
+    }
+
+    return message;
+  };
 
   // Get journey state to check for unsaved work
   const { isDirty, currentStep, isSaved, resetJourney } = useStore();
@@ -179,8 +194,8 @@ export default function AuthModal({
       return;
     }
 
-    if (password.length < 6) {
-      setAuthError("Password must be at least 6 characters");
+    if (password.length < 8) {
+      setAuthError("Password must be at least 8 characters");
       return;
     }
 
@@ -203,7 +218,7 @@ export default function AuthModal({
       });
 
       if (error) {
-        setAuthError(error.message);
+        setAuthError(mapSignupErrorMessage(error.message));
       } else {
         setAuthSuccess("Check your email for a confirmation link!");
       }
@@ -463,6 +478,7 @@ export default function AuthModal({
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         autoFocus
                         disabled={authLoading}
+                        autoComplete="email"
                       />
                     </div>
 
@@ -481,6 +497,7 @@ export default function AuthModal({
                         placeholder="Your password"
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         disabled={authLoading}
+                        autoComplete="current-password"
                       />
                     </div>
 
@@ -555,6 +572,7 @@ export default function AuthModal({
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         autoFocus
                         disabled={authLoading}
+                        autoComplete="given-name"
                       />
                     </div>
 
@@ -573,6 +591,7 @@ export default function AuthModal({
                         placeholder="you@example.com"
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         disabled={authLoading}
+                        autoComplete="email"
                       />
                     </div>
 
@@ -588,9 +607,10 @@ export default function AuthModal({
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="At least 6 characters"
+                        placeholder="At least 8 characters"
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         disabled={authLoading}
+                        autoComplete="new-password"
                       />
                     </div>
 
@@ -652,6 +672,7 @@ export default function AuthModal({
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         autoFocus
                         disabled={authLoading}
+                        autoComplete="email"
                       />
                     </div>
 

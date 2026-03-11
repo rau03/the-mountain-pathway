@@ -42,6 +42,13 @@ body.journey-mode {
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  /* Breakpoints for responsive design */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
@@ -216,4 +223,15 @@ body.journey-mode {
 
 .scrollbar-thin::-webkit-scrollbar-thumb:hover {
   background: #c4c1bf;
+}
+
+/* Psalm Formatting for Poetry Flow */
+.psalm-verse {
+  padding-left: 1.5rem;
+  text-indent: -1.5rem;
+  white-space: pre-line;
+  line-height: 1.7;
+  margin-bottom: 0.35rem;
+  color: #2d2d2d;
+  font-weight: 400;
 }
