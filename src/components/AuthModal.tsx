@@ -30,6 +30,11 @@ type AuthModalProps = {
 type AuthView = "login" | "signup" | "forgot";
 const DUPLICATE_EMAIL_ERROR_MESSAGE =
   "This email address is already connected to an account.";
+type SignupErrorLike = {
+  message?: string;
+  code?: string;
+  status?: number;
+};
 
 export default function AuthModal({
   open,
@@ -56,17 +61,33 @@ export default function AuthModal({
   const [resendError, setResendError] = useState<string | null>(null);
   const [resendSuccess, setResendSuccess] = useState<string | null>(null);
 
-  const mapSignupErrorMessage = (message: string) => {
-    const normalizedMessage = message.toLowerCase();
+  const isDuplicateEmailError = (error: SignupErrorLike | null | undefined) => {
+    if (!error) return false;
+    const normalizedMessage = (error.message || "").toLowerCase();
+    const normalizedCode = (error.code || "").toLowerCase();
+
     if (
+      normalizedCode.includes("user_already_exists") ||
+      normalizedCode.includes("email_exists") ||
+      normalizedCode.includes("email_already_in_use") ||
       normalizedMessage.includes("email-already-in-use") ||
       normalizedMessage.includes("already registered") ||
-      normalizedMessage.includes("already in use")
+      normalizedMessage.includes("already in use") ||
+      normalizedMessage.includes("already been registered") ||
+      normalizedMessage.includes("already associated") ||
+      normalizedMessage.includes("already connected")
     ) {
-      return DUPLICATE_EMAIL_ERROR_MESSAGE;
+      return true;
     }
 
-    return message;
+    return false;
+  };
+
+  const mapSignupErrorMessage = (error: SignupErrorLike) => {
+    if (isDuplicateEmailError(error)) {
+      return DUPLICATE_EMAIL_ERROR_MESSAGE;
+    }
+    return error.message || "Signup failed";
   };
 
   const isExistingAccountSignupResponse = (
@@ -234,7 +255,7 @@ export default function AuthModal({
       });
 
       if (error) {
-        const mappedMessage = mapSignupErrorMessage(error.message);
+        const mappedMessage = mapSignupErrorMessage(error);
         if (mappedMessage === DUPLICATE_EMAIL_ERROR_MESSAGE) {
           routeToLoginWithMessage(mappedMessage, email);
         } else {

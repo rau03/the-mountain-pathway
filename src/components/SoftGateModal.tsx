@@ -23,6 +23,11 @@ type SoftGateModalProps = {
 type ModalView = "choice" | "signup" | "login";
 const DUPLICATE_EMAIL_ERROR_MESSAGE =
   "This email address is already connected to an account.";
+type SignupErrorLike = {
+  message?: string;
+  code?: string;
+  status?: number;
+};
 
 export default function SoftGateModal({
   open,
@@ -52,17 +57,34 @@ export default function SoftGateModal({
   const [resetSuccess, setResetSuccess] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
 
-  const mapSignupErrorMessage = (message: string) => {
-    const normalizedMessage = message.toLowerCase();
+  const isDuplicateEmailError = (error: SignupErrorLike | null | undefined) => {
+    if (!error) return false;
+    const normalizedMessage = (error.message || "").toLowerCase();
+    const normalizedCode = (error.code || "").toLowerCase();
+
     if (
+      normalizedCode.includes("user_already_exists") ||
+      normalizedCode.includes("email_exists") ||
+      normalizedCode.includes("email_already_in_use") ||
       normalizedMessage.includes("email-already-in-use") ||
       normalizedMessage.includes("already registered") ||
-      normalizedMessage.includes("already in use")
+      normalizedMessage.includes("already in use") ||
+      normalizedMessage.includes("already been registered") ||
+      normalizedMessage.includes("already associated") ||
+      normalizedMessage.includes("already connected")
     ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const mapSignupErrorMessage = (error: SignupErrorLike) => {
+    if (isDuplicateEmailError(error)) {
       return DUPLICATE_EMAIL_ERROR_MESSAGE;
     }
 
-    return message;
+    return error.message || "Signup failed";
   };
 
   const isExistingAccountSignupResponse = (
@@ -272,7 +294,7 @@ export default function SoftGateModal({
       });
 
       if (error) {
-        const mappedMessage = mapSignupErrorMessage(error.message);
+        const mappedMessage = mapSignupErrorMessage(error);
         if (mappedMessage === DUPLICATE_EMAIL_ERROR_MESSAGE) {
           routeToLoginWithMessage(mappedMessage, email);
         } else {

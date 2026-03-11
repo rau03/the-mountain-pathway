@@ -142,4 +142,32 @@ describe("AuthModal auth parity updates", () => {
     expect(screen.getByLabelText("Email")).toHaveValue("existing@example.com");
     expect(screen.getByLabelText("Password")).toHaveValue("");
   });
+
+  it("maps duplicate email using Supabase error code variants", async () => {
+    signUpMock.mockResolvedValue({
+      data: { user: null },
+      error: {
+        message: "Please use a different credential",
+        code: "user_already_exists",
+      },
+    });
+
+    render(<AuthModal open={true} onOpenChange={() => {}} session={null} />);
+    fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
+    fireEvent.change(screen.getByLabelText("First Name"), {
+      target: { value: "Chris" },
+    });
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "existing2@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "12345678" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
+
+    expect(
+      await screen.findByText("This email address is already connected to an account.")
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toHaveValue("existing2@example.com");
+  });
 });
