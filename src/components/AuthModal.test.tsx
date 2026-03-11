@@ -67,7 +67,7 @@ describe("AuthModal auth parity updates", () => {
     expect(screen.getByLabelText("Email")).toHaveAttribute("autocomplete", "email");
     expect(screen.getByLabelText("Password")).toHaveAttribute(
       "placeholder",
-      "At least 8 characters"
+      "at least 8 characters."
     );
     expect(screen.getByLabelText("Password")).toHaveAttribute(
       "autocomplete",
@@ -91,7 +91,6 @@ describe("AuthModal auth parity updates", () => {
       ).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole("button", { name: "Back" }));
     fireEvent.click(screen.getByRole("button", { name: "Forgot password?" }));
     expect(screen.getByLabelText("Email")).toHaveAttribute("autocomplete", "email");
   });
@@ -115,5 +114,32 @@ describe("AuthModal auth parity updates", () => {
       await screen.findByText("Password must be at least 8 characters")
     ).toBeInTheDocument();
     expect(signUpMock).not.toHaveBeenCalled();
+  });
+
+  it("handles existing-account signup responses with no explicit error", async () => {
+    signUpMock.mockResolvedValue({
+      data: { user: { identities: [] } },
+      error: null,
+    });
+
+    render(<AuthModal open={true} onOpenChange={() => {}} session={null} />);
+    fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
+    fireEvent.change(screen.getByLabelText("First Name"), {
+      target: { value: "Chris" },
+    });
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "existing@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "12345678" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
+
+    expect(
+      await screen.findByText("This email address is already connected to an account.")
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toHaveValue("existing@example.com");
+    expect(screen.getByLabelText("Password")).toHaveValue("");
   });
 });

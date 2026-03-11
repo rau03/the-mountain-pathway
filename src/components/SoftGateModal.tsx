@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Session } from "@supabase/supabase-js";
 import {
   Dialog,
@@ -63,6 +63,20 @@ export default function SoftGateModal({
     }
 
     return message;
+  };
+
+  const isExistingAccountSignupResponse = (
+    user: { identities?: Array<{ id?: string }> | null } | null | undefined
+  ) => {
+    return Array.isArray(user?.identities) && user.identities.length === 0;
+  };
+
+  const routeToLoginWithMessage = (message: string, emailToPrefill: string) => {
+    setSignupError(null);
+    setLoginPassword("");
+    setLoginEmail(emailToPrefill.trim());
+    setLoginError(message);
+    setView("login");
   };
 
   // Reset form when modal opens
@@ -245,7 +259,7 @@ export default function SoftGateModal({
     setSignupError(null);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const { data, error } = await supabase.auth.signUp({
         email: email.trim(),
         password,
         options: {
@@ -258,7 +272,14 @@ export default function SoftGateModal({
       });
 
       if (error) {
-        setSignupError(mapSignupErrorMessage(error.message));
+        const mappedMessage = mapSignupErrorMessage(error.message);
+        if (mappedMessage === DUPLICATE_EMAIL_ERROR_MESSAGE) {
+          routeToLoginWithMessage(mappedMessage, email);
+        } else {
+          setSignupError(mappedMessage);
+        }
+      } else if (isExistingAccountSignupResponse(data?.user)) {
+        routeToLoginWithMessage(DUPLICATE_EMAIL_ERROR_MESSAGE, email);
       } else {
         setSignupSuccess(true);
       }
@@ -438,7 +459,7 @@ export default function SoftGateModal({
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="At least 8 characters"
+                    placeholder="at least 8 characters."
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                     disabled={signupLoading}
                     autoComplete="new-password"
