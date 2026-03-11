@@ -1,19 +1,34 @@
 "use client";
 
-import { Auth } from "@supabase/auth-ui-react";
-import { ThemeSupa } from "@supabase/auth-ui-shared";
+import { useState, type FormEvent } from "react";
 import supabase from "../../lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
 import { openExternalUrl } from "@/lib/capacitorUtils";
+import { getEmailRedirectTo, getPublicSiteUrl } from "@/lib/authRedirect";
 
 // Prevent static generation of this page
 export const dynamic = "force-dynamic";
 
+type LoginView = "login" | "signup" | "forgot";
+const DUPLICATE_EMAIL_ERROR_MESSAGE =
+  "This email address is already connected to an account.";
+type SignupErrorLike = {
+  message?: string;
+  code?: string;
+};
+
 export default function LoginPage() {
   const router = useRouter();
   const user = useUser();
+  const [view, setView] = useState<LoginView>("login");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   // If a user is already logged in, redirect them to the home page.
   useEffect(() => {
@@ -29,6 +44,130 @@ export default function LoginPage() {
       </div>
     );
   }
+  const sb = supabase;
+
+  const isDuplicateEmailError = (signupError: SignupErrorLike | null | undefined) => {
+    if (!signupError) return false;
+    const normalizedMessage = (signupError.message || "").toLowerCase();
+    const normalizedCode = (signupError.code || "").toLowerCase();
+    return (
+      normalizedCode.includes("user_already_exists") ||
+      normalizedCode.includes("email_exists") ||
+      normalizedCode.includes("email_already_in_use") ||
+      normalizedMessage.includes("email-already-in-use") ||
+      normalizedMessage.includes("already registered") ||
+      normalizedMessage.includes("already in use") ||
+      normalizedMessage.includes("already been registered") ||
+      normalizedMessage.includes("already associated") ||
+      normalizedMessage.includes("already connected")
+    );
+  };
+
+  const isExistingAccountSignupResponse = (
+    candidateUser: { identities?: Array<{ id?: string }> | null } | null | undefined
+  ) => {
+    return Array.isArray(candidateUser?.identities) && candidateUser.identities.length === 0;
+  };
+
+  const routeToLoginWithMessage = (message: string, emailToPrefill: string) => {
+    setView("login");
+    setPassword("");
+    setEmail(emailToPrefill.trim());
+    setSuccess(null);
+    setError(message);
+  };
+
+  const handleLogin = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      const { error: loginError } = await sb.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      if (loginError) {
+        setError(loginError.message);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignup = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!firstName.trim()) {
+      setError("Please enter your first name");
+      return;
+    }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      const { data, error: signupError } = await sb.auth.signUp({
+        email: email.trim(),
+        password,
+        options: {
+          data: {
+            first_name: firstName.trim(),
+            full_name: firstName.trim(),
+          },
+          emailRedirectTo: getEmailRedirectTo(),
+        },
+      });
+
+      if (signupError) {
+        if (isDuplicateEmailError(signupError)) {
+          routeToLoginWithMessage(DUPLICATE_EMAIL_ERROR_MESSAGE, email);
+        } else {
+          setError(signupError.message || "Signup failed");
+        }
+      } else if (isExistingAccountSignupResponse(data?.user)) {
+        routeToLoginWithMessage(DUPLICATE_EMAIL_ERROR_MESSAGE, email);
+      } else {
+        setSuccess("Check your email for a confirmation link!");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Signup failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!email.trim()) {
+      setError("Please enter your email");
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+    try {
+      localStorage.setItem("pendingPasswordReset", Date.now().toString());
+      const redirectTo = `${getPublicSiteUrl()}/auth/callback/recovery`;
+      const { error: resetError } = await sb.auth.resetPasswordForEmail(
+        email.trim(),
+        { redirectTo }
+      );
+      if (resetError) {
+        setError(resetError.message);
+      } else {
+        setSuccess("Check your email for a password reset link!");
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Reset failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div
@@ -41,15 +180,175 @@ export default function LoginPage() {
         padding: "2rem",
       }}
     >
-      <div style={{ width: "100%", maxWidth: "420px" }}>
-        <Auth
-          supabaseClient={supabase}
-          appearance={{ theme: ThemeSupa }}
-          theme="dark"
-          providers={["google"]}
-          redirectTo={`${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`}
-          onlyThirdPartyProviders={false}
-        />
+      <div style={{ width: "100%", maxWidth: "420px" }} className="space-y-4">
+        <div className="text-center space-y-2">
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+            {view === "login" && "Welcome Back"}
+            {view === "signup" && "Create Your Account"}
+            {view === "forgot" && "Reset Password"}
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            {view === "login" && "Log in to continue your journey"}
+            {view === "signup" && "Sign up to save your journey"}
+            {view === "forgot" && "Enter your email to receive a reset link"}
+          </p>
+        </div>
+
+        {success && (
+          <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+            <p className="text-sm text-green-700 dark:text-green-300 text-center">
+              {success}
+            </p>
+          </div>
+        )}
+        {error && (
+          <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+            <p className="text-sm text-red-600 dark:text-red-400 text-center">{error}</p>
+          </div>
+        )}
+
+        {view === "login" && !success && (
+          <form onSubmit={handleLogin} className="space-y-3">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              autoComplete="email"
+              disabled={loading}
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Your password"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              autoComplete="current-password"
+              disabled={loading}
+            />
+            <button
+              type="button"
+              onClick={() => {
+                setView("forgot");
+                setError(null);
+                setSuccess(null);
+              }}
+              className="text-sm text-brand-gold hover:text-brand-gold/80"
+            >
+              Forgot password?
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
+            >
+              {loading ? "Logging in..." : "Log In"}
+            </button>
+            <p className="text-sm text-center text-gray-500 dark:text-gray-400">
+              Don&apos;t have an account?{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setView("signup");
+                  setError(null);
+                  setSuccess(null);
+                }}
+                className="text-brand-gold hover:text-brand-gold/80"
+              >
+                Sign up
+              </button>
+            </p>
+          </form>
+        )}
+
+        {view === "signup" && !success && (
+          <form onSubmit={handleSignup} className="space-y-3">
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              placeholder="Your first name"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              autoComplete="given-name"
+              disabled={loading}
+            />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              autoComplete="email"
+              disabled={loading}
+            />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="at least 8 characters."
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              autoComplete="new-password"
+              disabled={loading}
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
+            >
+              {loading ? "Creating account..." : "Create Account"}
+            </button>
+            <p className="text-sm text-center text-gray-500 dark:text-gray-400">
+              Already have an account?{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setView("login");
+                  setError(null);
+                  setSuccess(null);
+                }}
+                className="text-brand-gold hover:text-brand-gold/80"
+              >
+                Log in
+              </button>
+            </p>
+          </form>
+        )}
+
+        {view === "forgot" && !success && (
+          <form onSubmit={handleForgotPassword} className="space-y-3">
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              autoComplete="email"
+              disabled={loading}
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
+            >
+              {loading ? "Sending..." : "Send Reset Link"}
+            </button>
+            <p className="text-sm text-center text-gray-500 dark:text-gray-400">
+              Back to{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  setView("login");
+                  setError(null);
+                  setSuccess(null);
+                }}
+                className="text-brand-gold hover:text-brand-gold/80"
+              >
+                login
+              </button>
+            </p>
+          </form>
+        )}
       </div>
 
       {/* Buy Me a Coffee Link */}

@@ -60,4 +60,43 @@ describe("SoftGateModal duplicate signup handling", () => {
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toHaveValue("existing@example.com");
   });
+
+  it("maps duplicate email with code-based Supabase errors", async () => {
+    signUpMock.mockResolvedValue({
+      data: { user: null },
+      error: {
+        message: "Use another email",
+        code: "user_already_exists",
+      },
+    });
+
+    render(
+      <SoftGateModal
+        open={true}
+        onOpenChange={() => {}}
+        onContinueAsGuest={() => {}}
+        onAuthComplete={() => {}}
+      />
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /Yes, create my free account/i })
+    );
+    fireEvent.change(screen.getByLabelText("First Name"), {
+      target: { value: "Chris" },
+    });
+    fireEvent.change(screen.getByLabelText("Email"), {
+      target: { value: "existing2@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "12345678" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
+
+    expect(
+      await screen.findByText("This email address is already connected to an account.")
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Email")).toHaveValue("existing2@example.com");
+  });
 });
