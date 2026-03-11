@@ -97,18 +97,25 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
               Psalm 139
             </h3>
             <div className="text-slate-900 leading-relaxed">
-              {step.content.scripture.split("\n\n").map((paragraph, i, arr) => {
-                const isAttribution = i === arr.length - 1 && paragraph.startsWith("—");
+              {step.content.scripture.split("\n").map((line, i) => {
+                const trimmedLine = line.trim();
+                const isAttribution =
+                  trimmedLine.startsWith("—") || trimmedLine.startsWith("--");
+
+                if (!trimmedLine) {
+                  return <div key={i} className="h-3" aria-hidden="true" />;
+                }
+
                 return (
                   <p
                     key={i}
                     className={
                       isAttribution
-                        ? "mt-6 text-sm italic text-slate-700 text-right"
-                        : "mb-4"
+                        ? "mt-6 text-sm italic text-slate-700 text-right whitespace-pre-line"
+                        : "psalm-verse whitespace-pre-line"
                     }
                   >
-                    {paragraph}
+                    {line}
                   </p>
                 );
               })}

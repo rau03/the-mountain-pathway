@@ -304,97 +304,69 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         </div>
       </div>
 
-      {/* Action Buttons - All buttons with consistent spacing */}
-      <div className={`flex flex-col gap-3 justify-center items-center ${isMobile ? "mt-8" : "mt-6"}`}>
-        {/* Save Journey Button - Only show if authenticated and on desktop (mobile has button in footer) */}
-        {session && !isMobile && (
-          <Button
-            onClick={handleSaveClick}
-            disabled={saveLoading}
-            variant="ghost"
-            size="lg"
-            className="font-medium bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 px-8 py-4 rounded-md border border-brand-slate/20"
-          >
-            {isSaved ? (
-              <CheckCircle className="w-5 h-5" />
-            ) : (
-              <UploadCloud className="w-5 h-5" />
-            )}
-            <span>{isSaved ? "Complete Journey" : "Save Journey"}</span>
-          </Button>
-        )}
-
+      {/* Action Buttons */}
+      <div
+        className={`flex flex-col gap-3 justify-center items-center ${isMobile ? "mt-8" : "mt-6"}`}
+      >
         <Button
-          onClick={handleDownloadPDF}
-          disabled={downloading}
-          variant="default"
+          onClick={handleSaveClick}
+          disabled={saveLoading}
           size="lg"
-          className="font-medium w-48"
+          className="w-56 font-bold bg-brand-gold text-slate-900 hover:bg-brand-gold/90"
         >
-          <Download className="w-4 h-4" />
-          <span>
-            {downloading
-              ? pathwayContent.summaryPage.generatingText
-              : pathwayContent.summaryPage.downloadButtonText}
-          </span>
-        </Button>
-
-        <Button
-          onClick={handleCopyToClipboard}
-          variant="outline"
-          size="lg"
-          className="font-medium w-48"
-        >
-          {copied ? (
-            <CheckCircle className="w-4 h-4 text-brand-gold" />
+          {isSaved ? (
+            <CheckCircle className="w-5 h-5" />
           ) : (
-            <Copy className="w-4 h-4" />
+            <UploadCloud className="w-5 h-5" />
           )}
-          <span>
-            {copied
-              ? pathwayContent.summaryPage.copiedText
-              : pathwayContent.summaryPage.copyButtonText}
-          </span>
+          <span>Save Journey</span>
         </Button>
 
         <Button
           onClick={handleStartNew}
           variant="outline"
           size="lg"
-          className="font-medium w-48"
+          className="w-56 font-medium"
         >
           <RotateCcw className="w-4 h-4" />
           <span>{pathwayContent.summaryPage.newJourneyButtonText}</span>
         </Button>
-      </div>
 
-      {/* Mobile Save Button - Only show on mobile */}
-      {isMobile && (
-        <div className="text-center mt-6">
+        <div className="flex flex-col sm:flex-row items-center gap-2 pt-1">
           <Button
-            onClick={handleSaveClick}
-            disabled={saveLoading}
+            onClick={handleDownloadPDF}
+            disabled={downloading}
             variant="ghost"
-            size="lg"
-            className="bg-black/10 backdrop-blur-sm text-white font-medium rounded-md border border-brand-slate/20 hover:bg-black/20"
+            size="sm"
+            className="font-medium text-sm text-brand-slate/80 hover:text-brand-slate"
           >
-            {session ? (
-              <>
-                {isSaved ? (
-                  <CheckCircle className="w-4 h-4" />
-                ) : (
-                  <UploadCloud className="w-4 h-4" />
-                )}
-                <span>{isSaved ? "Complete Journey" : "Save Journey"}</span>
-              </>
+            <Download className="w-4 h-4" />
+            <span>
+              {downloading
+                ? pathwayContent.summaryPage.generatingText
+                : pathwayContent.summaryPage.downloadButtonText}
+            </span>
+          </Button>
+
+          <Button
+            onClick={handleCopyToClipboard}
+            variant="ghost"
+            size="sm"
+            className="font-medium text-sm text-brand-slate/80 hover:text-brand-slate"
+          >
+            {copied ? (
+              <CheckCircle className="w-4 h-4 text-brand-gold" />
             ) : (
-              <>
-                <span>Log in to Save</span>
-              </>
+              <Copy className="w-4 h-4" />
             )}
+            <span>
+              {copied
+                ? pathwayContent.summaryPage.copiedText
+                : pathwayContent.summaryPage.copyButtonText}
+            </span>
           </Button>
         </div>
-      )}
+      </div>
 
       {/* Support & Legal */}
       <div className={`w-full flex flex-col items-center space-y-3 ${isMobile ? "pt-10" : "pt-8"}`}>

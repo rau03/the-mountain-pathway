@@ -32,6 +32,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
+  const [autoSaveLoading, setAutoSaveLoading] = useState(false);
   const [quickSaveError, setQuickSaveError] = useState<string | null>(null);
 
   const canQuickSave =
@@ -107,6 +108,52 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
     } else {
       setShowAuthModal(true);
     }
+  };
+
+  const handleNextStep = () => {
+    if (currentStep >= 9) {
+      nextStep();
+      return;
+    }
+
+    const targetStep = currentStep + 1;
+    nextStep();
+
+    if (!session?.user || autoSaveLoading) {
+      return;
+    }
+
+    setAutoSaveLoading(true);
+    const fallbackTitle = `Journey ${new Date().toLocaleDateString("en-US")}`;
+    const title = savedJourneyTitle || fallbackTitle;
+    const journeyData = {
+      title,
+      currentEntry,
+      currentStep: targetStep,
+      isCompleted: targetStep >= 9,
+    };
+
+    const autoSaveRequest =
+      isSaved && savedJourneyId
+        ? updateJourney(savedJourneyId, journeyData).then(() => ({
+            id: savedJourneyId,
+            title,
+          }))
+        : saveJourney(journeyData).then((savedJourney) => ({
+            id: savedJourney.id,
+            title,
+          }));
+
+    void autoSaveRequest
+      .then(({ id, title: savedTitle }) => {
+        markSaved(id, savedTitle);
+      })
+      .catch((error) => {
+        console.error("Auto-save on next step failed:", error);
+      })
+      .finally(() => {
+        setAutoSaveLoading(false);
+      });
   };
 
   return (
@@ -205,7 +252,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
             </Button>
           )}
 
-          <Button onClick={nextStep} size="lg">
+          <Button onClick={handleNextStep} size="lg" disabled={autoSaveLoading}>
             <ArrowRight className="h-5 w-5" />
           </Button>
         </div>

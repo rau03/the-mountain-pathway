@@ -21,6 +21,8 @@ type SoftGateModalProps = {
 };
 
 type ModalView = "choice" | "signup" | "login";
+const DUPLICATE_EMAIL_ERROR_MESSAGE =
+  "This email address is already connected to an account.";
 
 export default function SoftGateModal({
   open,
@@ -49,6 +51,19 @@ export default function SoftGateModal({
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
+
+  const mapSignupErrorMessage = (message: string) => {
+    const normalizedMessage = message.toLowerCase();
+    if (
+      normalizedMessage.includes("email-already-in-use") ||
+      normalizedMessage.includes("already registered") ||
+      normalizedMessage.includes("already in use")
+    ) {
+      return DUPLICATE_EMAIL_ERROR_MESSAGE;
+    }
+
+    return message;
+  };
 
   // Reset form when modal opens
   useEffect(() => {
@@ -221,8 +236,8 @@ export default function SoftGateModal({
       return;
     }
 
-    if (password.length < 6) {
-      setSignupError("Password must be at least 6 characters");
+    if (password.length < 8) {
+      setSignupError("Password must be at least 8 characters");
       return;
     }
 
@@ -243,7 +258,7 @@ export default function SoftGateModal({
       });
 
       if (error) {
-        setSignupError(error.message);
+        setSignupError(mapSignupErrorMessage(error.message));
       } else {
         setSignupSuccess(true);
       }
@@ -388,6 +403,7 @@ export default function SoftGateModal({
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                     autoFocus
                     disabled={signupLoading}
+                    autoComplete="given-name"
                   />
                 </div>
 
@@ -406,6 +422,7 @@ export default function SoftGateModal({
                     placeholder="you@example.com"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                     disabled={signupLoading}
+                    autoComplete="email"
                   />
                 </div>
 
@@ -421,9 +438,10 @@ export default function SoftGateModal({
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="At least 6 characters"
+                    placeholder="At least 8 characters"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                     disabled={signupLoading}
+                    autoComplete="new-password"
                   />
                 </div>
 
@@ -529,6 +547,7 @@ export default function SoftGateModal({
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         autoFocus
                         disabled={resetLoading}
+                        autoComplete="email"
                       />
                     </div>
 
@@ -587,6 +606,7 @@ export default function SoftGateModal({
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                       autoFocus
                       disabled={loginLoading}
+                      autoComplete="email"
                     />
                   </div>
 
@@ -605,6 +625,7 @@ export default function SoftGateModal({
                       placeholder="Your password"
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                       disabled={loginLoading}
+                      autoComplete="current-password"
                     />
                   </div>
 

@@ -66,6 +66,19 @@ export interface PathwayContent {
   };
 }
 
+const psalm139Nlt = `O Lord, you have examined my heart and know everything about me.
+You know when I sit down or stand up.
+You know my thoughts even when I am far away.
+You see me when I travel and when I rest at home.
+You know everything I do.
+
+Search me, O God, and know my heart;
+test me and know my anxious thoughts.
+Point out anything in me that offends you,
+and lead me along the path of everlasting life.
+
+-- Psalm 139 (NLT)`;
+
 export const pathwayData: PathwayStep[] = [
   {
     stepIndex: 0,
@@ -91,6 +104,8 @@ export const pathwayData: PathwayStep[] = [
       "Let's ground this time in His Word. As you slowly read through Psalm 139, listen for any word or phrase that resonates with your heart today.",
     icon: "BookOpen",
     content: {
+      scripture: psalm139Nlt,
+      /*
       scripture: `O Lord, you have searched me and known me! You know when I sit down and when I rise up; you discern my thoughts from afar. You search out my path and my lying down and are acquainted with all my ways. Even before a word is on my tongue, behold, O Lord, you know it altogether. You hem me in, behind and before, and lay your hand upon me. Such knowledge is too wonderful for me; it is high; I cannot attain it.
 
 Where shall I go from your Spirit? Or where shall I flee from your presence? If I ascend to heaven, you are there! If I make my bed in Sheol, you are there! If I take the wings of the morning and dwell in the uttermost parts of the sea, even there your hand shall lead me, and your right hand shall hold me. If I say, "Surely the darkness shall cover me, and the light about me be night," even the darkness is not dark to you; the night is bright as the day, for darkness is as light with you.
@@ -102,6 +117,7 @@ How precious to me are your thoughts, O God! How vast is the sum of them! If I w
 Search me, O God, and know my heart! Try me and know my thoughts! And see if there be any grievous way in me, and lead me in the way everlasting!
 
 — Psalm 139 (ESV)`,
+      */
       instructions: "Take your time. Let the words settle in your heart.",
     },
     isInput: false,

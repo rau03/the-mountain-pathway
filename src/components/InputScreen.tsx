@@ -83,6 +83,9 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
   const promptClass = isImageFirstInputStep
     ? "leading-relaxed text-center text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] pr-2 md:text-slate-800 md:[text-shadow:none]"
     : "leading-relaxed text-center text-slate-800 pr-2";
+  const promptCalloutClass = isImageFirstInputStep
+    ? "mx-auto mt-1 rounded-xl border border-white/40 bg-black/45 backdrop-blur-sm px-4 py-3 md:bg-white/80 md:border-slate-300"
+    : "mx-auto mt-1 max-w-3xl rounded-xl border border-slate-300 bg-white/70 px-4 py-3";
   const textCardClass = isImageFirstInputStep
     ? "relative text-center rounded-2xl overflow-hidden"
     : "text-center";
@@ -114,7 +117,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
     ? "text-sm text-white leading-relaxed [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] md:text-slate-800 md:[text-shadow:none]"
     : "text-sm text-slate-800 leading-relaxed";
   const prayerGuideButtonClass = isImageFirstInputStep
-    ? "px-4 py-2 bg-black/25 hover:bg-black/35 border border-white/30 rounded-lg text-sm text-white font-semibold transition-colors shadow-sm [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] md:bg-slate-100 md:hover:bg-slate-200 md:border-slate-300 md:text-slate-900 md:[text-shadow:none]"
+    ? "px-4 py-2 bg-black/55 hover:bg-black/65 border border-white/60 rounded-lg text-sm text-white font-bold transition-colors shadow-sm [text-shadow:0_2px_7px_rgba(0,0,0,0.7)] md:bg-slate-100 md:hover:bg-slate-200 md:border-slate-400 md:text-slate-900 md:[text-shadow:none]"
     : "px-4 py-2 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-sm text-slate-900 font-semibold transition-colors shadow-sm";
   const summaryCardClass = isImageFirstInputStep
     ? "relative rounded-2xl overflow-hidden"
@@ -177,9 +180,9 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
             {step.title}
           </h2>
           <p className={subtitleClass}>{step.subtitle}</p>
-          <p className={promptClass}>
-            {step.prompt}
-          </p>
+          <div className={promptCalloutClass}>
+            <p className={promptClass}>{step.prompt}</p>
+          </div>
         </div>
       </div>
 
