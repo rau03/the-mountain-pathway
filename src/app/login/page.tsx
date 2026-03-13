@@ -211,20 +211,26 @@ export default function LoginPage() {
           <form onSubmit={handleLogin} className="space-y-3">
             <input
               type="email"
+              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-              autoComplete="email"
+              autoComplete="username"
+              autoCapitalize="none"
+              autoCorrect="off"
               disabled={loading}
             />
             <input
               type="password"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Your password"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               autoComplete="current-password"
+              autoCapitalize="none"
+              autoCorrect="off"
               disabled={loading}
             />
             <button
@@ -234,14 +240,14 @@ export default function LoginPage() {
                 setError(null);
                 setSuccess(null);
               }}
-              className="text-sm text-brand-gold hover:text-brand-gold/80"
+              className="inline-flex items-center min-h-11 px-2 text-sm text-brand-gold hover:text-brand-gold/80"
             >
               Forgot password?
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
+              className="w-full min-h-11 px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
             >
               {loading ? "Logging in..." : "Log In"}
             </button>
@@ -254,7 +260,7 @@ export default function LoginPage() {
                   setError(null);
                   setSuccess(null);
                 }}
-                className="text-brand-gold hover:text-brand-gold/80"
+                className="inline-flex items-center min-h-11 px-2 text-brand-gold hover:text-brand-gold/80"
               >
                 Sign up
               </button>
@@ -266,6 +272,7 @@ export default function LoginPage() {
           <form onSubmit={handleSignup} className="space-y-3">
             <input
               type="text"
+              name="firstName"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               placeholder="Your first name"
@@ -275,26 +282,32 @@ export default function LoginPage() {
             />
             <input
               type="email"
+              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               autoComplete="email"
+              autoCapitalize="none"
+              autoCorrect="off"
               disabled={loading}
             />
             <input
               type="password"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="at least 8 characters."
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               autoComplete="new-password"
+              autoCapitalize="none"
+              autoCorrect="off"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
+              className="w-full min-h-11 px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
             >
               {loading ? "Creating account..." : "Create Account"}
             </button>
@@ -307,7 +320,7 @@ export default function LoginPage() {
                   setError(null);
                   setSuccess(null);
                 }}
-                className="text-brand-gold hover:text-brand-gold/80"
+                className="inline-flex items-center min-h-11 px-2 text-brand-gold hover:text-brand-gold/80"
               >
                 Log in
               </button>
@@ -319,17 +332,20 @@ export default function LoginPage() {
           <form onSubmit={handleForgotPassword} className="space-y-3">
             <input
               type="email"
+              name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               autoComplete="email"
+              autoCapitalize="none"
+              autoCorrect="off"
               disabled={loading}
             />
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
+              className="w-full min-h-11 px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
             >
               {loading ? "Sending..." : "Send Reset Link"}
             </button>
@@ -342,7 +358,7 @@ export default function LoginPage() {
                   setError(null);
                   setSuccess(null);
                 }}
-                className="text-brand-gold hover:text-brand-gold/80"
+                className="inline-flex items-center min-h-11 px-2 text-brand-gold hover:text-brand-gold/80"
               >
                 login
               </button>

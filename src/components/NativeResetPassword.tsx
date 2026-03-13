@@ -101,6 +101,7 @@ export default function NativeResetPassword({ onDone }: Props) {
             <input
               id="np-password"
               type="password"
+              name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="at least 8 characters."
@@ -108,6 +109,8 @@ export default function NativeResetPassword({ onDone }: Props) {
               autoFocus
               disabled={loading}
               autoComplete="new-password"
+              autoCapitalize="none"
+              autoCorrect="off"
             />
           </div>
 
@@ -121,12 +124,15 @@ export default function NativeResetPassword({ onDone }: Props) {
             <input
               id="np-confirm"
               type="password"
+              name="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Re-enter your password"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
               disabled={loading}
               autoComplete="new-password"
+              autoCapitalize="none"
+              autoCorrect="off"
             />
           </div>
 
@@ -139,7 +145,7 @@ export default function NativeResetPassword({ onDone }: Props) {
           <Button
             type="submit"
             disabled={loading}
-            className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+            className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
           >
             {loading ? (
               <>
@@ -154,8 +160,9 @@ export default function NativeResetPassword({ onDone }: Props) {
 
         <div className="mt-6 text-center">
           <button
+            type="button"
             onClick={onDone}
-            className="text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+            className="inline-flex min-h-11 items-center px-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
           >
             ← Back to home
           </button>

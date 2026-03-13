@@ -348,7 +348,7 @@ export default function SoftGateModal({
               {/* Sign Up Option */}
               <Button
                 onClick={() => setView("signup")}
-                className="w-full h-auto py-3 px-4 bg-brand-gold hover:bg-brand-gold/90 text-slate-900 flex flex-col items-center justify-center gap-0.5"
+                className="w-full min-h-11 h-auto py-3 px-4 bg-brand-gold hover:bg-brand-gold/90 text-slate-900 flex flex-col items-center justify-center gap-0.5"
               >
                 <div className="font-semibold text-sm">
                   Yes, create my free account
@@ -362,7 +362,7 @@ export default function SoftGateModal({
               <Button
                 onClick={handleContinueAsGuest}
                 variant="outline"
-                className="w-full h-auto py-3 px-4 flex flex-col items-center justify-center gap-0.5 border-gray-300 dark:border-gray-600"
+                className="w-full min-h-11 h-auto py-3 px-4 flex flex-col items-center justify-center gap-0.5 border-gray-300 dark:border-gray-600"
               >
                 <div className="font-semibold text-sm text-gray-700 dark:text-gray-200">
                   No thanks, I&apos;ll explore first
@@ -376,8 +376,9 @@ export default function SoftGateModal({
             {/* Login link */}
             <div className="text-center pt-2 border-t border-gray-200 dark:border-gray-700">
               <button
+                type="button"
                 onClick={() => setView("login")}
-                className="text-sm text-gray-900 dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                className="inline-flex items-center min-h-11 px-2 text-sm text-gray-900 dark:text-gray-100 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
               >
                 I already have an account →
               </button>
@@ -388,8 +389,9 @@ export default function SoftGateModal({
           <div className="p-6 space-y-4">
             {/* Back button */}
             <button
+              type="button"
               onClick={handleBack}
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+              className="inline-flex min-h-11 items-center gap-1 px-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
@@ -422,7 +424,7 @@ export default function SoftGateModal({
                     setView("login");
                   }}
                   variant="outline"
-                  className="w-full"
+                  className="w-full min-h-11"
                 >
                   Go to Login
                 </Button>
@@ -440,6 +442,7 @@ export default function SoftGateModal({
                   <input
                     id="signup-firstName"
                     type="text"
+                    name="firstName"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="Your first name"
@@ -460,12 +463,15 @@ export default function SoftGateModal({
                   <input
                     id="signup-email"
                     type="email"
+                    name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                     disabled={signupLoading}
                     autoComplete="email"
+                    autoCapitalize="none"
+                    autoCorrect="off"
                   />
                 </div>
 
@@ -479,12 +485,15 @@ export default function SoftGateModal({
                   <input
                     id="signup-password"
                     type="password"
+                    name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="at least 8 characters."
                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                     disabled={signupLoading}
                     autoComplete="new-password"
+                    autoCapitalize="none"
+                    autoCorrect="off"
                   />
                 </div>
 
@@ -499,7 +508,7 @@ export default function SoftGateModal({
                 <Button
                   type="submit"
                   disabled={signupLoading}
-                  className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                  className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
                 >
                   {signupLoading ? (
                     <>
@@ -518,8 +527,9 @@ export default function SoftGateModal({
               <div className="text-center text-sm text-gray-500 dark:text-gray-400">
                 Already have an account?{" "}
                 <button
+                  type="button"
                   onClick={() => setView("login")}
-                  className="text-brand-gold hover:text-brand-gold/80"
+                  className="inline-flex items-center min-h-11 px-2 text-brand-gold hover:text-brand-gold/80"
                 >
                   Log in
                 </button>
@@ -531,8 +541,9 @@ export default function SoftGateModal({
           <div className="p-6 space-y-4">
             {/* Back button */}
             <button
+              type="button"
               onClick={handleBack}
-              className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+              className="inline-flex min-h-11 items-center gap-1 px-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               Back
@@ -567,7 +578,7 @@ export default function SoftGateModal({
                         setResetSuccess(false);
                       }}
                       variant="outline"
-                      className="w-full border-gray-300 dark:border-gray-600"
+                      className="w-full min-h-11 border-gray-300 dark:border-gray-600"
                     >
                       Back to Login
                     </Button>
@@ -584,6 +595,7 @@ export default function SoftGateModal({
                       <input
                         id="reset-email"
                         type="email"
+                        name="email"
                         value={resetEmail}
                         onChange={(e) => setResetEmail(e.target.value)}
                         placeholder="you@example.com"
@@ -591,6 +603,8 @@ export default function SoftGateModal({
                         autoFocus
                         disabled={resetLoading}
                         autoComplete="email"
+                        autoCapitalize="none"
+                        autoCorrect="off"
                       />
                     </div>
 
@@ -605,7 +619,7 @@ export default function SoftGateModal({
                     <Button
                       type="submit"
                       disabled={resetLoading}
-                      className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                      className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
                     >
                       {resetLoading ? (
                         <>
@@ -643,13 +657,16 @@ export default function SoftGateModal({
                     <input
                       id="login-email"
                       type="email"
+                      name="email"
                       value={loginEmail}
                       onChange={(e) => setLoginEmail(e.target.value)}
                       placeholder="you@example.com"
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                       autoFocus
                       disabled={loginLoading}
-                      autoComplete="email"
+                      autoComplete="username"
+                      autoCapitalize="none"
+                      autoCorrect="off"
                     />
                   </div>
 
@@ -663,12 +680,15 @@ export default function SoftGateModal({
                     <input
                       id="login-password"
                       type="password"
+                      name="password"
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="Your password"
                       className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                       disabled={loginLoading}
                       autoComplete="current-password"
+                      autoCapitalize="none"
+                      autoCorrect="off"
                     />
                   </div>
 
@@ -677,7 +697,7 @@ export default function SoftGateModal({
                     <button
                       type="button"
                       onClick={() => setShowForgotPassword(true)}
-                      className="text-sm text-brand-gold hover:text-brand-gold/80"
+                      className="inline-flex min-h-11 items-center px-2 text-sm text-brand-gold hover:text-brand-gold/80"
                     >
                       Forgot password?
                     </button>
@@ -694,7 +714,7 @@ export default function SoftGateModal({
                   <Button
                     type="submit"
                     disabled={loginLoading}
-                    className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                    className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
                   >
                     {loginLoading ? (
                       <>
@@ -711,8 +731,9 @@ export default function SoftGateModal({
                 <div className="text-center text-sm text-gray-500 dark:text-gray-400">
                   Don&apos;t have an account?{" "}
                   <button
+                    type="button"
                     onClick={() => setView("signup")}
-                    className="text-brand-gold hover:text-brand-gold/80"
+                    className="inline-flex min-h-11 items-center px-2 text-brand-gold hover:text-brand-gold/80"
                   >
                     Sign up
                   </button>

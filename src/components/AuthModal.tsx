@@ -382,7 +382,7 @@ export default function AuthModal({
                       setShowSavedJourneys(true);
                       onOpenChange(false);
                     }}
-                    className="w-full flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                    className="w-full min-h-11 flex items-center justify-center gap-2 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
                   >
                     <BookOpen className="w-4 h-4" />
                     View Saved Journeys
@@ -392,7 +392,7 @@ export default function AuthModal({
                     onClick={handleSignOutClick}
                     disabled={signingOut}
                     variant="outline"
-                    className="w-full border-gray-300 dark:border-gray-600"
+                    className="w-full min-h-11 border-gray-300 dark:border-gray-600"
                   >
                     {signingOut ? (
                       <>
@@ -411,12 +411,13 @@ export default function AuthModal({
                 {/* Back button for signup/forgot views */}
                 {authView !== "login" && (
                   <button
+                    type="button"
                     onClick={() => {
                       setAuthView("login");
                       setAuthError(null);
                       setAuthSuccess(null);
                     }}
-                    className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
+                    className="inline-flex min-h-11 items-center gap-1 px-2 text-sm text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 transition-colors"
                   >
                     <ArrowLeft className="w-4 h-4" />
                     Back
@@ -473,7 +474,7 @@ export default function AuthModal({
                           onClick={handleResendConfirmation}
                           disabled={resendLoading}
                           variant="outline"
-                          className="w-full border-gray-300 dark:border-gray-600"
+                          className="w-full min-h-11 border-gray-300 dark:border-gray-600"
                         >
                           {resendLoading ? (
                             <>
@@ -494,7 +495,7 @@ export default function AuthModal({
                             setResendError(null);
                             setResendSuccess(null);
                           }}
-                          className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                          className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
                         >
                           Back to login
                         </Button>
@@ -516,13 +517,16 @@ export default function AuthModal({
                       <input
                         id="login-email"
                         type="email"
+                        name="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         autoFocus
                         disabled={authLoading}
-                        autoComplete="email"
+                        autoComplete="username"
+                        autoCapitalize="none"
+                        autoCorrect="off"
                       />
                     </div>
 
@@ -536,12 +540,15 @@ export default function AuthModal({
                       <input
                         id="login-password"
                         type="password"
+                        name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Your password"
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         disabled={authLoading}
                         autoComplete="current-password"
+                        autoCapitalize="none"
+                        autoCorrect="off"
                       />
                     </div>
 
@@ -552,7 +559,7 @@ export default function AuthModal({
                           setAuthView("forgot");
                           setAuthError(null);
                         }}
-                        className="text-sm text-brand-gold hover:text-brand-gold/80"
+                        className="inline-flex min-h-11 items-center px-2 text-sm text-brand-gold hover:text-brand-gold/80"
                       >
                         Forgot password?
                       </button>
@@ -569,7 +576,7 @@ export default function AuthModal({
                     <Button
                       type="submit"
                       disabled={authLoading}
-                      className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                      className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
                     >
                       {authLoading ? (
                         <>
@@ -589,7 +596,7 @@ export default function AuthModal({
                           setAuthView("signup");
                           setAuthError(null);
                         }}
-                        className="text-brand-gold hover:text-brand-gold/80"
+                        className="inline-flex min-h-11 items-center px-2 text-brand-gold hover:text-brand-gold/80"
                       >
                         Sign up
                       </button>
@@ -610,6 +617,7 @@ export default function AuthModal({
                       <input
                         id="signup-firstName"
                         type="text"
+                        name="firstName"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
                         placeholder="Your first name"
@@ -630,12 +638,15 @@ export default function AuthModal({
                       <input
                         id="signup-email"
                         type="email"
+                        name="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         disabled={authLoading}
                         autoComplete="email"
+                        autoCapitalize="none"
+                        autoCorrect="off"
                       />
                     </div>
 
@@ -649,12 +660,15 @@ export default function AuthModal({
                       <input
                         id="signup-password"
                         type="password"
+                        name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="at least 8 characters."
                         className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                         disabled={authLoading}
                         autoComplete="new-password"
+                        autoCapitalize="none"
+                        autoCorrect="off"
                       />
                     </div>
 
@@ -669,7 +683,7 @@ export default function AuthModal({
                     <Button
                       type="submit"
                       disabled={authLoading}
-                      className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                      className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
                     >
                       {authLoading ? (
                         <>
@@ -689,7 +703,7 @@ export default function AuthModal({
                           setAuthView("login");
                           setAuthError(null);
                         }}
-                        className="text-brand-gold hover:text-brand-gold/80"
+                        className="inline-flex min-h-11 items-center px-2 text-brand-gold hover:text-brand-gold/80"
                       >
                         Log in
                       </button>
@@ -710,6 +724,7 @@ export default function AuthModal({
                       <input
                         id="forgot-email"
                         type="email"
+                        name="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="you@example.com"
@@ -717,6 +732,8 @@ export default function AuthModal({
                         autoFocus
                         disabled={authLoading}
                         autoComplete="email"
+                        autoCapitalize="none"
+                        autoCorrect="off"
                       />
                     </div>
 
@@ -731,7 +748,7 @@ export default function AuthModal({
                     <Button
                       type="submit"
                       disabled={authLoading}
-                      className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                      className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
                     >
                       {authLoading ? (
                         <>
@@ -784,14 +801,14 @@ export default function AuthModal({
             <div className="flex flex-col gap-2">
               <Button
                 onClick={() => setShowUnsavedWarning(false)}
-                className="w-full bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+                className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
               >
                 Continue Journey
               </Button>
               <Button
                 onClick={handleSignOut}
                 variant="outline"
-                className="w-full text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
+                className="w-full min-h-11 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
               >
                 Leave Without Saving
               </Button>
