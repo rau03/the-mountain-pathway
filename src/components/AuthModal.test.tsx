@@ -52,10 +52,28 @@ describe("AuthModal auth parity updates", () => {
 
     render(<AuthModal open={true} onOpenChange={() => {}} session={null} />);
 
-    expect(screen.getByLabelText("Email")).toHaveAttribute("autocomplete", "email");
+    expect(screen.getByLabelText("Email")).toHaveAttribute(
+      "autocomplete",
+      "username"
+    );
+    expect(screen.getByLabelText("Email")).toHaveAttribute("name", "email");
+    expect(screen.getByLabelText("Email")).toHaveAttribute(
+      "autocapitalize",
+      "none"
+    );
+    expect(screen.getByLabelText("Email")).toHaveAttribute("autocorrect", "off");
     expect(screen.getByLabelText("Password")).toHaveAttribute(
       "autocomplete",
       "current-password"
+    );
+    expect(screen.getByLabelText("Password")).toHaveAttribute("name", "password");
+    expect(screen.getByLabelText("Password")).toHaveAttribute(
+      "autocapitalize",
+      "none"
+    );
+    expect(screen.getByLabelText("Password")).toHaveAttribute(
+      "autocorrect",
+      "off"
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
@@ -64,7 +82,17 @@ describe("AuthModal auth parity updates", () => {
       "autocomplete",
       "given-name"
     );
+    expect(screen.getByLabelText("First Name")).toHaveAttribute(
+      "name",
+      "firstName"
+    );
     expect(screen.getByLabelText("Email")).toHaveAttribute("autocomplete", "email");
+    expect(screen.getByLabelText("Email")).toHaveAttribute("name", "email");
+    expect(screen.getByLabelText("Email")).toHaveAttribute(
+      "autocapitalize",
+      "none"
+    );
+    expect(screen.getByLabelText("Email")).toHaveAttribute("autocorrect", "off");
     expect(screen.getByLabelText("Password")).toHaveAttribute(
       "placeholder",
       "at least 8 characters."
@@ -72,6 +100,15 @@ describe("AuthModal auth parity updates", () => {
     expect(screen.getByLabelText("Password")).toHaveAttribute(
       "autocomplete",
       "new-password"
+    );
+    expect(screen.getByLabelText("Password")).toHaveAttribute("name", "password");
+    expect(screen.getByLabelText("Password")).toHaveAttribute(
+      "autocapitalize",
+      "none"
+    );
+    expect(screen.getByLabelText("Password")).toHaveAttribute(
+      "autocorrect",
+      "off"
     );
 
     fireEvent.change(screen.getByLabelText("First Name"), {
@@ -93,6 +130,7 @@ describe("AuthModal auth parity updates", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Forgot password?" }));
     expect(screen.getByLabelText("Email")).toHaveAttribute("autocomplete", "email");
+    expect(screen.getByLabelText("Email")).toHaveAttribute("name", "email");
   });
 
   it("enforces 8-character minimum for signup", async () => {

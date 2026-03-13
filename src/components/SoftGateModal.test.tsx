@@ -43,6 +43,24 @@ describe("SoftGateModal duplicate signup handling", () => {
       screen.getByRole("button", { name: /Yes, create my free account/i })
     );
 
+    expect(screen.getByLabelText("First Name")).toHaveAttribute("name", "firstName");
+    expect(screen.getByLabelText("Email")).toHaveAttribute("name", "email");
+    expect(screen.getByLabelText("Email")).toHaveAttribute("autocomplete", "email");
+    expect(screen.getByLabelText("Email")).toHaveAttribute(
+      "autocapitalize",
+      "none"
+    );
+    expect(screen.getByLabelText("Email")).toHaveAttribute("autocorrect", "off");
+    expect(screen.getByLabelText("Password")).toHaveAttribute("name", "password");
+    expect(screen.getByLabelText("Password")).toHaveAttribute(
+      "autocapitalize",
+      "none"
+    );
+    expect(screen.getByLabelText("Password")).toHaveAttribute(
+      "autocorrect",
+      "off"
+    );
+
     fireEvent.change(screen.getByLabelText("First Name"), {
       target: { value: "Chris" },
     });
@@ -59,6 +77,19 @@ describe("SoftGateModal duplicate signup handling", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toHaveValue("existing@example.com");
+    expect(screen.getByLabelText("Email")).toHaveAttribute(
+      "autocomplete",
+      "username"
+    );
+    expect(screen.getByLabelText("Email")).toHaveAttribute(
+      "autocapitalize",
+      "none"
+    );
+    expect(screen.getByLabelText("Email")).toHaveAttribute("autocorrect", "off");
+    expect(screen.getByLabelText("Password")).toHaveAttribute(
+      "autocomplete",
+      "current-password"
+    );
   });
 
   it("maps duplicate email with code-based Supabase errors", async () => {
