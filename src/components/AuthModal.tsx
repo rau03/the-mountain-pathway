@@ -29,7 +29,7 @@ type AuthModalProps = {
 
 type AuthView = "login" | "signup" | "forgot";
 const DUPLICATE_EMAIL_ERROR_MESSAGE =
-  "This email address is already connected to an account.";
+  "This email address is already connected to an account. Please log in or choose Forgot password.";
 type SignupErrorLike = {
   message?: string;
   code?: string;
