@@ -124,7 +124,9 @@ describe("AuthModal auth parity updates", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("This email address is already connected to an account.")
+        screen.getByText(
+          "This email address is already connected to an account. Please log in or choose Forgot password."
+        )
       ).toBeInTheDocument();
     });
 
@@ -174,7 +176,9 @@ describe("AuthModal auth parity updates", () => {
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
     expect(
-      await screen.findByText("This email address is already connected to an account.")
+      await screen.findByText(
+        "This email address is already connected to an account. Please log in or choose Forgot password."
+      )
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Log In" })).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toHaveValue("existing@example.com");
@@ -204,7 +208,9 @@ describe("AuthModal auth parity updates", () => {
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
     expect(
-      await screen.findByText("This email address is already connected to an account.")
+      await screen.findByText(
+        "This email address is already connected to an account. Please log in or choose Forgot password."
+      )
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toHaveValue("existing2@example.com");
   });

@@ -73,7 +73,9 @@ describe("SoftGateModal duplicate signup handling", () => {
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
     expect(
-      await screen.findByText("This email address is already connected to an account.")
+      await screen.findByText(
+        "This email address is already connected to an account. Please log in or choose Forgot password."
+      )
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toHaveValue("existing@example.com");
@@ -125,7 +127,9 @@ describe("SoftGateModal duplicate signup handling", () => {
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
     expect(
-      await screen.findByText("This email address is already connected to an account.")
+      await screen.findByText(
+        "This email address is already connected to an account. Please log in or choose Forgot password."
+      )
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toHaveValue("existing2@example.com");
