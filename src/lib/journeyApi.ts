@@ -74,7 +74,9 @@ export async function saveJourney(
       current_step: data.currentStep,
       is_completed: data.isCompleted,
     })
-    .select()
+    .select(
+      "id, user_id, title, current_step, is_completed, created_at, updated_at"
+    )
     .single();
 
   if (journeyError) {
@@ -140,7 +142,9 @@ export async function updateJourney(
     .update(updateData)
     .eq("id", id)
     .eq("user_id", user.id)
-    .select()
+    .select(
+      "id, user_id, title, current_step, is_completed, created_at, updated_at"
+    )
     .single();
 
   if (journeyError) {
@@ -198,7 +202,9 @@ export async function fetchUserJourneys(): Promise<SavedJourney[]> {
 
   const { data: journeys, error } = await supabase
     .from("journeys")
-    .select("*")
+    .select(
+      "id, user_id, title, current_step, is_completed, created_at, updated_at"
+    )
     .eq("user_id", user.id)
     .order("created_at", { ascending: false });
 
@@ -228,7 +234,9 @@ export async function fetchJourney(id: string): Promise<SavedJourney> {
   // Fetch journey metadata
   const { data: journey, error: journeyError } = await supabase
     .from("journeys")
-    .select("*")
+    .select(
+      "id, user_id, title, current_step, is_completed, created_at, updated_at"
+    )
     .eq("id", id)
     .eq("user_id", user.id)
     .single();
@@ -241,7 +249,9 @@ export async function fetchJourney(id: string): Promise<SavedJourney> {
   // Fetch journey steps
   const { data: steps, error: stepsError } = await supabase
     .from("journey_steps")
-    .select("*")
+    .select(
+      "id, journey_id, step_number, step_key, prompt_text, user_response, created_at, updated_at"
+    )
     .eq("journey_id", id)
     .order("step_number", { ascending: true });
 
