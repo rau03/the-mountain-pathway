@@ -1,6 +1,6 @@
 {
   "name": "the-mountain-pathway",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -10,6 +10,7 @@
     "build:capacitor": "./scripts/build-capacitor.sh",
     "cap:ios": "npx cap open ios",
     "cap:android": "npx cap open android",
+    "sync:ios-version": "node ./scripts/sync-ios-version.mjs",
     "test": "vitest",
     "test:watch": "vitest --watch"
   },
