@@ -39,6 +39,28 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Supabase local CLI state (keep migrations/schema in git)
+.supabase/
+supabase/.temp/
+
+# Backup config artifacts
+*.current
+
+# AI/session-generated working notes at repo root (avoid root clutter)
+/BETA_LAUNCH_*.md
+/DOMAIN_LIVE_VERIFICATION*.md
+/EXECUTIVE_SUMMARY_*.md
+/FILES_CREATED_*.md
+/FINAL_SUMMARY*.md
+/NEXT_STEPS_SUMMARY*.md
+/PHASE_*_CHECKLIST*.md
+/PHASE_*_COMPLETION*.md
+/PRE_BETA_ANALYSIS*.md
+/SETUP_COMPLETE*.md
+/TODAY_AT_A_GLANCE*.md
+/TODO_*.md
+/WORK_SUMMARY_*.md
+
 
 # vercel
 .vercel
