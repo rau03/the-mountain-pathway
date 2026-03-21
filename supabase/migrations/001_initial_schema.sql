@@ -1,3 +1,18 @@
+-- ============================================================================
+-- 001_initial_schema.sql
+-- Canonical initial schema for The Mountain Pathway journey persistence.
+--
+-- Contains:
+-- - journeys table (journey metadata per user)
+-- - journey_steps table (per-step responses linked to journeys)
+-- - updated_at trigger function and triggers for both tables
+-- - RLS policies for user-scoped access on both tables
+-- - supporting indexes for common query paths
+--
+-- Source of truth: consolidated from root SQL setup variants using
+-- supabase-force-clean.sql as the canonical schema definition.
+-- ============================================================================
+
 -- Force clean setup - handles existing tables
 -- This will completely remove and recreate both tables
 
