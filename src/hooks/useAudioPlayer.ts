@@ -10,9 +10,8 @@ export const useAudioPlayer = () => {
   const musicAudioRef = useRef<HTMLAudioElement | null>(null);
   const natureAudioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Initialize audio elements on first render
-  useEffect(() => {
-    // Create audio elements if they don't exist
+  // Lazily initialize audio elements from user-triggered actions.
+  const initializeAudio = useCallback(() => {
     if (!musicAudioRef.current) {
       musicAudioRef.current = new Audio("/audio/music-ambient-pad.mp3");
       musicAudioRef.current.loop = true;
@@ -24,8 +23,10 @@ export const useAudioPlayer = () => {
       natureAudioRef.current.loop = true;
       natureAudioRef.current.volume = 0.8; // Set nature sounds to 80% volume
     }
+  }, []);
 
-    // Cleanup function to pause and reset audio when component unmounts
+  // Cleanup function to pause and reset audio when component unmounts
+  useEffect(() => {
     return () => {
       if (musicAudioRef.current) {
         musicAudioRef.current.pause();
@@ -41,6 +42,7 @@ export const useAudioPlayer = () => {
   // Smart setActiveTrack function that handles track switching
   const setActiveTrack = useCallback(
     async (newTrack: AudioTrack) => {
+      initializeAudio();
       const musicAudio = musicAudioRef.current;
       const natureAudio = natureAudioRef.current;
 
@@ -80,11 +82,12 @@ export const useAudioPlayer = () => {
         }
       }
     },
-    [activeTrack, isPlaying]
+    [activeTrack, isPlaying, initializeAudio]
   );
 
   // togglePlayPause function that plays or pauses the active track
   const togglePlayPause = useCallback(async () => {
+    initializeAudio();
     const musicAudio = musicAudioRef.current;
     const natureAudio = natureAudioRef.current;
 
@@ -112,7 +115,7 @@ export const useAudioPlayer = () => {
       console.error("Error toggling audio playback:", error);
       setIsPlaying(false);
     }
-  }, [isPlaying, activeTrack]);
+  }, [isPlaying, activeTrack, initializeAudio]);
 
   return {
     isPlaying,

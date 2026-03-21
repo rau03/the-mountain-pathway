@@ -2,8 +2,6 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { Session } from "@supabase/supabase-js";
-import { App as CapApp } from "@capacitor/app";
-import type { PluginListenerHandle } from "@capacitor/core";
 import { useStore } from "@/lib/store/useStore";
 import { LandingPage } from "@/components/LandingPage";
 import { JourneyScreen } from "@/components/JourneyScreen";
@@ -18,177 +16,28 @@ import SoftGateModal from "@/components/SoftGateModal";
 import WelcomeInfoModal from "@/components/WelcomeInfoModal";
 import ProfileSetupModal from "@/components/ProfileSetupModal";
 import { Button } from "@/components/ui/button";
-import { getBackgroundForStep } from "@/lib/pathway-data";
-import supabase from "@/lib/supabaseClient";
-import { isNativeApp } from "@/lib/capacitorUtils";
-import { parseSupabaseAuthRedirect } from "@/lib/deepLink";
 import NativeResetPassword from "@/components/NativeResetPassword";
+import { useHomeSessionSync } from "@/hooks/useHomeSessionSync";
+import { useNativeAuthDeepLink } from "@/hooks/useNativeAuthDeepLink";
+import { useJourneyBackground } from "@/hooks/useJourneyBackground";
+import { useViewportFlags } from "@/hooks/useViewportFlags";
+import { useDesktopStepScrollReset } from "@/hooks/useDesktopStepScrollReset";
+import { useUnsavedJourneyUnloadGuard } from "@/hooks/useUnsavedJourneyUnloadGuard";
 
 export default function HomeClient({ session }: { session: Session | null }) {
   const { currentStep, setCurrentStep, setAnonymous, startJourney } =
     useStore();
-  const [currentBackground, setCurrentBackground] = useState(
-    "/homepage-background.v3.jpg"
-  );
-  const [liveSession, setLiveSession] = useState<Session | null>(session);
+  const { liveSession, showProfileSetupModal, setShowProfileSetupModal } =
+    useHomeSessionSync(session, setAnonymous);
+  const { showNativeResetPassword, setShowNativeResetPassword } =
+    useNativeAuthDeepLink(liveSession);
+  const { currentBackground, backgroundPositionClass } =
+    useJourneyBackground(currentStep);
+  const { isMobile } = useViewportFlags();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSoftGateModal, setShowSoftGateModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
-  const [showProfileSetupModal, setShowProfileSetupModal] = useState(false);
-  const [showNativeResetPassword, setShowNativeResetPassword] = useState(false);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
-  const previousSessionRef = useRef<Session | null>(null);
-
-  // Update anonymous status when session changes
-  useEffect(() => {
-    setAnonymous(!liveSession);
-  }, [liveSession, setAnonymous]);
-
-  // After a deep-link code exchange signs the user in, check whether
-  // a password reset was pending and show the reset form inline.
-  // Rendering inline avoids Capacitor WKWebView navigation issues
-  // (window.location.replace/href doesn't work reliably for inter-page
-  // navigation in Capacitor static-export builds).
-  useEffect(() => {
-    if (!liveSession || !isNativeApp()) return;
-
-    const pendingReset = localStorage.getItem("pendingPasswordReset");
-    if (pendingReset) {
-      localStorage.removeItem("pendingPasswordReset");
-      const elapsed = Date.now() - parseInt(pendingReset, 10);
-      if (elapsed < 30 * 60 * 1000) {
-        setShowNativeResetPassword(true);
-      }
-    }
-  }, [liveSession]);
-
-  // Listen for real-time session changes
-  useEffect(() => {
-    if (!supabase) return;
-
-    // Set initial session
-    setLiveSession(session);
-    previousSessionRef.current = session;
-
-    // Subscribe to auth state changes
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(
-      (event: string, newSession: Session | null) => {
-        // Check if this is a new signup (user didn't have session before, now they do)
-        const isNewSignup =
-          !previousSessionRef.current && newSession && event === "SIGNED_IN";
-
-        setLiveSession(newSession);
-        previousSessionRef.current = newSession;
-
-        // If new signup and user hasn't set their name, show profile setup modal
-        if (isNewSignup && newSession?.user) {
-          const userData = newSession.user.user_metadata;
-          const hasName = userData?.first_name || userData?.full_name;
-          if (!hasName) {
-            // Small delay to let other modals close first
-            setTimeout(() => {
-              setShowProfileSetupModal(true);
-            }, 500);
-          }
-        }
-      }
-    );
-
-    // Cleanup subscription on unmount
-    return () => subscription.unsubscribe();
-  }, [session]);
-
-  // Handle deep links for Supabase auth (iOS custom scheme)
-  useEffect(() => {
-    const sb = supabase;
-    if (!sb) return;
-    if (!isNativeApp()) return;
-
-    const handleUrl = async (url: string) => {
-      const parsed = parseSupabaseAuthRedirect(url);
-      try {
-        if (parsed.kind === "pkce") {
-          await sb.auth.exchangeCodeForSession(parsed.code);
-        } else if (parsed.kind === "hash") {
-          await sb.auth.setSession({
-            access_token: parsed.access_token,
-            refresh_token: parsed.refresh_token || "",
-          });
-        } else {
-          return;
-        }
-
-        // Show inline reset form if this is a recovery deep link or
-        // the localStorage flag was set before the reset email.
-        const next = parsed.next;
-        if (next === "/reset-password") {
-          setShowNativeResetPassword(true);
-          return;
-        }
-
-        const pendingReset = localStorage.getItem("pendingPasswordReset");
-        if (pendingReset) {
-          localStorage.removeItem("pendingPasswordReset");
-          const elapsed = Date.now() - parseInt(pendingReset, 10);
-          if (elapsed < 30 * 60 * 1000) {
-            setShowNativeResetPassword(true);
-            return;
-          }
-        }
-      } catch (err) {
-        console.error("Deep link auth handling failed:", err);
-        return;
-      }
-    };
-
-    let listener: PluginListenerHandle | null = null;
-
-    (async () => {
-      // Handle cold-start deep link (app launched from email link)
-      try {
-        const res = await CapApp.getLaunchUrl();
-        if (res?.url) await handleUrl(res.url);
-      } catch {
-        // ignore
-      }
-
-      // Listen for deep links while app is running/in background
-      try {
-        listener = await CapApp.addListener("appUrlOpen", ({ url }) => {
-          void handleUrl(url);
-        });
-      } catch (err) {
-        console.error("Failed to attach appUrlOpen listener:", err);
-      }
-    })();
-
-    return () => {
-      listener?.remove();
-    };
-  }, []);
-
-  // Update background when step changes
-  useEffect(() => {
-    const newBackground = getBackgroundForStep(currentStep);
-
-    if (newBackground !== currentBackground) {
-      // Preload the new image
-      const img = new Image();
-      img.onload = () => {
-        setCurrentBackground(newBackground);
-      };
-      img.src = newBackground;
-    }
-  }, [currentStep, currentBackground]);
-
-  // Initialize background on first load
-  useEffect(() => {
-    if (!currentBackground) {
-      setCurrentBackground(getBackgroundForStep(currentStep));
-    }
-  }, [currentStep, currentBackground]);
 
   // Reset invalid step to landing page
   useEffect(() => {
@@ -206,32 +55,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
     }
   }, [currentStep]);
 
-  // Reset desktop scroll position when step changes
-  useEffect(() => {
-    if (desktopScrollRef.current) {
-      // Immediate reset
-      desktopScrollRef.current.scrollTop = 0;
-
-      // Additional reset after DOM update
-      requestAnimationFrame(() => {
-        if (desktopScrollRef.current) {
-          desktopScrollRef.current.scrollTop = 0;
-          desktopScrollRef.current.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: "instant" as ScrollBehavior,
-          });
-        }
-      });
-
-      // Final safety reset after render
-      setTimeout(() => {
-        if (desktopScrollRef.current) {
-          desktopScrollRef.current.scrollTop = 0;
-        }
-      }, 50);
-    }
-  }, [currentStep]);
+  useDesktopStepScrollReset(currentStep, desktopScrollRef);
 
   // Handle "Begin your pathway" button click - opens soft gate modal
   const handleBeginClick = () => {
@@ -277,39 +101,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
   // Include summary page (step 9) so it gets the header and footer
   const isJourneyScreen = currentStep > -1 && currentStep <= 9;
 
-  // Define background position explicitly for Tailwind purge-proof class names
-  // Step 0 uses bg-bottom, all other steps use bg-center
-  const backgroundPositionClass = currentStep === 0 ? "bg-bottom" : "bg-center";
-
-  // Check if we're on mobile (for conditional rendering)
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640); // sm breakpoint
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  // Data loss prevention - warn users before leaving with unsaved changes
-  useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      // Get current state directly from store to avoid stale closures
-      const { isDirty, currentStep: step, isSaved } = useStore.getState();
-
-      // Only warn if user is in journey (not landing or summary) and has unsaved changes
-      if (isDirty && !isSaved && step > -1 && step < 9) {
-        e.preventDefault();
-        // Modern browsers ignore custom messages, but this is required for the prompt to show
-        e.returnValue = "";
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, []);
+  useUnsavedJourneyUnloadGuard();
 
   if (showNativeResetPassword) {
     return (
