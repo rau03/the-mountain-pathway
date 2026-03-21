@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { SimpleAudioPlayer } from "./SimpleAudioPlayer";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
@@ -16,12 +17,13 @@ export const HeaderMobile: React.FC = () => {
         data-testid="header-mountain-icon"
       >
         <span className="inline-flex w-6 h-6 overflow-hidden">
-          <img
+          <Image
             src="/gold_lines_no%20background_mp.png"
             alt="Mountain Pathway Logo"
             width={32}
             height={32}
             className="w-6 h-6 object-contain scale-[1.75]"
+            unoptimized
             style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
           />
         </span>

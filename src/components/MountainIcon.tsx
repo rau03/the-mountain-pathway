@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 
 // Import from assets - bundler resolves path correctly for web and Capacitor
 import mountainIconSrc from "@/assets/mountain-icon-128.png";
@@ -23,18 +24,14 @@ export function MountainIcon({
   alt = "Mountain Pathway",
 }: MountainIconProps) {
   const { width, height, className: sizeClass } = sizeMap[size];
-  // Bundler resolves import to correct path for web and Capacitor
-  const src =
-    typeof mountainIconSrc === "string"
-      ? mountainIconSrc
-      : (mountainIconSrc as { src: string }).src;
   return (
-    <img
-      src={src}
+    <Image
+      src={mountainIconSrc}
       alt={alt}
       width={width}
       height={height}
       className={`${sizeClass} ${className}`.trim()}
+      unoptimized
     />
   );
 }
