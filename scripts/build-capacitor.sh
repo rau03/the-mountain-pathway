@@ -120,6 +120,7 @@ import supabase from "../../lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
+import { getEmailRedirectTo } from "@/lib/authRedirect";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -157,7 +158,7 @@ export default function LoginPage() {
           appearance={{ theme: ThemeSupa }}
           theme="dark"
           providers={["google"]}
-          redirectTo={typeof window !== "undefined" ? `${window.location.origin}/auth/callback` : "/auth/callback"}
+          redirectTo={getEmailRedirectTo()}
           onlyThirdPartyProviders={false}
         />
       </div>
