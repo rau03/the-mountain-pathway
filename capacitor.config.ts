@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.themountainpathway.app',
-  appName: 'The Mountain Pathway',
+  appName: 'MtnPathway',
   webDir: 'out',
   ios: {
     // Let web layer control safe-area spacing to avoid iOS inset gaps
