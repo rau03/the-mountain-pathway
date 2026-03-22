@@ -17,6 +17,11 @@ bash scripts/build-capacitor.sh
 ```
 ⏱️ Takes ~1-2 minutes
 
+**Release env checks (before build):**
+- Confirm `NEXT_PUBLIC_SITE_URL` resolves to `https://themountainpathway.com` (not `localhost`, `127.0.0.1`, or `.local`)
+- Confirm `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set for production
+- Run `npm run release:safety-scan` and confirm it passes
+
 **What this does:**
 - Compiles your React code → static HTML/CSS/JS
 - Copies it to `ios/App/App/public/`
