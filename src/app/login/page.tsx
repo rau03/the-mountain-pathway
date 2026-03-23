@@ -151,7 +151,6 @@ export default function LoginPage() {
     setError(null);
     setSuccess(null);
     try {
-      localStorage.setItem("pendingPasswordReset", Date.now().toString());
       const redirectTo = `${getPublicSiteUrl()}/auth/callback/recovery`;
       const { error: resetError } = await sb.auth.resetPasswordForEmail(
         email.trim(),
@@ -160,6 +159,7 @@ export default function LoginPage() {
       if (resetError) {
         setError(resetError.message);
       } else {
+        localStorage.setItem("pendingPasswordReset", Date.now().toString());
         setSuccess("Check your email for a password reset link!");
       }
     } catch (err) {
