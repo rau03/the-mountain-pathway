@@ -5,6 +5,14 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
+        // Ensure Apple can fetch AASA as JSON from the well-known path.
+        source: "/.well-known/apple-app-site-association",
+        headers: [
+          { key: "Content-Type", value: "application/json" },
+          { key: "Cache-Control", value: "public, max-age=300, must-revalidate" },
+        ],
+      },
+      {
         source: "/(.*)",
         headers: [
           { key: "X-Frame-Options", value: "DENY" },
