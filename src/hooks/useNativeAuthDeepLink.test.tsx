@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { renderHook, waitFor } from "@testing-library/react";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import { detectRawResetIntent, useNativeAuthDeepLink } from "./useNativeAuthDeepLink";
 
 const getLaunchUrlMock = vi.fn();
@@ -105,5 +105,36 @@ describe("useNativeAuthDeepLink cold-start recovery handling", () => {
       expect(result.current.showNativeResetPassword).toBe(true);
     });
     expect(verifyOtpMock).not.toHaveBeenCalled();
+  });
+
+  it("handles reset intent from appUrlOpen TO JS event", async () => {
+    let appUrlOpenHandler: ((event: { url: string }) => void) | null = null;
+    addListenerMock.mockImplementation(async (eventName: string, handler: unknown) => {
+      if (eventName === "appUrlOpen") {
+        appUrlOpenHandler = handler as (event: { url: string }) => void;
+      }
+      return { remove: vi.fn() };
+    });
+    getLaunchUrlMock.mockResolvedValue({ url: null });
+
+    const { result } = renderHook(() => useNativeAuthDeepLink(null));
+
+    await waitFor(() => {
+      expect(appUrlOpenHandler).not.toBeNull();
+    });
+
+    act(() => {
+      appUrlOpenHandler?.({
+        url: "https://themountainpathway.com/auth/confirm?token_hash=event_hash&type=recovery&next=%2Freset-password",
+      });
+    });
+
+    await waitFor(() => {
+      expect(result.current.showNativeResetPassword).toBe(true);
+    });
+    expect(verifyOtpMock).toHaveBeenCalledWith({
+      token_hash: "event_hash",
+      type: "recovery",
+    });
   });
 });
