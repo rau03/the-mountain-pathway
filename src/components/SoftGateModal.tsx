@@ -230,8 +230,6 @@ export default function SoftGateModal({
       // /auth/callback?next=/reset-password. This is the only reliable
       // way to carry the recovery signal — Supabase strips query params
       // from redirect_to but preserves the full path.
-      localStorage.setItem("pendingPasswordReset", Date.now().toString());
-
       const redirectTo = `${getPublicSiteUrl()}/auth/callback/recovery`;
 
       const { error } = await supabase.auth.resetPasswordForEmail(
@@ -244,6 +242,7 @@ export default function SoftGateModal({
       if (error) {
         setResetError(error.message);
       } else {
+        localStorage.setItem("pendingPasswordReset", Date.now().toString());
         setResetSuccess(true);
       }
     } catch (err) {

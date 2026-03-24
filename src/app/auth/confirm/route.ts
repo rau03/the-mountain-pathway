@@ -23,17 +23,17 @@ function htmlEscape(s: string): string {
 }
 
 function isAllowedRedirectTo(redirectTo: string, requestOrigin: string): boolean {
-  // Allow same-origin absolute redirects
-  if (redirectTo.startsWith(requestOrigin)) return true;
-
-  // Allow known production origins (covers cases where requestOrigin is different)
-  const allowedOrigins = [
-    "https://themountainpathway.com",
-    "https://www.themountainpathway.com",
-  ];
-  if (allowedOrigins.some((o) => redirectTo.startsWith(o))) return true;
-
-  return false;
+  try {
+    const redirectOrigin = new URL(redirectTo).origin;
+    const allowedOrigins = new Set([
+      requestOrigin,
+      "https://themountainpathway.com",
+      "https://www.themountainpathway.com",
+    ]);
+    return allowedOrigins.has(redirectOrigin);
+  } catch {
+    return false;
+  }
 }
 
 export async function GET(request: NextRequest) {

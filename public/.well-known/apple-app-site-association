@@ -1,0 +1,21 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "K4S9KW3BZP.com.themountainpathway.app",
+        "paths": [
+          "/auth/*",
+          "/reset-password",
+          "/reset-password/*"
+        ]
+      }
+    ]
+  },
+  "webcredentials": {
+    "apps": [
+      "K4S9KW3BZP.com.themountainpathway.app"
+    ]
+  }
+
+}
