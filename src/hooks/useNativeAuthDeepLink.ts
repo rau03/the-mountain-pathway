@@ -6,6 +6,39 @@ import supabase from "@/lib/supabaseClient";
 import { isNativeApp } from "@/lib/capacitorUtils";
 import { parseSupabaseAuthRedirect } from "@/lib/deepLink";
 
+type RawResetIntent = {
+  isResetIntent: boolean;
+  tokenHash?: string;
+};
+
+function safeParseUrl(urlString: string): URL | null {
+  try {
+    return new URL(urlString);
+  } catch {
+    return null;
+  }
+}
+
+export function detectRawResetIntent(urlString: string): RawResetIntent {
+  const url = safeParseUrl(urlString);
+  if (!url) return { isResetIntent: false };
+
+  const pathname = url.pathname;
+  const next = url.searchParams.get("next");
+  const type = url.searchParams.get("type");
+  const tokenHash = url.searchParams.get("token_hash") || undefined;
+
+  const isRecoveryPath = pathname === "/auth/callback/recovery";
+  const isConfirmRecoveryPath =
+    pathname === "/auth/confirm" && (type === "recovery" || !!tokenHash);
+  const hasResetNext = next === "/reset-password";
+
+  return {
+    isResetIntent: isRecoveryPath || isConfirmRecoveryPath || hasResetNext,
+    tokenHash,
+  };
+}
+
 export function useNativeAuthDeepLink(liveSession: Session | null) {
   const [showNativeResetPassword, setShowNativeResetPassword] = useState(false);
 
@@ -38,6 +71,21 @@ export function useNativeAuthDeepLink(liveSession: Session | null) {
             refresh_token: parsed.refresh_token || "",
           });
         } else {
+          const rawResetIntent = detectRawResetIntent(url);
+          if (!rawResetIntent.isResetIntent) return;
+
+          if (rawResetIntent.tokenHash) {
+            const { error } = await sb.auth.verifyOtp({
+              token_hash: rawResetIntent.tokenHash,
+              type: "recovery",
+            });
+            if (error) {
+              console.error("Deep link recovery token verification failed:", error);
+              return;
+            }
+          }
+
+          setShowNativeResetPassword(true);
           return;
         }
 
