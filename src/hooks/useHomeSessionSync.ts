@@ -13,18 +13,12 @@ export function useHomeSessionSync(
   const previousSessionRef = useRef<Session | null>(null);
 
   useEffect(() => {
-    console.log("[useHomeSessionSync] setAnonymous from liveSession", {
-      hasLiveSession: !!liveSession,
-    });
     setAnonymous(!liveSession);
   }, [liveSession, setAnonymous]);
 
   useEffect(() => {
     if (!supabase) return;
 
-    console.log("[useHomeSessionSync] initialize from initialSession", {
-      hasInitialSession: !!initialSession,
-    });
     setLiveSession(initialSession);
     previousSessionRef.current = initialSession;
 
@@ -32,18 +26,9 @@ export function useHomeSessionSync(
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (event: string, newSession: Session | null) => {
-        console.log("[useHomeSessionSync] onAuthStateChange", {
-          event,
-          hadPreviousSession: !!previousSessionRef.current,
-          hasNewSession: !!newSession,
-        });
         const isNewSignup =
           !previousSessionRef.current && newSession && event === "SIGNED_IN";
 
-        console.log("[useHomeSessionSync] setLiveSession from auth event", {
-          event,
-          hasNewSession: !!newSession,
-        });
         setLiveSession(newSession);
         previousSessionRef.current = newSession;
 
@@ -52,7 +37,6 @@ export function useHomeSessionSync(
           const hasName = userData?.first_name || userData?.full_name;
           if (!hasName) {
             setTimeout(() => {
-              console.log("[useHomeSessionSync] opening profile setup modal");
               setShowProfileSetupModal(true);
             }, 500);
           }

@@ -39,22 +39,6 @@ export default function HomeClient({ session }: { session: Session | null }) {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    console.log("[HomeClient] state snapshot", {
-      showNativeResetPassword,
-      currentStep,
-      hasLiveSession: !!liveSession,
-      showProfileSetupModal,
-      isMobile,
-    });
-  }, [
-    showNativeResetPassword,
-    currentStep,
-    liveSession,
-    showProfileSetupModal,
-    isMobile,
-  ]);
-
   // Reset invalid step to landing page
   useEffect(() => {
     if (currentStep > 9) {
@@ -120,15 +104,10 @@ export default function HomeClient({ session }: { session: Session | null }) {
   useUnsavedJourneyUnloadGuard();
 
   if (showNativeResetPassword) {
-    console.log(
-      "[HomeClient] render branch=NativeResetPassword (showNativeResetPassword=true)"
-    );
     return (
       <NativeResetPassword onDone={() => setShowNativeResetPassword(false)} />
     );
   }
-
-  console.log("[HomeClient] render branch=MainApp (showNativeResetPassword=false)");
 
   return (
     <div className="relative min-h-screen">

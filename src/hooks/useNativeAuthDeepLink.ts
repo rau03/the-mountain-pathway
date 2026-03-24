@@ -61,86 +61,49 @@ export function useNativeAuthDeepLink(liveSession: Session | null) {
     if (!isNativeApp()) return;
 
     const handleUrl = async (url: string) => {
-      console.log("[useNativeAuthDeepLink] handleUrl start", { url });
       const parsed = parseSupabaseAuthRedirect(url);
-      console.log("[useNativeAuthDeepLink] parseSupabaseAuthRedirect result", parsed);
       const rawResetIntent = detectRawResetIntent(url);
-      console.log("[useNativeAuthDeepLink] detectRawResetIntent result", rawResetIntent);
       try {
         if (parsed.kind === "pkce") {
-          console.log("[useNativeAuthDeepLink] branch=pkce exchangeCodeForSession");
           await sb.auth.exchangeCodeForSession(parsed.code);
         } else if (parsed.kind === "hash") {
-          console.log("[useNativeAuthDeepLink] branch=hash setSession");
           await sb.auth.setSession({
             access_token: parsed.access_token,
             refresh_token: parsed.refresh_token || "",
           });
         } else {
-          console.log("[useNativeAuthDeepLink] branch=none parsed kind");
-          if (!rawResetIntent.isResetIntent) {
-            console.log(
-              "[useNativeAuthDeepLink] branch=none exiting (no reset intent)"
-            );
-            return;
-          }
+          if (!rawResetIntent.isResetIntent) return;
 
           if (rawResetIntent.tokenHash) {
-            console.log(
-              "[useNativeAuthDeepLink] branch=none verifyOtp with token_hash"
-            );
             const { error } = await sb.auth.verifyOtp({
               token_hash: rawResetIntent.tokenHash,
               type: "recovery",
             });
             if (error) {
-            console.log(
-              "[useNativeAuthDeepLink] branch=none verifyOtp failed",
-              error
-            );
               console.error("Deep link recovery token verification failed:", error);
               return;
             }
           }
 
-          console.log(
-            "[useNativeAuthDeepLink] branch=none setShowNativeResetPassword(true)"
-          );
           setShowNativeResetPassword(true);
           return;
         }
 
         const next = parsed.next;
         if (next === "/reset-password") {
-          console.log(
-            "[useNativeAuthDeepLink] branch=parsed setShowNativeResetPassword(true) via next"
-          );
           setShowNativeResetPassword(true);
           return;
         }
 
         const pendingReset = localStorage.getItem("pendingPasswordReset");
         if (pendingReset) {
-          console.log(
-            "[useNativeAuthDeepLink] branch=parsed pendingPasswordReset found"
-          );
           localStorage.removeItem("pendingPasswordReset");
           const elapsed = Date.now() - parseInt(pendingReset, 10);
           if (elapsed < 30 * 60 * 1000) {
-            console.log(
-              "[useNativeAuthDeepLink] branch=parsed setShowNativeResetPassword(true) via pending reset"
-            );
             setShowNativeResetPassword(true);
             return;
           }
-          console.log(
-            "[useNativeAuthDeepLink] branch=parsed pending reset expired",
-            { elapsed }
-          );
         }
-        console.log(
-          "[useNativeAuthDeepLink] branch=parsed complete (no reset navigation)"
-        );
       } catch (err) {
         console.error("Deep link auth handling failed:", err);
         return;
@@ -152,12 +115,8 @@ export function useNativeAuthDeepLink(liveSession: Session | null) {
     (async () => {
       try {
         const res = await CapApp.getLaunchUrl();
-        console.log("[useNativeAuthDeepLink] getLaunchUrl() result", res);
         if (res?.url) {
-          console.log("[useNativeAuthDeepLink] cold start URL received", res.url);
           await handleUrl(res.url);
-        } else {
-          console.log("[useNativeAuthDeepLink] cold start URL missing");
         }
       } catch {
         // ignore
@@ -165,7 +124,6 @@ export function useNativeAuthDeepLink(liveSession: Session | null) {
 
       try {
         listener = await CapApp.addListener("appUrlOpen", ({ url }) => {
-          console.log("[useNativeAuthDeepLink] appUrlOpen received", { url });
           void handleUrl(url);
         });
       } catch (err) {
