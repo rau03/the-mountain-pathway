@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Session } from "@supabase/supabase-js";
 import {
   Dialog,
@@ -56,6 +56,7 @@ export default function SoftGateModal({
   const [resetLoading, setResetLoading] = useState(false);
   const [resetSuccess, setResetSuccess] = useState(false);
   const [resetError, setResetError] = useState<string | null>(null);
+  const hasHandledAuthCompleteRef = useRef(false);
 
   const isDuplicateEmailError = (error: SignupErrorLike | null | undefined) => {
     if (!error) return false;
@@ -117,15 +118,22 @@ export default function SoftGateModal({
       setResetEmail("");
       setResetSuccess(false);
       setResetError(null);
+      setCurrentSession(null);
+      hasHandledAuthCompleteRef.current = false;
+    } else {
+      hasHandledAuthCompleteRef.current = false;
     }
   }, [open]);
 
   // Listen for auth state changes
   useEffect(() => {
-    if (!supabase) return;
+    if (!supabase || !open) return;
+
+    let isActive = true;
 
     // Check initial session state
-    supabase.auth.getSession().then((result: unknown) => {
+    void supabase.auth.getSession().then((result: unknown) => {
+      if (!isActive) return;
       const {
         data: { session },
       } = result as { data: { session: Session | null } };
@@ -137,19 +145,25 @@ export default function SoftGateModal({
       data: { subscription },
     } = supabase.auth.onAuthStateChange(
       (_event: unknown, session: Session | null) => {
-        // If user just authenticated (new session), trigger callback and close
-        if (session && !currentSession && open) {
-          setCurrentSession(session);
-          onAuthComplete();
-          onOpenChange(false);
-        } else {
-          setCurrentSession(session);
-        }
+        if (!isActive) return;
+        setCurrentSession(session);
       }
     );
 
-    return () => subscription.unsubscribe();
-  }, [open, onOpenChange, onAuthComplete, currentSession]);
+    return () => {
+      isActive = false;
+      subscription.unsubscribe();
+    };
+  }, [open]);
+
+  // Handle authenticated state transitions outside render
+  useEffect(() => {
+    if (!open || !currentSession || hasHandledAuthCompleteRef.current) return;
+
+    hasHandledAuthCompleteRef.current = true;
+    onAuthComplete();
+    onOpenChange(false);
+  }, [open, currentSession, onAuthComplete, onOpenChange]);
 
   const handleContinueAsGuest = () => {
     onContinueAsGuest();
@@ -310,13 +324,6 @@ export default function SoftGateModal({
       setSignupLoading(false);
     }
   };
-
-  // If user is already authenticated, just start the journey
-  if (currentSession && open) {
-    onAuthComplete();
-    onOpenChange(false);
-    return null;
-  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

@@ -1,28 +1,60 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { Session } from "@supabase/supabase-js";
 import { useStore } from "@/lib/store/useStore";
 import { LandingPage } from "@/components/LandingPage";
-import { JourneyScreen } from "@/components/JourneyScreen";
-import { SummaryScreen } from "@/components/SummaryScreen";
 import { HeaderDesktop } from "@/components/HeaderDesktop";
 import { DesktopSaveFooter } from "@/components/DesktopSaveFooter";
-import { DesktopAuthSection } from "@/components/DesktopAuthSection";
-import { MobileJourneyLayout } from "@/components/MobileJourneyLayout";
 import { SimpleAudioPlayer } from "@/components/SimpleAudioPlayer";
-import AuthModal from "@/components/AuthModal";
-import SoftGateModal from "@/components/SoftGateModal";
-import WelcomeInfoModal from "@/components/WelcomeInfoModal";
-import ProfileSetupModal from "@/components/ProfileSetupModal";
 import { Button } from "@/components/ui/button";
-import NativeResetPassword from "@/components/NativeResetPassword";
 import { useHomeSessionSync } from "@/hooks/useHomeSessionSync";
 import { useNativeAuthDeepLink } from "@/hooks/useNativeAuthDeepLink";
 import { useJourneyBackground } from "@/hooks/useJourneyBackground";
 import { useViewportFlags } from "@/hooks/useViewportFlags";
 import { useDesktopStepScrollReset } from "@/hooks/useDesktopStepScrollReset";
 import { useUnsavedJourneyUnloadGuard } from "@/hooks/useUnsavedJourneyUnloadGuard";
+
+const JourneyScreen = dynamic(
+  () => import("@/components/JourneyScreen").then((mod) => mod.JourneyScreen)
+);
+const SummaryScreen = dynamic(
+  () => import("@/components/SummaryScreen").then((mod) => mod.SummaryScreen)
+);
+const DesktopAuthSection = dynamic(
+  () =>
+    import("@/components/DesktopAuthSection").then(
+      (mod) => mod.DesktopAuthSection
+    )
+);
+const MobileJourneyLayout = dynamic(
+  () =>
+    import("@/components/MobileJourneyLayout").then(
+      (mod) => mod.MobileJourneyLayout
+    )
+);
+const AuthModal = dynamic(() => import("@/components/AuthModal"), {
+  ssr: false,
+});
+const SoftGateModal = dynamic(() => import("@/components/SoftGateModal"), {
+  ssr: false,
+});
+const WelcomeInfoModal = dynamic(() => import("@/components/WelcomeInfoModal"), {
+  ssr: false,
+});
+const ProfileSetupModal = dynamic(
+  () => import("@/components/ProfileSetupModal"),
+  {
+    ssr: false,
+  }
+);
+const NativeResetPassword = dynamic(
+  () => import("@/components/NativeResetPassword"),
+  {
+    ssr: false,
+  }
+);
 
 export default function HomeClient({ session }: { session: Session | null }) {
   const { currentStep, setCurrentStep, setAnonymous, startJourney } =
@@ -58,7 +90,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
   useDesktopStepScrollReset(currentStep, desktopScrollRef);
 
   // Handle "Begin your pathway" button click - opens soft gate modal
-  const handleBeginClick = () => {
+  const handleBeginClick = useCallback(() => {
     // If user is already logged in, skip the soft gate and start journey
     if (liveSession) {
       startJourney();
@@ -66,21 +98,21 @@ export default function HomeClient({ session }: { session: Session | null }) {
       // Show the soft gate modal for non-authenticated users
       setShowSoftGateModal(true);
     }
-  };
+  }, [liveSession, startJourney]);
 
   // Handle continuing as guest (from soft gate modal)
-  const handleContinueAsGuest = () => {
+  const handleContinueAsGuest = useCallback(() => {
     setAnonymous(true);
     startJourney();
-  };
+  }, [setAnonymous, startJourney]);
 
   // Handle successful authentication (from soft gate modal)
-  const handleAuthComplete = () => {
+  const handleAuthComplete = useCallback(() => {
     setAnonymous(false);
     startJourney();
-  };
+  }, [setAnonymous, startJourney]);
 
-  const renderCurrentScreen = () => {
+  const renderCurrentScreen = useCallback(() => {
     if (currentStep === -1) {
       return (
         <LandingPage
@@ -95,7 +127,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
     }
 
     return <JourneyScreen />;
-  };
+  }, [currentStep, handleBeginClick, liveSession]);
 
   // This is the stable, desktop-first layout
   // Include summary page (step 9) so it gets the header and footer
