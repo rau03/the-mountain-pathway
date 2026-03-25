@@ -1,4 +1,5 @@
 import React from "react";
+import Image from "next/image";
 import { Play, HelpCircle, Coffee, Mail } from "lucide-react";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
@@ -19,13 +20,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <div className="flex flex-col items-center gap-4 md:gap-8">
         {/* Hero Icon - aligned with iOS dark translucent chip */}
         <div className="p-4 bg-black/35 backdrop-blur-md rounded-full border border-white/10 shadow-lg overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src="/gold_lines_no%20background_mp.png"
             alt="Mountain Pathway"
             width={64}
             height={64}
             className="w-16 h-16 object-contain scale-[1.75]"
+            sizes="64px"
+            priority
             style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
           />
         </div>
