@@ -34,6 +34,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
   const [saveLoading, setSaveLoading] = useState(false);
   const [autoSaveLoading, setAutoSaveLoading] = useState(false);
   const [quickSaveError, setQuickSaveError] = useState<string | null>(null);
+  const [autoSaveError, setAutoSaveError] = useState<string | null>(null);
 
   const canQuickSave =
     isSaved && savedJourneyId && savedJourneyTitle && isDirty;
@@ -110,6 +111,43 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
     }
   };
 
+  const runAutoSave = async (targetStep: number) => {
+    const fallbackTitle = `Journey ${new Date().toLocaleDateString("en-US")}`;
+    const title = savedJourneyTitle || fallbackTitle;
+    const journeyData = {
+      title,
+      currentEntry,
+      currentStep: targetStep,
+      isCompleted: targetStep >= 9,
+    };
+
+    if (isSaved && savedJourneyId) {
+      await updateJourney(savedJourneyId, journeyData);
+      return { id: savedJourneyId, title };
+    }
+
+    const savedJourney = await saveJourney(journeyData);
+    return { id: savedJourney.id, title };
+  };
+
+  const handleRetryAutoSave = () => {
+    if (!session?.user || autoSaveLoading) return;
+
+    setAutoSaveLoading(true);
+    setAutoSaveError(null);
+
+    void runAutoSave(currentStep)
+      .then(({ id, title }) => {
+        markSaved(id, title);
+      })
+      .catch(() => {
+        setAutoSaveError("Not saved - tap to retry");
+      })
+      .finally(() => {
+        setAutoSaveLoading(false);
+      });
+  };
+
   const handleNextStep = () => {
     if (currentStep >= 9) {
       nextStep();
@@ -124,32 +162,14 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
     }
 
     setAutoSaveLoading(true);
-    const fallbackTitle = `Journey ${new Date().toLocaleDateString("en-US")}`;
-    const title = savedJourneyTitle || fallbackTitle;
-    const journeyData = {
-      title,
-      currentEntry,
-      currentStep: targetStep,
-      isCompleted: targetStep >= 9,
-    };
+    setAutoSaveError(null);
 
-    const autoSaveRequest =
-      isSaved && savedJourneyId
-        ? updateJourney(savedJourneyId, journeyData).then(() => ({
-            id: savedJourneyId,
-            title,
-          }))
-        : saveJourney(journeyData).then((savedJourney) => ({
-            id: savedJourney.id,
-            title,
-          }));
-
-    void autoSaveRequest
-      .then(({ id, title: savedTitle }) => {
-        markSaved(id, savedTitle);
+    void runAutoSave(targetStep)
+      .then(({ id, title }) => {
+        markSaved(id, title);
       })
-      .catch((error) => {
-        console.error("Auto-save on next step failed:", error);
+      .catch(() => {
+        setAutoSaveError("Not saved - tap to retry");
       })
       .finally(() => {
         setAutoSaveLoading(false);
@@ -162,6 +182,15 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
         <div className="mb-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
           {quickSaveError}
         </div>
+      )}
+      {autoSaveError && (
+        <button
+          type="button"
+          onClick={handleRetryAutoSave}
+          className="mb-2 w-full text-sm text-amber-700 dark:text-amber-300 bg-amber-50 dark:bg-amber-900/20 p-2 rounded text-center hover:underline"
+        >
+          {autoSaveLoading ? "Retrying save..." : autoSaveError}
+        </button>
       )}
       <footer className="w-full grid grid-cols-[1fr_auto_1fr] items-center pt-1 gap-4">
         {/* Left Side: Back Button + Quick Save */}

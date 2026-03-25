@@ -23,12 +23,17 @@ export default async function Home() {
 
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-  // Fetch the current session
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+  // Fetch the current session, but gracefully fall back if network fails
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-  // Render the page with or without a session
-  // Landing page is public; journey content will check for session
-  return <PageWrapper session={session} />;
+    // Render the page with or without a session
+    // Landing page is public; journey content will check for session
+    return <PageWrapper session={session} />;
+  } catch (error) {
+    console.error("Failed to fetch session on home page:", error);
+    return <PageWrapper session={null} />;
+  }
 }
