@@ -227,7 +227,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
               disabled={isFirstStep}
               variant="ghost"
               size="sm"
-              className="h-9 w-9 p-0 disabled:opacity-30"
+              className="h-11 w-11 p-0 disabled:opacity-30"
               aria-label="Previous step"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -240,7 +240,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                 disabled={saveLoading}
                 variant="ghost"
                 size="sm"
-                className="bg-green-600/80 backdrop-blur-sm text-white font-medium px-2.5 py-1.5 rounded-md border border-green-500/30 hover:bg-green-600 text-xs"
+                className="bg-green-600/80 backdrop-blur-sm text-white font-medium px-2.5 py-1.5 rounded-md border border-green-500/30 hover:bg-green-600 text-xs min-h-11"
               >
                 {saveLoading ? (
                   <div className="flex items-center gap-1">
@@ -276,11 +276,11 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                   onClick={() => setShowAuthModal(true)}
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 p-0"
+                  className="h-11 w-11 p-0"
                   aria-label="Account"
                   title="Account settings"
                 >
-                  <User className="h-3.5 w-3.5" />
+                  <User className="h-4 w-4" />
                 </Button>
               )}
             </div>
@@ -310,7 +310,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                 disabled={saveLoading}
                 variant="ghost"
                 size="sm"
-                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2 py-1 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[10px]"
+                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2 py-1 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[10px] min-h-11"
               >
                 {isSaved ? "Save As New" : "Save"}
               </Button>
@@ -322,7 +322,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                 disabled={saveLoading}
                 variant="ghost"
                 size="sm"
-                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2 py-1 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[10px]"
+                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2 py-1 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[10px] min-h-11"
               >
                 Save
               </Button>
@@ -331,7 +331,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
             <Button
               onClick={handleNextStep}
               size="sm"
-              className="h-9 w-9 p-0"
+              className="h-11 w-11 p-0"
               aria-label="Next step"
               disabled={autoSaveLoading}
             >

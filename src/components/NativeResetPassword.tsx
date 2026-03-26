@@ -56,7 +56,7 @@ export default function NativeResetPassword({ onDone }: Props) {
 
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+      <div className="min-h-[100dvh] bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4 pt-[calc(env(safe-area-inset-top,0px)+1rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] overflow-y-auto">
         <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-brand-gold/20">
           <div className="text-center space-y-4">
             <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
@@ -76,7 +76,7 @@ export default function NativeResetPassword({ onDone }: Props) {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4 pt-[calc(env(safe-area-inset-top,0px)+1rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] overflow-y-auto">
       <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-brand-gold/20">
         <div className="text-center space-y-3 mb-6">
           <div className="mx-auto w-12 h-12 bg-brand-gold/20 rounded-full flex items-center justify-center">

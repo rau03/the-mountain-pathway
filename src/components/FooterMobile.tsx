@@ -16,7 +16,7 @@ export const FooterMobile: React.FC = () => {
         disabled={isFirstStep}
         variant="ghost"
         size="sm"
-        className="h-9 w-9 p-0 disabled:opacity-30"
+        className="h-11 w-11 p-0 disabled:opacity-30"
         aria-label="Previous step"
       >
         <ArrowLeft className="h-4 w-4" />
@@ -31,7 +31,7 @@ export const FooterMobile: React.FC = () => {
       <Button
         onClick={nextStep}
         size="sm"
-        className="h-9 w-9 p-0"
+        className="h-11 w-11 p-0"
         aria-label="Next step"
       >
         <ArrowRight className="h-4 w-4" />

@@ -182,7 +182,7 @@ function ResetPasswordContent() {
   // Loading state while checking session or exchanging code
   if (isValidSession === null || isExchangingCode) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+      <div className="min-h-[100dvh] bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4 pt-[calc(env(safe-area-inset-top,0px)+1rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] overflow-y-auto">
         <div className="flex flex-col items-center">
           <Loader2 className="w-8 h-8 animate-spin text-brand-gold" />
           <p className="mt-4 text-gray-400">
@@ -196,7 +196,7 @@ function ResetPasswordContent() {
   // Invalid or expired session
   if (!isValidSession) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+      <div className="min-h-[100dvh] bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4 pt-[calc(env(safe-area-inset-top,0px)+1rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] overflow-y-auto">
         <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-brand-gold/20">
           <div className="text-center space-y-4">
             <div className="mx-auto w-12 h-12 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center">
@@ -224,7 +224,7 @@ function ResetPasswordContent() {
   // Success state
   if (success) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+      <div className="min-h-[100dvh] bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4 pt-[calc(env(safe-area-inset-top,0px)+1rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] overflow-y-auto">
         <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-brand-gold/20">
           <div className="text-center space-y-4">
             <div className="mx-auto w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
@@ -247,7 +247,7 @@ function ResetPasswordContent() {
 
   // Password reset form
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4 pt-[calc(env(safe-area-inset-top,0px)+1rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] overflow-y-auto">
       <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-xl shadow-xl p-8 border border-brand-gold/20">
         {/* Header */}
         <div className="text-center space-y-3 mb-6">
@@ -368,7 +368,7 @@ function ResetPasswordContent() {
 // Loading fallback for Suspense
 function LoadingFallback() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4">
+    <div className="min-h-[100dvh] bg-gradient-to-b from-slate-900 to-slate-800 flex items-center justify-center p-4 pt-[calc(env(safe-area-inset-top,0px)+1rem)] pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] overflow-y-auto">
       <div className="flex flex-col items-center">
         <Loader2 className="w-8 h-8 animate-spin text-brand-gold" />
         <p className="mt-4 text-gray-400">Loading...</p>

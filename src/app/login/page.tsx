@@ -39,7 +39,7 @@ export default function LoginPage() {
 
   if (!supabase) {
     return (
-      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ minHeight: "100dvh", display: "flex", alignItems: "center", justifyContent: "center" }}>
         <p>Configuration error: Supabase is not available</p>
       </div>
     );
@@ -172,12 +172,17 @@ export default function LoginPage() {
   return (
     <div
       style={{
-        minHeight: "100vh",
+        minHeight: "100dvh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        padding: "2rem",
+        paddingTop: "calc(env(safe-area-inset-top, 0px) + 1rem)",
+        paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 1rem)",
+        paddingLeft: "1rem",
+        paddingRight: "1rem",
+        overflowY: "auto",
+        WebkitOverflowScrolling: "touch",
       }}
     >
       <div style={{ width: "100%", maxWidth: "420px" }} className="space-y-4">

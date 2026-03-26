@@ -17,6 +17,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
 }) => {
   const { currentStep } = useStore();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   const currentBackground = getBackgroundForStep(currentStep);
 
@@ -62,6 +63,26 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
       scrollContainerRef.current.scrollTop = 0;
     }
   }, [currentStep]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+
+    const handleViewportChange = () => {
+      const keyboardHeight = window.innerHeight - viewport.height;
+      setIsKeyboardOpen(keyboardHeight > 120);
+    };
+
+    handleViewportChange();
+    viewport.addEventListener("resize", handleViewportChange);
+    viewport.addEventListener("scroll", handleViewportChange);
+
+    return () => {
+      viewport.removeEventListener("resize", handleViewportChange);
+      viewport.removeEventListener("scroll", handleViewportChange);
+    };
+  }, []);
 
   const isJourneyScreen = currentStep > -1 && currentStep < 9;
   const isSummaryScreen = currentStep === 9;
@@ -115,7 +136,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
   }
 
   return (
-    <div className="relative h-[100svh] w-full min-w-full bg-brand-stone flex flex-col overflow-hidden overscroll-none">
+    <div className="relative h-[100dvh] w-full min-w-full bg-brand-stone flex flex-col overflow-hidden overscroll-none">
       {/* Background Image Crossfade Container */}
       <div className="absolute inset-0 z-0 overflow-hidden bg-brand-stone">
         {/* Current background (always visible underneath) */}
@@ -158,13 +179,15 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         {/* Bottom Sheet - Scrollable content region */}
         <div
           ref={scrollContainerRef}
-          className={`${bottomSheetClass} overflow-y-auto overscroll-y-contain px-6 pb-36`}
+          className={`${bottomSheetClass} overflow-y-auto overscroll-y-contain px-6 ${
+            isKeyboardOpen ? "pb-8" : "pb-36"
+          }`}
         >
           <JourneyScreen />
         </div>
 
         {/* Mobile Save Footer - Fixed to device viewport bottom */}
-        {isJourneyScreen && (
+        {isJourneyScreen && !isKeyboardOpen && (
           <div className="fixed inset-x-0 bottom-0 z-20 bg-brand-stone safe-area-bottom">
             <MobileSaveFooter session={session} />
           </div>

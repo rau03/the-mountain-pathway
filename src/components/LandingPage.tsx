@@ -15,7 +15,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLearnMoreClick,
 }) => {
   return (
-    <div className="h-[100svh] flex flex-col items-center justify-between md:justify-center px-6 pt-[calc(env(safe-area-inset-top,0px)+6.25rem)] md:pt-10 pb-16 md:gap-8 overflow-hidden">
+    <div className="min-h-[100dvh] flex flex-col items-center justify-between md:justify-center px-6 pt-[calc(env(safe-area-inset-top,0px)+6.25rem)] md:pt-10 pb-[calc(env(safe-area-inset-bottom,0px)+4rem)] md:pb-16 md:gap-8 overflow-y-auto">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
       <div className="flex flex-col items-center gap-4 md:gap-8">
         {/* Hero Icon - aligned with iOS dark translucent chip */}
@@ -39,13 +39,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           {/* Text Content */}
           <div className="relative z-10 max-w-2xl space-y-3 md:space-y-6 text-center p-4 md:p-8">
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.6),0_1px_3px_rgba(0,0,0,0.4)]">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.6),0_1px_3px_rgba(0,0,0,0.4)]">
               {pathwayContent.landingPage.heroTitle}
             </h1>
-            <p className="text-lg md:text-xl font-light text-white [text-shadow:0_2px_6px_rgba(0,0,0,0.5),0_1px_2px_rgba(0,0,0,0.3)]">
+            <p className="text-base sm:text-lg md:text-xl font-light text-white [text-shadow:0_2px_6px_rgba(0,0,0,0.5),0_1px_2px_rgba(0,0,0,0.3)]">
               {pathwayContent.landingPage.heroSubtitle}
             </p>
-            <p className="text-base md:text-lg leading-relaxed text-white/95 [text-shadow:0_2px_6px_rgba(0,0,0,0.5),0_1px_2px_rgba(0,0,0,0.3)]">
+            <p className="text-sm sm:text-base md:text-lg leading-relaxed text-white/95 [text-shadow:0_2px_6px_rgba(0,0,0,0.5),0_1px_2px_rgba(0,0,0,0.3)]">
               {pathwayContent.landingPage.heroDescription}
             </p>
           </div>
