@@ -35,6 +35,11 @@ export default function ProfileSetupModal({
       return;
     }
 
+    if (!firstName.trim()) {
+      setError("Please enter your first name");
+      return;
+    }
+
     setLoading(true);
     setError(null);
 

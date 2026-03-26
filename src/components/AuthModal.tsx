@@ -201,6 +201,16 @@ export default function AuthModal({
     e.preventDefault();
     if (!supabase) return;
 
+    if (!email.trim()) {
+      setAuthError("Please enter your email");
+      return;
+    }
+
+    if (!password) {
+      setAuthError("Please enter your password");
+      return;
+    }
+
     setAuthLoading(true);
     setAuthError(null);
 
