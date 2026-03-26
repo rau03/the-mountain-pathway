@@ -211,10 +211,23 @@ export default function LoginPage() {
         </div>
 
         {success && (
-          <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
-            <p className="text-sm text-green-700 dark:text-green-300 text-center">
-              {success}
-            </p>
+          <div className="space-y-3">
+            <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+              <p className="text-sm text-green-700 dark:text-green-300 text-center">
+                {success}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setSuccess(null);
+                setView("login");
+                setError(null);
+              }}
+              className="w-full min-h-11 px-4 py-2 rounded-md bg-brand-gold text-slate-900 font-semibold hover:bg-brand-gold/90"
+            >
+              Back to Login
+            </button>
           </div>
         )}
         {error && (
