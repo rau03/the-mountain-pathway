@@ -38,9 +38,9 @@ describe("mobile controls tap targets", () => {
     const prevButton = screen.getByRole("button", { name: "Previous step" });
     const nextButton = screen.getByRole("button", { name: "Next step" });
 
-    expect(prevButton.className).toContain("h-9");
-    expect(prevButton.className).toContain("w-9");
-    expect(nextButton.className).toContain("h-9");
-    expect(nextButton.className).toContain("w-9");
+    expect(prevButton.className).toContain("h-11");
+    expect(prevButton.className).toContain("w-11");
+    expect(nextButton.className).toContain("h-11");
+    expect(nextButton.className).toContain("w-11");
   });
 });
