@@ -3,6 +3,35 @@ import { persist } from "zustand/middleware";
 import { AppState, JournalEntry } from "../../types";
 import { isNativeApp } from "@/lib/capacitorUtils";
 
+const WEB_SESSION_FLAG = "mountain-pathway-web-session-active";
+
+const isFreshWebVisit = (): boolean => {
+  if (typeof window === "undefined" || typeof document === "undefined") {
+    return false;
+  }
+
+  try {
+    const hasSessionFlag = sessionStorage.getItem(WEB_SESSION_FLAG) === "1";
+    const referrer = document.referrer;
+    let isInternalReferrer = false;
+
+    if (referrer) {
+      try {
+        isInternalReferrer = new URL(referrer).origin === window.location.origin;
+      } catch {
+        isInternalReferrer = false;
+      }
+    }
+
+    const freshVisit = !hasSessionFlag && !isInternalReferrer;
+    sessionStorage.setItem(WEB_SESSION_FLAG, "1");
+
+    return freshVisit;
+  } catch {
+    return false;
+  }
+};
+
 const createNewEntry = (): JournalEntry => ({
   id: Date.now().toString(),
   createdAt: new Date().toISOString(),
@@ -147,9 +176,12 @@ export const useStore = create<AppState>()(
       version: 3,
       merge: (persistedState, currentState) => {
         const merged = { ...currentState, ...(persistedState as object) } as AppState;
-        // On native app, always open at landing page (don't restore step position)
+        // On native app, always open at landing page (don't restore step position).
+        // On web, only force landing page on fresh external visit.
         try {
           if (isNativeApp()) {
+            merged.currentStep = -1;
+          } else if (isFreshWebVisit()) {
             merged.currentStep = -1;
           }
         } catch {
