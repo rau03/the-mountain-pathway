@@ -11,8 +11,15 @@ const config: CapacitorConfig = {
     allowsLinkPreview: true,
     // Scroll to accommodate keyboard
     scrollEnabled: true,
+    // Match landing-page fallback color before hero image renders
+    backgroundColor: '#d6d3d1',
   },
   plugins: {
+    SplashScreen: {
+      launchAutoHide: false,
+      showSpinner: false,
+      backgroundColor: '#d6d3d1',
+    },
     // App plugin handles external URLs
     App: {
       // No specific config needed

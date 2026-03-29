@@ -17,7 +17,7 @@ export const HeaderDesktop: React.FC = () => {
         {showBrandIcon && (
           <span className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-black/10 backdrop-blur-sm border border-brand-slate/20 overflow-hidden">
             <Image
-              src="/gold_lines_no%20background_mp.png"
+              src="/gold_lines_no_background_mp.png"
               alt="Mountain Pathway"
               width={32}
               height={32}

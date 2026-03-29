@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import { Capacitor } from "@capacitor/core";
+import { SplashScreen } from "@capacitor/splash-screen";
 import { Play, HelpCircle, Coffee, Mail } from "lucide-react";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
@@ -14,6 +16,45 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onBeginClick,
   onLearnMoreClick,
 }) => {
+  const didHideSplashRef = useRef(false);
+
+  useEffect(() => {
+    if (didHideSplashRef.current) {
+      return;
+    }
+    if (!Capacitor.isNativePlatform() || Capacitor.getPlatform() !== "ios") {
+      return;
+    }
+
+    let cancelled = false;
+    let hidden = false;
+    const hideSplash = async () => {
+      if (cancelled || hidden) {
+        return;
+      }
+      hidden = true;
+      didHideSplashRef.current = true;
+      try {
+        await SplashScreen.hide({ fadeOutDuration: 600 });
+      } catch (error) {
+        console.error("Failed to hide splash screen:", error);
+      }
+    };
+
+    const minDelayId = window.setTimeout(() => {
+      void hideSplash();
+    }, 500);
+    const timeoutId = window.setTimeout(() => {
+      void hideSplash();
+    }, 1200);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(minDelayId);
+      window.clearTimeout(timeoutId);
+    };
+  }, []);
+
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-between md:justify-center px-6 pt-[calc(env(safe-area-inset-top,0px)+6.25rem)] md:pt-10 pb-[calc(env(safe-area-inset-bottom,0px)+4rem)] md:pb-16 md:gap-8 overflow-y-auto">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
@@ -21,13 +62,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         {/* Hero Icon - aligned with iOS dark translucent chip */}
         <div className="p-4 bg-black/35 backdrop-blur-md rounded-full border border-white/10 shadow-lg overflow-hidden">
           <Image
-            src="/gold_lines_no%20background_mp.png"
+            src="/gold_lines_no_background_mp.png"
             alt="Mountain Pathway"
             width={64}
             height={64}
             className="w-16 h-16 object-contain scale-[1.75]"
             sizes="64px"
             priority
+            unoptimized
             style={{ filter: "brightness(0.88) saturate(1.6) hue-rotate(-3deg) contrast(1.12)" }}
           />
         </div>

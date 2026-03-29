@@ -18,7 +18,7 @@ export const HeaderMobile: React.FC = () => {
       >
         <span className="inline-flex w-6 h-6 overflow-hidden">
           <Image
-            src="/gold_lines_no%20background_mp.png"
+            src="/gold_lines_no_background_mp.png"
             alt="Mountain Pathway Logo"
             width={32}
             height={32}
