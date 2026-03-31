@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Mountain, Loader2, CheckCircle, AlertCircle, Coffee } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
 import { openExternalUrl } from "@/lib/capacitorUtils";
+import { Capacitor } from "@capacitor/core";
 
 function ResetPasswordContent() {
   const router = useRouter();
@@ -344,21 +345,23 @@ function ResetPasswordContent() {
 
         {/* Buy Me a Coffee Link */}
         <div className="mt-6 text-center">
-          <a
-            href="https://buymeacoffee.com/themountainpathway"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-              e.preventDefault();
-              void openExternalUrl(
-                "https://buymeacoffee.com/themountainpathway"
-              );
-            }}
-            className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-300 transition-colors"
-          >
-            <Coffee className="w-4 h-4" />
-            <span>Buy me a Coffee</span>
-          </a>
+          {!Capacitor.isNativePlatform() && (
+            <a
+              href="https://buymeacoffee.com/themountainpathway"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                e.preventDefault();
+                void openExternalUrl(
+                  "https://buymeacoffee.com/themountainpathway"
+                );
+              }}
+              className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-300 transition-colors"
+            >
+              <Coffee className="w-4 h-4" />
+              <span>Buy me a Coffee</span>
+            </a>
+          )}
         </div>
       </div>
     </div>

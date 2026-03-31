@@ -125,19 +125,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           )}
 
           {/* Buy Me a Coffee Link */}
-          <a
-            href="https://buymeacoffee.com/themountainpathway"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-              e.preventDefault();
-              void openExternalUrl("https://buymeacoffee.com/themountainpathway");
-            }}
-            className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
-          >
-            <Coffee className="w-5 h-5" />
-            <span>Buy me a Coffee</span>
-          </a>
+          {!Capacitor.isNativePlatform() && (
+            <a
+              href="https://buymeacoffee.com/themountainpathway"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => {
+                e.preventDefault();
+                void openExternalUrl("https://buymeacoffee.com/themountainpathway");
+              }}
+              className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
+            >
+              <Coffee className="w-5 h-5" />
+              <span>Buy me a Coffee</span>
+            </a>
+          )}
 
           {/* Contact Link */}
           <button

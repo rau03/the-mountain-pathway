@@ -376,19 +376,21 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       {/* Support & Legal */}
       <div className={`w-full flex flex-col items-center space-y-3 ${isMobile ? "pt-10" : "pt-8"}`}>
         {/* Buy Me a Coffee Link */}
-        <a
-          href="https://buymeacoffee.com/themountainpathway"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => {
-            e.preventDefault();
-            void openExternalUrl("https://buymeacoffee.com/themountainpathway");
-          }}
-          className="inline-flex items-center gap-2 text-sm text-brand-slate/60 hover:text-brand-slate transition-colors"
-        >
-          <Coffee className="w-4 h-4" />
-          <span>Buy me a Coffee</span>
-        </a>
+        {!Capacitor.isNativePlatform() && (
+          <a
+            href="https://buymeacoffee.com/themountainpathway"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => {
+              e.preventDefault();
+              void openExternalUrl("https://buymeacoffee.com/themountainpathway");
+            }}
+            className="inline-flex items-center gap-2 text-sm text-brand-slate/60 hover:text-brand-slate transition-colors"
+          >
+            <Coffee className="w-4 h-4" />
+            <span>Buy me a Coffee</span>
+          </a>
+        )}
 
         {/* Legal Links */}
         <div className="flex items-center justify-center gap-3 text-xs text-brand-slate/40">

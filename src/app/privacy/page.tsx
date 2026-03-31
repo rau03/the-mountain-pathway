@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft, Coffee } from "lucide-react";
+import { Capacitor } from "@capacitor/core";
 
 export const metadata = {
   title: "Privacy Policy | The Mountain Pathway",
@@ -200,15 +201,17 @@ export default function PrivacyPolicy() {
 
           {/* Buy Me a Coffee Link */}
           <div className="text-center pt-8 border-t border-brand-slate/10 mt-8">
-            <a
-              href="https://buymeacoffee.com/themountainpathway"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
-            >
-              <Coffee className="w-4 h-4" />
-              <span>Buy me a Coffee</span>
-            </a>
+            {!Capacitor.isNativePlatform() && (
+              <a
+                href="https://buymeacoffee.com/themountainpathway"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 text-sm text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
+              >
+                <Coffee className="w-4 h-4" />
+                <span>Buy me a Coffee</span>
+              </a>
+            )}
           </div>
         </div>
       </div>
