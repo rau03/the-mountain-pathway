@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Capacitor } from "@capacitor/core";
 import { SplashScreen } from "@capacitor/splash-screen";
@@ -17,6 +17,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLearnMoreClick,
 }) => {
   const didHideSplashRef = useRef(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (didHideSplashRef.current) {
@@ -125,7 +130,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           )}
 
           {/* Buy Me a Coffee Link */}
-          {!Capacitor.isNativePlatform() && (
+          {mounted && !Capacitor.isNativePlatform() && (
             <a
               href="https://buymeacoffee.com/themountainpathway"
               target="_blank"

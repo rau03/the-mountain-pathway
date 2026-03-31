@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { ArrowLeft, ArrowRight, User, Save, Coffee } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
@@ -17,12 +17,17 @@ interface MobileSaveFooterProps {
 }
 
 export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
+  const [mounted, setMounted] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [autoSaveLoading, setAutoSaveLoading] = useState(false);
   const [quickSaveError, setQuickSaveError] = useState<string | null>(null);
   const [autoSaveError, setAutoSaveError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const {
     currentEntry,
@@ -284,7 +289,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
               </Button>
             )}
 
-            {!Capacitor.isNativePlatform() && (
+            {mounted && !Capacitor.isNativePlatform() && (
               <a
                 href="https://buymeacoffee.com/themountainpathway"
                 target="_blank"

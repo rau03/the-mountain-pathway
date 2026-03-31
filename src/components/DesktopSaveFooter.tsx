@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { ArrowLeft, ArrowRight, Save, Coffee } from "lucide-react";
 import { Capacitor } from "@capacitor/core";
@@ -36,6 +36,11 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
   const [autoSaveLoading, setAutoSaveLoading] = useState(false);
   const [quickSaveError, setQuickSaveError] = useState<string | null>(null);
   const [autoSaveError, setAutoSaveError] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const canQuickSave =
     isSaved && savedJourneyId && savedJourneyTitle && isDirty;
@@ -240,7 +245,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
               </>
             )}
           </p>
-          {!Capacitor.isNativePlatform() && (
+          {mounted && !Capacitor.isNativePlatform() && (
             <a
               href="https://buymeacoffee.com/themountainpathway"
               target="_blank"
