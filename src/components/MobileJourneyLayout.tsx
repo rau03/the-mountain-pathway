@@ -182,7 +182,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
           className={`${bottomSheetClass} overflow-y-auto overscroll-y-contain px-6 ${
             isKeyboardOpen
               ? "pb-8"
-              : "pb-[calc(env(safe-area-inset-bottom,0px)+7rem)]"
+              : "pb-[calc(env(safe-area-inset-bottom,0px)+9rem)]"
           }`}
         >
           <JourneyScreen />
