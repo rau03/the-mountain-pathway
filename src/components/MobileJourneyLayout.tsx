@@ -190,7 +190,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
 
         {/* Mobile Save Footer - Fixed to device viewport bottom */}
         {isJourneyScreen && !isKeyboardOpen && (
-          <div className="fixed inset-x-0 bottom-0 z-40 bg-brand-stone">
+          <div className="fixed inset-x-0 bottom-0 z-40">
             <MobileSaveFooter session={session} />
           </div>
         )}
