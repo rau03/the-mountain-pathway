@@ -182,7 +182,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
           className={`${bottomSheetClass} overflow-y-auto overscroll-y-contain px-6 ${
             isKeyboardOpen
               ? "pb-8"
-              : "pb-[calc(env(safe-area-inset-bottom,0px)+11rem)]"
+              : "pb-[calc(env(safe-area-inset-bottom,0px)+8rem)]"
           }`}
         >
           <JourneyScreen />
@@ -190,7 +190,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
 
         {/* Mobile Save Footer - Fixed to device viewport bottom */}
         {isJourneyScreen && !isKeyboardOpen && (
-          <div className="fixed inset-x-0 bottom-0 z-20 bg-brand-stone">
+          <div className="fixed inset-x-0 bottom-0 z-40 bg-brand-stone">
             <MobileSaveFooter session={session} />
           </div>
         )}
