@@ -207,7 +207,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
 
   return (
     <>
-      <footer className="flex-shrink-0 w-full bg-brand-stone pt-0.5 pb-0 px-6 border-t border-brand-stone/20">
+      <footer className="flex-shrink-0 w-full bg-brand-stone pt-0 pb-0 px-6 border-t border-brand-stone/20">
         {/* Quick Save Error Message */}
         {quickSaveError && (
           <div className="mb-2 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
@@ -264,7 +264,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
           </div>
 
           {/* Center: Step Counter + Account Button + Coffee Link */}
-          <div className="flex items-center justify-center gap-2 min-h-11">
+          <div className="flex items-center justify-center gap-2 min-h-9">
             <p className="text-xs text-brand-slate/70 font-medium whitespace-nowrap">
               {currentStep === 9 ? (
                 "Complete"
@@ -281,7 +281,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                 onClick={() => setShowAuthModal(true)}
                 variant="ghost"
                 size="sm"
-                className="h-11 w-11 p-0"
+                className="h-9 w-9 p-0"
                 aria-label="Account"
                 title="Account settings"
               >
