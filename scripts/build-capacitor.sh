@@ -26,6 +26,7 @@ fi
 cp src/app/auth/confirm/route.ts "$BACKUP_DIR/confirm.route.ts.backup"
 cp src/app/page.tsx "$BACKUP_DIR/page.tsx.backup"
 cp src/app/login/page.tsx "$BACKUP_DIR/login.page.tsx.backup"
+cp src/components/BuyMeCoffeeLink.tsx "$BACKUP_DIR/buy-me-coffee-link.tsx.backup"
 
 # Function to restore files on exit (success or failure)
 cleanup() {
@@ -48,6 +49,9 @@ cleanup() {
     fi
     if [ -f "$BACKUP_DIR/login.page.tsx.backup" ]; then
         cp "$BACKUP_DIR/login.page.tsx.backup" src/app/login/page.tsx
+    fi
+    if [ -f "$BACKUP_DIR/buy-me-coffee-link.tsx.backup" ]; then
+        cp "$BACKUP_DIR/buy-me-coffee-link.tsx.backup" src/components/BuyMeCoffeeLink.tsx
     fi
     rm -rf "$BACKUP_DIR"
     echo "✅ Files restored"
@@ -121,6 +125,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
 import { getEmailRedirectTo } from "@/lib/authRedirect";
+import BuyMeCoffeeLink from "@/components/BuyMeCoffeeLink";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -163,11 +168,7 @@ export default function LoginPage() {
         />
       </div>
 
-      {/* Buy Me a Coffee Link */}
-      <a
-        href="https://buymeacoffee.com/themountainpathway"
-        target="_blank"
-        rel="noopener noreferrer"
+      <BuyMeCoffeeLink
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -178,27 +179,9 @@ export default function LoginPage() {
           textDecoration: "none",
           transition: "color 0.2s",
         }}
-        onMouseOver={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.7)")}
-        onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.5)")}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M10 2v2" />
-          <path d="M14 2v2" />
-          <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" />
-          <path d="M6 2v2" />
-        </svg>
-        Buy me a Coffee
-      </a>
+        defaultColor="rgba(255, 255, 255, 0.5)"
+        hoverColor="rgba(255, 255, 255, 0.7)"
+      />
     </div>
   );
 }
@@ -212,6 +195,25 @@ echo "🏗️  Building Next.js static export..."
 # Use non-Turbopack build for Capacitor export reliability.
 # Turbopack can complete "Exporting" while omitting root out/index.html.
 rm -rf .next out
+if [ -f ".env.ios" ]; then
+    echo "📄 Loading iOS build env from .env.ios..."
+    set -a
+    # shellcheck disable=SC1091
+    . ./.env.ios
+    set +a
+else
+    echo "❌ Missing .env.ios file required for iOS build"
+    exit 1
+fi
+
+if [ -f "src/components/BuyMeCoffeeLink.stub.tsx" ]; then
+    echo "🧩 Replacing BuyMeCoffeeLink with iOS stub..."
+    cp src/components/BuyMeCoffeeLink.stub.tsx src/components/BuyMeCoffeeLink.tsx
+else
+    echo "❌ Missing src/components/BuyMeCoffeeLink.stub.tsx required for iOS build"
+    exit 1
+fi
+
 NEXT_PUBLIC_SITE_URL=https://themountainpathway.com npx next build
 
 # Check if build succeeded

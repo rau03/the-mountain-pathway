@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { ArrowLeft, Trash2, Mail, Clock, Shield, AlertTriangle, Coffee } from "lucide-react";
-import { Capacitor } from "@capacitor/core";
+import { ArrowLeft, Trash2, Mail, Clock, Shield, AlertTriangle } from "lucide-react";
+import BuyMeCoffeeLink from "@/components/BuyMeCoffeeLink";
 
 export const metadata = {
   title: "Data Deletion | The Mountain Pathway",
@@ -185,19 +185,8 @@ export default function DataDeletion() {
             </p>
           </section>
 
-          {/* Buy Me a Coffee Link */}
           <div className="text-center pt-8 border-t border-brand-slate/10 mt-8">
-            {!Capacitor.isNativePlatform() && (
-              <a
-                href="https://buymeacoffee.com/themountainpathway"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 text-sm text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
-              >
-                <Coffee className="w-4 h-4" />
-                <span>Buy me a Coffee</span>
-              </a>
-            )}
+            <BuyMeCoffeeLink className="inline-flex items-center gap-2 text-sm text-brand-slate/50 hover:text-brand-slate/70 transition-colors" />
           </div>
         </div>
       </div>

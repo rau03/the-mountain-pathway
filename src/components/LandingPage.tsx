@@ -2,10 +2,11 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Capacitor } from "@capacitor/core";
 import { SplashScreen } from "@capacitor/splash-screen";
-import { Play, HelpCircle, Coffee, Mail } from "lucide-react";
+import { Play, HelpCircle, Mail } from "lucide-react";
 import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
-import { openEmail, openExternalUrl } from "@/lib/capacitorUtils";
+import { openEmail } from "@/lib/capacitorUtils";
+import BuyMeCoffeeLink from "@/components/BuyMeCoffeeLink";
 
 type LandingPageProps = {
   onBeginClick: () => void;
@@ -17,11 +18,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLearnMoreClick,
 }) => {
   const didHideSplashRef = useRef(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     if (didHideSplashRef.current) {
@@ -129,22 +125,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </button>
           )}
 
-          {/* Buy Me a Coffee Link */}
-          {mounted && !Capacitor.isNativePlatform() && (
-            <a
-              href="https://buymeacoffee.com/themountainpathway"
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.preventDefault();
-                void openExternalUrl("https://buymeacoffee.com/themountainpathway");
-              }}
-              className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
-            >
-              <Coffee className="w-5 h-5" />
-              <span>Buy me a Coffee</span>
-            </a>
-          )}
+          <BuyMeCoffeeLink
+            className="flex items-center gap-2 text-base text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
+            iconClassName="w-5 h-5"
+          />
 
           {/* Contact Link */}
           <button

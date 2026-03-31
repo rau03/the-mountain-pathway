@@ -5,8 +5,7 @@ import supabase from "../../lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
-import { openExternalUrl } from "@/lib/capacitorUtils";
-import { Capacitor } from "@capacitor/core";
+import BuyMeCoffeeLink from "@/components/BuyMeCoffeeLink";
 import { getEmailRedirectTo, getPublicSiteUrl } from "@/lib/authRedirect";
 
 // Prevent static generation of this page
@@ -397,29 +396,20 @@ export default function LoginPage() {
         )}
       </div>
 
-      {/* Buy Me a Coffee Link */}
-      {!Capacitor.isNativePlatform() && (
-        <a
-          href="https://buymeacoffee.com/themountainpathway"
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={(e) => {
-            e.preventDefault();
-            void openExternalUrl("https://buymeacoffee.com/themountainpathway");
-          }}
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            marginTop: "2rem",
-            fontSize: "0.875rem",
-            color: "rgba(255, 255, 255, 0.5)",
-            textDecoration: "none",
-            transition: "color 0.2s",
-          }}
-          onMouseOver={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.7)")}
-          onMouseOut={(e) => (e.currentTarget.style.color = "rgba(255, 255, 255, 0.5)")}
-        >
+      <BuyMeCoffeeLink
+        style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          marginTop: "2rem",
+          fontSize: "0.875rem",
+          color: "rgba(255, 255, 255, 0.5)",
+          textDecoration: "none",
+          transition: "color 0.2s",
+        }}
+        defaultColor="rgba(255, 255, 255, 0.5)"
+        hoverColor="rgba(255, 255, 255, 0.7)"
+        icon={
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -436,9 +426,8 @@ export default function LoginPage() {
             <path d="M16 8a1 1 0 0 1 1 1v8a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V9a1 1 0 0 1 1-1h14a4 4 0 1 1 0 8h-1" />
             <path d="M6 2v2" />
           </svg>
-          Buy me a Coffee
-        </a>
-      )}
+        }
+      />
     </div>
   );
 }

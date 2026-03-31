@@ -1,33 +1,27 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Session } from "@supabase/supabase-js";
-import { ArrowLeft, ArrowRight, User, Save, Coffee } from "lucide-react";
-import { Capacitor } from "@capacitor/core";
+import { ArrowLeft, ArrowRight, User, Save } from "lucide-react";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
 import AuthModal from "./AuthModal";
 import SaveJourneyModal from "./SaveJourneyModal";
 import { Button } from "./ui/button";
 import { saveJourney, updateJourney } from "@/lib/journeyApi";
-import { openExternalUrl } from "@/lib/capacitorUtils";
+import BuyMeCoffeeLink from "./BuyMeCoffeeLink";
 
 interface MobileSaveFooterProps {
   session: Session | null;
 }
 
 export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
-  const [mounted, setMounted] = useState(false);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
   const [saveLoading, setSaveLoading] = useState(false);
   const [autoSaveLoading, setAutoSaveLoading] = useState(false);
   const [quickSaveError, setQuickSaveError] = useState<string | null>(null);
   const [autoSaveError, setAutoSaveError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   const {
     currentEntry,
@@ -289,23 +283,10 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
               </Button>
             )}
 
-            {mounted && !Capacitor.isNativePlatform() && (
-              <a
-                href="https://buymeacoffee.com/themountainpathway"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => {
-                  e.preventDefault();
-                  void openExternalUrl(
-                    "https://buymeacoffee.com/themountainpathway"
-                  );
-                }}
-                className="hidden md:inline-flex items-center gap-1.5 text-xs text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
-              >
-                <Coffee className="w-3.5 h-3.5" />
-                <span>Buy me a Coffee</span>
-              </a>
-            )}
+            <BuyMeCoffeeLink
+              className="hidden md:inline-flex items-center gap-1.5 text-xs text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
+              iconClassName="w-3.5 h-3.5"
+            />
           </div>
 
           {/* Right Side: Save Journey Button + Next Button */}
