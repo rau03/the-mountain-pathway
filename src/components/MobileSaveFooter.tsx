@@ -202,7 +202,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
 
   return (
     <>
-      <footer className="flex-shrink-0 w-full bg-brand-stone pt-1 pb-[calc(env(safe-area-inset-bottom,0px)+0.25rem)] px-8 border-t border-brand-stone/20">
+      <footer className="flex-shrink-0 w-full bg-brand-stone pt-0.5 pb-[calc(env(safe-area-inset-bottom,0px)+0.125rem)] px-6 border-t border-brand-stone/20">
         {/* Quick Save Error Message */}
         {quickSaveError && (
           <div className="mb-2 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
@@ -259,32 +259,31 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
           </div>
 
           {/* Center: Step Counter + Account Button + Coffee Link */}
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              <p className="text-xs text-brand-slate/70 font-medium whitespace-nowrap">
-                {currentStep === 9 ? (
-                  "Complete"
-                ) : (
-                  <>
-                    Step {currentStep + 1} of {pathwayData.length}
-                  </>
-                )}
-              </p>
-
-              {/* Account Button - Only show when authenticated */}
-              {isAuthenticated && (
-                <Button
-                  onClick={() => setShowAuthModal(true)}
-                  variant="ghost"
-                  size="sm"
-                  className="h-11 w-11 p-0"
-                  aria-label="Account"
-                  title="Account settings"
-                >
-                  <User className="h-4 w-4" />
-                </Button>
+          <div className="flex items-center justify-center gap-2 min-h-11">
+            <p className="text-xs text-brand-slate/70 font-medium whitespace-nowrap">
+              {currentStep === 9 ? (
+                "Complete"
+              ) : (
+                <>
+                  Step {currentStep + 1} of {pathwayData.length}
+                </>
               )}
-            </div>
+            </p>
+
+            {/* Account Button - Only show when authenticated */}
+            {isAuthenticated && (
+              <Button
+                onClick={() => setShowAuthModal(true)}
+                variant="ghost"
+                size="sm"
+                className="h-11 w-11 p-0"
+                aria-label="Account"
+                title="Account settings"
+              >
+                <User className="h-4 w-4" />
+              </Button>
+            )}
+
             {!Capacitor.isNativePlatform() && (
               <a
                 href="https://buymeacoffee.com/themountainpathway"
@@ -296,7 +295,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                     "https://buymeacoffee.com/themountainpathway"
                   );
                 }}
-                className="inline-flex items-center gap-1.5 text-xs text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
+                className="hidden md:inline-flex items-center gap-1.5 text-xs text-brand-slate/50 hover:text-brand-slate/70 transition-colors"
               >
                 <Coffee className="w-3.5 h-3.5" />
                 <span>Buy me a Coffee</span>
