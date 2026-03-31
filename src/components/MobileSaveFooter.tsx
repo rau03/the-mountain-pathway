@@ -202,7 +202,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
 
   return (
     <>
-      <footer className="flex-shrink-0 w-full bg-brand-stone pt-0.5 pb-[calc(env(safe-area-inset-bottom,0px)+0.125rem)] px-6 border-t border-brand-stone/20">
+      <footer className="flex-shrink-0 w-full bg-brand-stone pt-0.5 pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] px-6 border-t border-brand-stone/20">
         {/* Quick Save Error Message */}
         {quickSaveError && (
           <div className="mb-2 text-xs text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-2 rounded text-center">
