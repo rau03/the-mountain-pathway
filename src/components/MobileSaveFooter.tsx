@@ -312,7 +312,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                 disabled={saveLoading}
                 variant="ghost"
                 size="sm"
-                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2 py-1 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[10px] min-h-11"
+                className="bg-black/10 backdrop-blur-sm text-white font-medium px-1.5 py-0.5 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[9px] min-h-8"
               >
                 {isSaved ? "Save As New" : "Save"}
               </Button>
@@ -324,7 +324,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
                 disabled={saveLoading}
                 variant="ghost"
                 size="sm"
-                className="bg-black/10 backdrop-blur-sm text-white font-medium px-2 py-1 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[10px] min-h-11"
+                className="bg-black/10 backdrop-blur-sm text-white font-medium px-1.5 py-0.5 rounded-md border border-brand-slate/20 hover:bg-black/20 text-[9px] min-h-8"
               >
                 Save
               </Button>
