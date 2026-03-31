@@ -89,8 +89,8 @@ describe("MobileSaveFooter autosave on next step", () => {
   it("skips autosave silently for guests", async () => {
     render(<MobileSaveFooter session={null} />);
     const nextButton = screen.getByLabelText("Next step");
-    expect(nextButton.className).toContain("h-11");
-    expect(nextButton.className).toContain("w-11");
+    expect(nextButton.className).toContain("h-9");
+    expect(nextButton.className).toContain("w-9");
     fireEvent.click(nextButton);
 
     await waitFor(() => {

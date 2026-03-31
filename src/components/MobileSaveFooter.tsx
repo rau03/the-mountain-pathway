@@ -228,7 +228,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
               disabled={isFirstStep}
               variant="ghost"
               size="sm"
-              className="h-11 w-11 p-0 disabled:opacity-30 touch-manipulation"
+              className="h-9 w-9 p-0 disabled:opacity-30 touch-manipulation"
               aria-label="Previous step"
             >
               <ArrowLeft className="h-4 w-4" />
@@ -333,7 +333,7 @@ export const MobileSaveFooter = ({ session }: MobileSaveFooterProps) => {
             <Button
               onClick={handleNextStep}
               size="sm"
-              className="h-11 w-11 p-0 touch-manipulation"
+              className="h-9 w-9 p-0 touch-manipulation"
               aria-label="Next step"
               disabled={autoSaveLoading}
             >
