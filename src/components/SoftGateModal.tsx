@@ -327,7 +327,7 @@ export default function SoftGateModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-sm sm:max-w-md p-0 gap-0 overflow-hidden border-brand-gold/20">
+      <DialogContent className="max-w-sm sm:max-w-md p-0 gap-0 overflow-hidden border-brand-gold/20 top-[50%] translate-y-[-50%]">
         <DialogHeader className="sr-only">
           <DialogTitle>Before You Begin</DialogTitle>
         </DialogHeader>

@@ -20,12 +20,12 @@ export default function WelcomeInfoModal({
 }: WelcomeInfoModalProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md sm:max-w-lg p-0 gap-0 overflow-hidden border-brand-gold/20">
+      <DialogContent className="max-w-md sm:max-w-lg p-0 gap-0 overflow-hidden border-brand-gold/20 flex flex-col max-h-[calc(100dvh-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px)-1.5rem)] sm:max-h-[calc(100dvh-2rem)]">
         <DialogHeader className="sr-only">
           <DialogTitle>About The Mountain Pathway</DialogTitle>
         </DialogHeader>
 
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 overflow-y-auto">
           {/* Header */}
           <div className="text-center space-y-3">
             <div className="mx-auto w-14 h-14 bg-brand-gold/20 rounded-full flex items-center justify-center">
@@ -109,15 +109,16 @@ export default function WelcomeInfoModal({
             </p>
           </div>
 
-          {/* Action */}
-          <div className="flex justify-center">
-            <Button
-              onClick={() => onOpenChange(false)}
-              className="bg-brand-gold hover:bg-brand-gold/90 text-slate-900 px-8"
-            >
-              Got it, thanks!
-            </Button>
-          </div>
+        </div>
+
+        {/* Action */}
+        <div className="flex justify-center px-6 pt-4 pb-[calc(env(safe-area-inset-bottom,0px)+1rem)] sm:pb-6 border-t border-brand-gold/10 bg-background">
+          <Button
+            onClick={() => onOpenChange(false)}
+            className="bg-brand-gold hover:bg-brand-gold/90 text-slate-900 px-8"
+          >
+            Got it, thanks!
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
