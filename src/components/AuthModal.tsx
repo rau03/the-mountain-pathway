@@ -435,7 +435,7 @@ export default function AuthModal({
           <div className="w-full">
             {currentSession ? (
               // Authenticated user - show account options
-              <div className="p-6 space-y-6">
+              <div className="p-6 space-y-6 overflow-y-auto">
                 {/* Header */}
                 <div className="text-center space-y-3">
                   <div className="mx-auto w-12 h-12 bg-brand-gold/20 rounded-full flex items-center justify-center">
