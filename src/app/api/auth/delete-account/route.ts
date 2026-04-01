@@ -40,7 +40,18 @@ export async function POST(request: NextRequest) {
   } = await authClient.auth.getUser(accessToken);
 
   if (userError || !user) {
-    return NextResponse.json({ error: UNAUTHORIZED_MESSAGE }, { status: 401 });
+    const supabaseMessage =
+      userError?.message || "Supabase could not verify the provided token";
+
+    console.error("[delete-account] getUser failed", {
+      message: supabaseMessage,
+      status: userError?.status ?? null,
+      code: userError?.code ?? null,
+      hasToken: Boolean(accessToken),
+      hasUser: Boolean(user),
+    });
+
+    return NextResponse.json({ error: supabaseMessage }, { status: 401 });
   }
 
   const adminClient = createClient(supabaseUrl, serviceRoleKey, {
