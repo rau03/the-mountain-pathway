@@ -46,7 +46,11 @@ export default function AuthModal({
     session || null
   );
   const [signingOut, setSigningOut] = useState(false);
+  const [deletingAccount, setDeletingAccount] = useState(false);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [accountError, setAccountError] = useState<string | null>(null);
+  const [accountSuccess, setAccountSuccess] = useState<string | null>(null);
   const wasUnauthenticatedRef = useRef(!session);
 
   // Auth form state
@@ -107,7 +111,8 @@ export default function AuthModal({
   };
 
   // Get journey state to check for unsaved work
-  const { isDirty, currentStep, isSaved, resetJourney } = useStore();
+  const { isDirty, currentStep, isSaved, resetJourney, clearLocalProgress } =
+    useStore();
 
   // Reset form when modal opens/closes
   useEffect(() => {
@@ -121,6 +126,10 @@ export default function AuthModal({
       setResendLoading(false);
       setResendError(null);
       setResendSuccess(null);
+      setShowDeleteConfirmation(false);
+      setDeletingAccount(false);
+      setAccountError(null);
+      setAccountSuccess(null);
     }
   }, [open]);
 
@@ -179,6 +188,8 @@ export default function AuthModal({
 
     setSigningOut(true);
     setShowUnsavedWarning(false);
+    setAccountError(null);
+    setAccountSuccess(null);
 
     try {
       await supabase.auth.signOut();
@@ -193,6 +204,64 @@ export default function AuthModal({
     } catch (error) {
       console.error("Error signing out:", error);
       setSigningOut(false);
+    }
+  };
+
+  const handleDeleteAccountClick = () => {
+    setAccountError(null);
+    setAccountSuccess(null);
+    setShowDeleteConfirmation(true);
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!supabase || !currentSession?.access_token) {
+      setAccountError("Unable to verify your session. Please log in again.");
+      return;
+    }
+
+    setDeletingAccount(true);
+    setAccountError(null);
+    setAccountSuccess(null);
+
+    try {
+      const response = await fetch("/api/auth/delete-account", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${currentSession.access_token}`,
+        },
+      });
+
+      const payload = (await response.json().catch(() => null)) as
+        | { error?: string }
+        | null;
+
+      if (!response.ok) {
+        throw new Error(payload?.error || "Failed to delete account");
+      }
+
+      setShowDeleteConfirmation(false);
+      setAuthView("login");
+      setAuthError(null);
+      setAuthSuccess("Your account has been permanently deleted.");
+      setAccountSuccess(null);
+
+      clearLocalProgress();
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("mountain-pathway-storage");
+      }
+
+      await supabase.auth.signOut();
+      setCurrentSession(null);
+
+      window.setTimeout(() => {
+        onOpenChange(false);
+      }, 1300);
+    } catch (error) {
+      setAccountError(
+        error instanceof Error ? error.message : "Failed to delete account"
+      );
+    } finally {
+      setDeletingAccount(false);
     }
   };
 
@@ -386,6 +455,20 @@ export default function AuthModal({
 
                 {/* Actions */}
                 <div className="space-y-2">
+                  {accountSuccess && (
+                    <div className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+                      <p className="text-sm text-green-700 dark:text-green-300 text-center">
+                        {accountSuccess}
+                      </p>
+                    </div>
+                  )}
+                  {accountError && (
+                    <div className="p-3 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
+                      <p className="text-sm text-red-600 dark:text-red-400 text-center">
+                        {accountError}
+                      </p>
+                    </div>
+                  )}
                   <Button
                     onClick={() => {
                       setShowSavedJourneys(true);
@@ -399,7 +482,7 @@ export default function AuthModal({
 
                   <Button
                     onClick={handleSignOutClick}
-                    disabled={signingOut}
+                    disabled={signingOut || deletingAccount}
                     variant="outline"
                     className="w-full min-h-11 border-gray-300 dark:border-gray-600"
                   >
@@ -411,6 +494,15 @@ export default function AuthModal({
                     ) : (
                       "Sign Out"
                     )}
+                  </Button>
+
+                  <Button
+                    onClick={handleDeleteAccountClick}
+                    disabled={signingOut || deletingAccount}
+                    variant="outline"
+                    className="w-full min-h-11 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
+                  >
+                    Delete Account
                   </Button>
                 </div>
               </div>
@@ -820,6 +912,61 @@ export default function AuthModal({
                 className="w-full min-h-11 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
               >
                 Leave Without Saving
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog
+        open={showDeleteConfirmation}
+        onOpenChange={(nextOpen) => {
+          if (!deletingAccount) {
+            setShowDeleteConfirmation(nextOpen);
+          }
+        }}
+      >
+        <DialogContent className="max-w-xs sm:max-w-sm p-6">
+          <DialogHeader className="sr-only">
+            <DialogTitle>Delete account confirmation</DialogTitle>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="flex flex-col items-center text-center space-y-3">
+              <div className="p-3 bg-red-100 dark:bg-red-900/30 rounded-full">
+                <AlertTriangle className="w-6 h-6 text-red-600 dark:text-red-400" />
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                Delete Account Permanently
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                This action cannot be undone. Your account and saved journey data
+                will be permanently deleted.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <Button
+                onClick={() => setShowDeleteConfirmation(false)}
+                disabled={deletingAccount}
+                className="w-full min-h-11 bg-brand-gold hover:bg-brand-gold/90 text-slate-900"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleDeleteAccount}
+                disabled={deletingAccount}
+                variant="outline"
+                className="w-full min-h-11 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
+              >
+                {deletingAccount ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    Deleting account...
+                  </>
+                ) : (
+                  "Yes, Delete Account"
+                )}
               </Button>
             </div>
           </div>

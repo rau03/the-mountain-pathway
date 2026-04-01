@@ -1,25 +1,30 @@
 import React from "react";
-import { describe, expect, it, vi, beforeEach } from "vitest";
+import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { Session } from "@supabase/supabase-js";
 import AuthModal from "./AuthModal";
 
+const getSessionMock = vi.fn();
+const onAuthStateChangeMock = vi.fn();
 const signUpMock = vi.fn();
 const signInWithPasswordMock = vi.fn();
 const resetPasswordForEmailMock = vi.fn();
 const resendMock = vi.fn();
+const signOutMock = vi.fn();
+const clearLocalProgressMock = vi.fn();
+const resetJourneyMock = vi.fn();
 
 vi.mock("@/lib/supabaseClient", () => ({
   default: {
     auth: {
-      getSession: vi.fn().mockResolvedValue({ data: { session: null } }),
-      onAuthStateChange: vi.fn().mockReturnValue({
-        data: { subscription: { unsubscribe: vi.fn() } },
-      }),
+      getSession: (...args: unknown[]) => getSessionMock(...args),
+      onAuthStateChange: (...args: unknown[]) => onAuthStateChangeMock(...args),
       signUp: (...args: unknown[]) => signUpMock(...args),
       signInWithPassword: (...args: unknown[]) => signInWithPasswordMock(...args),
       resetPasswordForEmail: (...args: unknown[]) =>
         resetPasswordForEmailMock(...args),
       resend: (...args: unknown[]) => resendMock(...args),
+      signOut: (...args: unknown[]) => signOutMock(...args),
     },
   },
 }));
@@ -33,16 +38,41 @@ vi.mock("@/lib/store/useStore", () => ({
     isDirty: false,
     currentStep: -1,
     isSaved: false,
-    resetJourney: vi.fn(),
+    resetJourney: resetJourneyMock,
+    clearLocalProgress: clearLocalProgressMock,
   }),
 }));
 
+const authenticatedSession = {
+  access_token: "test-access-token",
+  user: {
+    id: "user-123",
+    email: "test@example.com",
+    user_metadata: { first_name: "Chris" },
+  },
+} as unknown as Session;
+
 describe("AuthModal auth parity updates", () => {
   beforeEach(() => {
+    getSessionMock.mockReset();
+    onAuthStateChangeMock.mockReset();
     signUpMock.mockReset();
     signInWithPasswordMock.mockReset();
     resetPasswordForEmailMock.mockReset();
     resendMock.mockReset();
+    signOutMock.mockReset();
+    clearLocalProgressMock.mockReset();
+    resetJourneyMock.mockReset();
+
+    getSessionMock.mockResolvedValue({ data: { session: null } });
+    onAuthStateChangeMock.mockReturnValue({
+      data: { subscription: { unsubscribe: vi.fn() } },
+    });
+    signOutMock.mockResolvedValue({ error: null });
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   it("applies 8-char validation, duplicate email message mapping, and autocomplete attrs", async () => {
@@ -213,5 +243,75 @@ describe("AuthModal auth parity updates", () => {
       )
     ).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toHaveValue("existing2@example.com");
+  });
+
+  it("deletes account after confirmation and clears local state", async () => {
+    getSessionMock.mockResolvedValue({ data: { session: authenticatedSession } });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ success: true }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(
+      <AuthModal
+        open={true}
+        onOpenChange={() => {}}
+        session={authenticatedSession}
+      />
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Delete Account" }));
+    expect(
+      await screen.findByText("Delete Account Permanently")
+    ).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Yes, Delete Account" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        "/api/auth/delete-account",
+        expect.objectContaining({
+          method: "POST",
+          headers: expect.objectContaining({
+            Authorization: "Bearer test-access-token",
+          }),
+        })
+      );
+    });
+
+    await waitFor(() => {
+      expect(clearLocalProgressMock).toHaveBeenCalled();
+      expect(signOutMock).toHaveBeenCalled();
+    });
+
+    expect(
+      await screen.findByText("Your account has been permanently deleted.")
+    ).toBeInTheDocument();
+  });
+
+  it("shows account deletion error when API call fails", async () => {
+    getSessionMock.mockResolvedValue({ data: { session: authenticatedSession } });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: false,
+      json: async () => ({ error: "Failed to delete account" }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(
+      <AuthModal
+        open={true}
+        onOpenChange={() => {}}
+        session={authenticatedSession}
+      />
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Delete Account" }));
+    fireEvent.click(screen.getByRole("button", { name: "Yes, Delete Account" }));
+
+    expect(
+      await screen.findByText("Failed to delete account")
+    ).toBeInTheDocument();
+    expect(clearLocalProgressMock).not.toHaveBeenCalled();
   });
 });
