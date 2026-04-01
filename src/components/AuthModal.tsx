@@ -484,7 +484,7 @@ export default function AuthModal({
                     onClick={handleSignOutClick}
                     disabled={signingOut || deletingAccount}
                     variant="outline"
-                    className="w-full min-h-11 border-gray-300 dark:border-gray-600"
+                    className="w-full min-h-11 border-gray-300 dark:border-gray-600 touch-manipulation"
                   >
                     {signingOut ? (
                       <>
@@ -500,7 +500,7 @@ export default function AuthModal({
                     onClick={handleDeleteAccountClick}
                     disabled={signingOut || deletingAccount}
                     variant="outline"
-                    className="w-full min-h-11 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20"
+                    className="w-full min-h-11 text-red-600 border-red-200 hover:bg-red-50 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/20 touch-manipulation"
                   >
                     Delete Account
                   </Button>
