@@ -15,7 +15,6 @@ const storeState = {
   isSaved: false,
   savedJourneyId: null as string | null,
   savedJourneyTitle: null as string | null,
-  isDirty: true,
   markSaved: markSavedMock,
   nextStep: nextStepMock,
   prevStep: prevStepMock,
@@ -31,10 +30,6 @@ vi.mock("@/lib/journeyApi", () => ({
 }));
 
 vi.mock("@/components/AuthModal", () => ({
-  default: () => null,
-}));
-
-vi.mock("@/components/SaveJourneyModal", () => ({
   default: () => null,
 }));
 
