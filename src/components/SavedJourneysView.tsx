@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -44,6 +44,7 @@ export default function SavedJourneysView({
 
   const { restoreJourneyEntry } = useStore();
   const [viewLoading, setViewLoading] = useState<string | null>(null);
+  const loadRequestIdRef = useRef(0);
 
   // Load journeys when modal opens
   useEffect(() => {
@@ -53,11 +54,15 @@ export default function SavedJourneysView({
   }, [open]);
 
   const loadJourneys = async () => {
+    const requestId = ++loadRequestIdRef.current;
     setLoading(true);
     setError(null);
 
     // Add timeout to prevent infinite loading
     const timeoutId = setTimeout(() => {
+      if (requestId !== loadRequestIdRef.current) {
+        return;
+      }
       setLoading(false);
       setError(
         "Loading timed out. Please check your connection and try again."
@@ -67,12 +72,20 @@ export default function SavedJourneysView({
     try {
       const userJourneys = await fetchUserJourneys();
       clearTimeout(timeoutId);
+      if (requestId !== loadRequestIdRef.current) {
+        return;
+      }
       setJourneys(userJourneys);
     } catch (err) {
       clearTimeout(timeoutId);
+      if (requestId !== loadRequestIdRef.current) {
+        return;
+      }
       setError(err instanceof Error ? err.message : "Failed to load journeys");
     } finally {
-      setLoading(false);
+      if (requestId === loadRequestIdRef.current) {
+        setLoading(false);
+      }
     }
   };
 
@@ -88,6 +101,7 @@ export default function SavedJourneysView({
     setDeleteLoading(id);
     try {
       await deleteJourney(id);
+      loadRequestIdRef.current += 1;
       setJourneys((prev) => prev.filter((j) => j.id !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete journey");

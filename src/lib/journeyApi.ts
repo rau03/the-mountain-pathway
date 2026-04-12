@@ -282,15 +282,22 @@ export async function deleteJourney(id: string): Promise<void> {
   }
 
   // Delete the journey (CASCADE will automatically delete related steps)
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from("journeys")
     .delete()
     .eq("id", id)
-    .eq("user_id", user.id);
+    .eq("user_id", user.id)
+    .select("id");
 
   if (error) {
     console.error("Error deleting journey:", error);
     throw new Error(`Failed to delete journey: ${error.message}`);
+  }
+
+  if (!data || data.length === 0) {
+    throw new Error(
+      "No journey was deleted. It may be missing or you may not have permission."
+    );
   }
 }
 
