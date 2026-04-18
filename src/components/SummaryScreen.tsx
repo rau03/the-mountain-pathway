@@ -10,6 +10,7 @@ import {
 import { Session } from "@supabase/supabase-js";
 import { Capacitor } from "@capacitor/core";
 import { Share } from "@capacitor/share";
+import { Filesystem, Directory } from "@capacitor/filesystem";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData, pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
@@ -219,13 +220,23 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
       // Check if running in native app (Capacitor)
       if (Capacitor.isNativePlatform()) {
-        // For native apps, use Share to let user save/share the PDF
-        const pdfBase64 = pdf.output("datauristring");
-        
+        const pdfBase64 = pdf.output("datauristring").split(",")[1];
+
+        await Filesystem.writeFile({
+          path: filename,
+          data: pdfBase64,
+          directory: Directory.Cache,
+        });
+
+        const { uri } = await Filesystem.getUri({
+          path: filename,
+          directory: Directory.Cache,
+        });
+
         await Share.share({
           title: "Mountain Pathway Journey",
           text: "My Mountain Pathway journey summary",
-          url: pdfBase64,
+          files: [uri],
           dialogTitle: "Save or Share your Journey PDF",
         });
       } else {
