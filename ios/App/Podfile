@@ -10,6 +10,7 @@ target 'App' do
   # Capacitor Plugins
   pod 'CapacitorApp', :path => '../../node_modules/@capacitor/app'
   pod 'CapacitorBrowser', :path => '../../node_modules/@capacitor/browser'
+  pod 'CapacitorFilesystem', :path => '../../node_modules/@capacitor/filesystem'
   pod 'CapacitorShare', :path => '../../node_modules/@capacitor/share'
 
 end
