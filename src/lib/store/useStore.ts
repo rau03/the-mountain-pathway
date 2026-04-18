@@ -173,7 +173,7 @@ export const useStore = create<AppState>()(
     }),
     {
       name: "mountain-pathway-storage",
-      version: 3,
+      version: 4,
       merge: (persistedState, currentState) => {
         const merged = { ...currentState, ...(persistedState as object) } as AppState;
         // On native app, always open at landing page (don't restore step position).
@@ -187,30 +187,45 @@ export const useStore = create<AppState>()(
         } catch {
           // Capacitor may not be available (e.g. in tests)
         }
+        if (merged.isAnonymous) {
+          merged.currentEntry = createNewEntry();
+          merged.entries = [];
+          merged.currentStep = -1;
+          merged.isDirty = false;
+          merged.isSaved = false;
+          merged.savedJourneyId = null;
+          merged.savedJourneyTitle = null;
+        }
         return merged;
       },
-      partialize: (state) => ({
-        // Persist journey data and preferences
-        currentStep: state.currentStep,
-        currentEntry: state.currentEntry,
-        entries: state.entries,
-        audioEnabled: state.audioEnabled,
-        currentAudioTrack: state.currentAudioTrack,
-        silenceTimer: state.silenceTimer,
-        // Persist tracking flags
-        isAnonymous: state.isAnonymous,
-        isSaved: state.isSaved,
-        savedJourneyId: state.savedJourneyId,
-        savedJourneyTitle: state.savedJourneyTitle,
-        isDirty: state.isDirty,
-        // Exclude: isTimerActive (session-specific)
-      }),
+      partialize: (state) => {
+        if (state.isAnonymous) {
+          return {
+            audioEnabled: state.audioEnabled,
+            currentAudioTrack: state.currentAudioTrack,
+            silenceTimer: state.silenceTimer,
+            isAnonymous: state.isAnonymous,
+          };
+        }
+        return {
+          currentStep: state.currentStep,
+          currentEntry: state.currentEntry,
+          entries: state.entries,
+          audioEnabled: state.audioEnabled,
+          currentAudioTrack: state.currentAudioTrack,
+          silenceTimer: state.silenceTimer,
+          isAnonymous: state.isAnonymous,
+          isSaved: state.isSaved,
+          savedJourneyId: state.savedJourneyId,
+          savedJourneyTitle: state.savedJourneyTitle,
+          isDirty: state.isDirty,
+        };
+      },
       migrate: (persistedState: unknown, version: number) => {
         // Migrate from version 1 to version 2
         if (version < 2) {
           return {
             ...(persistedState as object),
-            // Add new tracking flags with defaults
             isAnonymous: true,
             isSaved: false,
             savedJourneyId: null,
@@ -219,14 +234,24 @@ export const useStore = create<AppState>()(
           };
         }
         // Migrate from version 2 to version 3 - add savedJourneyTitle
-        const state = persistedState as Record<string, unknown>;
+        let state = persistedState as Record<string, unknown>;
         if (!("savedJourneyTitle" in state)) {
+          state = { ...state, savedJourneyTitle: null };
+        }
+        // Migrate from version 3 to version 4 - strip guest entry data
+        if (version < 4 && state.isAnonymous === true) {
           return {
             ...state,
+            currentEntry: { id: "", createdAt: "", responses: {}, completed: false },
+            entries: [],
+            currentStep: -1,
+            isDirty: false,
+            isSaved: false,
+            savedJourneyId: null,
             savedJourneyTitle: null,
           };
         }
-        return persistedState;
+        return state;
       },
     }
   )
