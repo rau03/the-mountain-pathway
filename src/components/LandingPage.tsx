@@ -18,6 +18,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onLearnMoreClick,
 }) => {
   const didHideSplashRef = useRef(false);
+  const [contactCopied, setContactCopied] = useState(false);
 
   useEffect(() => {
     if (didHideSplashRef.current) {
@@ -131,19 +132,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           />
 
           {/* Contact Link */}
-          <a
-            href="mailto:hello@themountainpathway.com"
-            onClick={(e) => {
+          <button
+            onClick={() => {
               if (Capacitor.isNativePlatform()) {
-                e.preventDefault();
                 void openEmail("hello@themountainpathway.com");
+              } else {
+                void navigator.clipboard.writeText("hello@themountainpathway.com").then(() => {
+                  setContactCopied(true);
+                  setTimeout(() => setContactCopied(false), 2000);
+                });
               }
             }}
             className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
           >
             <Mail className="w-4 h-4" />
-            <span>Contact</span>
-          </a>
+            <span>{contactCopied ? "Email copied!" : "Contact"}</span>
+          </button>
         </div>
       </div>
     </div>
