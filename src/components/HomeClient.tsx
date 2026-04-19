@@ -63,13 +63,37 @@ export default function HomeClient({ session }: { session: Session | null }) {
     useHomeSessionSync(session, setAnonymous);
   const { showNativeResetPassword, setShowNativeResetPassword } =
     useNativeAuthDeepLink(liveSession);
-  const { currentBackground, backgroundPositionClass } =
+  const { currentBackground, desktopAlignment } =
     useJourneyBackground(currentStep);
   const { isMobile } = useViewportFlags();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSoftGateModal, setShowSoftGateModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
+
+  // Desktop crossfade state — mirrors MobileJourneyLayout pattern
+  const desktopShownBgRef = useRef(currentBackground);
+  const [desktopPrevBg, setDesktopPrevBg] = useState<string | null>(null);
+  const [desktopFadeOut, setDesktopFadeOut] = useState(false);
+
+  useEffect(() => {
+    if (currentBackground === desktopShownBgRef.current) return;
+
+    setDesktopPrevBg(desktopShownBgRef.current);
+    desktopShownBgRef.current = currentBackground;
+    setDesktopFadeOut(false);
+
+    const fadeTimer = setTimeout(() => setDesktopFadeOut(true), 50);
+    const cleanupTimer = setTimeout(() => {
+      setDesktopPrevBg(null);
+      setDesktopFadeOut(false);
+    }, 850);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(cleanupTimer);
+    };
+  }, [currentBackground]);
 
   // Reset invalid step to landing page
   useEffect(() => {
@@ -154,7 +178,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
           className="relative min-h-screen bg-cover"
           style={{
             backgroundImage: `url('/homepage-background.v3.jpg')`,
-            backgroundPosition: "center 65%",
+            backgroundPosition: "center 70%",
           }}
         >
           {/* Mobile Controls - Top Right with iOS safe area */}
@@ -196,40 +220,50 @@ export default function HomeClient({ session }: { session: Session | null }) {
       ) : (
         // Journey Screen - Clean Layout Swap
         <>
-          {/* DESKTOP LAYOUT: Stable split-screen (visible ≥ 768px) */}
-          <div className="hidden md:block bg-brand-stone">
-            <main className="flex flex-row h-screen overflow-hidden bg-brand-stone">
-              {/* Visual Pane - Left side with background image */}
+          {/* DESKTOP LAYOUT: Full-bleed background with crossfade (visible ≥ 768px) */}
+          <div className="hidden md:flex md:flex-col relative h-screen w-full overflow-hidden bg-brand-stone">
+            {/* Background Image Crossfade Container */}
+            <div className="absolute inset-0 z-0 overflow-hidden bg-brand-stone">
               <div
-                className={`w-[45%] h-screen bg-cover ${backgroundPositionClass} transition-all duration-1000`}
+                className={`absolute inset-0 bg-cover ${desktopAlignment}`}
                 style={{ backgroundImage: `url('${currentBackground}')` }}
               />
-
-              {/* Content Pane - Right side with content */}
-              <div className="w-[55%] h-screen flex flex-col relative bg-brand-stone p-8 overflow-hidden">
-                {/* Header */}
-                {isJourneyScreen && (
-                  <div className="flex-shrink-0">
-                    <HeaderDesktop />
-                  </div>
-                )}
-
-                {/* Main Content - Scrollable */}
+              {desktopPrevBg && (
                 <div
-                  ref={desktopScrollRef}
-                  className="flex-grow flex flex-col py-6 pr-2 overflow-y-auto scrollbar-thin bg-brand-stone"
-                >
+                  className={`absolute inset-0 bg-cover ${desktopAlignment} transition-opacity duration-[800ms] ease-in-out ${
+                    desktopFadeOut ? "opacity-0" : "opacity-100"
+                  }`}
+                  style={{ backgroundImage: `url('${desktopPrevBg}')` }}
+                />
+              )}
+            </div>
+
+            {/* Content Layer */}
+            <div className="relative z-10 flex flex-col h-screen p-8 overflow-hidden">
+              {/* Header */}
+              {isJourneyScreen && (
+                <div className="flex-shrink-0">
+                  <HeaderDesktop />
+                </div>
+              )}
+
+              {/* Main Content - Scrollable */}
+              <div
+                ref={desktopScrollRef}
+                className="flex-grow flex flex-col py-6 overflow-y-auto scrollbar-thin items-center"
+              >
+                <div className="w-full max-w-[672px]">
                   {renderCurrentScreen()}
                 </div>
-
-                {/* Footer */}
-                {isJourneyScreen && (
-                  <div className="flex-shrink-0 pt-5 pb-1">
-                    <DesktopSaveFooter session={liveSession} />
-                  </div>
-                )}
               </div>
-            </main>
+
+              {/* Footer */}
+              {isJourneyScreen && (
+                <div className="flex-shrink-0 pt-5 pb-1">
+                  <DesktopSaveFooter session={liveSession} />
+                </div>
+              )}
+            </div>
           </div>
 
           {/* MOBILE LAYOUT: Fading bottom sheet (visible < 768px) */}
