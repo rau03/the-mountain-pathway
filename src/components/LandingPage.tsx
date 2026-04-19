@@ -131,13 +131,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           />
 
           {/* Contact Link */}
-          <button
-            onClick={() => openEmail("hello@themountainpathway.com")}
+          <a
+            href="mailto:hello@themountainpathway.com"
+            onClick={(e) => {
+              if (Capacitor.isNativePlatform()) {
+                e.preventDefault();
+                void openEmail("hello@themountainpathway.com");
+              }
+            }}
             className="flex items-center gap-1.5 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_3px_rgba(0,0,0,0.4)]"
           >
             <Mail className="w-4 h-4" />
             <span>Contact</span>
-          </button>
+          </a>
         </div>
       </div>
     </div>
