@@ -18,6 +18,7 @@ export interface PathwayStep {
   isSummary?: boolean;
   key: string;
   mobileAlignment?: string;
+  desktopAlignment?: string;
 }
 
 export interface PathwayContent {
@@ -138,6 +139,7 @@ export const pathwayData: PathwayStep[] = [
     isTimer: true,
     key: "begin",
     mobileAlignment: "[background-position:center_30%]",
+    desktopAlignment: "[background-position:center_80%]",
   },
   {
     stepIndex: 1,
@@ -168,6 +170,7 @@ Search me, O God, and know my heart! Try me and know my thoughts! And see if the
     isInput: false,
     key: "reflect",
     mobileAlignment: "[background-position:center_50%]",
+    desktopAlignment: "[background-position:center_40%]",
   },
   {
     stepIndex: 2,
@@ -181,6 +184,7 @@ Search me, O God, and know my heart! Try me and know my thoughts! And see if the
     isInput: true,
     key: "respond",
     mobileAlignment: "[background-position:center_50%]",
+    desktopAlignment: "[background-position:center_40%]",
   },
   {
     stepIndex: 3,
@@ -194,6 +198,7 @@ Search me, O God, and know my heart! Try me and know my thoughts! And see if the
     isInput: true,
     key: "thoughts",
     mobileAlignment: "[background-position:center_50%]",
+    desktopAlignment: "[background-position:center_70%]",
   },
   {
     stepIndex: 4,
@@ -207,6 +212,7 @@ Search me, O God, and know my heart! Try me and know my thoughts! And see if the
     isInput: true,
     key: "emotions",
     mobileAlignment: "[background-position:center_70%]",
+    desktopAlignment: "[background-position:center_70%]",
   },
   {
     stepIndex: 5,
@@ -220,6 +226,7 @@ Search me, O God, and know my heart! Try me and know my thoughts! And see if the
     isInput: true,
     key: "desire",
     mobileAlignment: "[background-position:center_70%]",
+    desktopAlignment: "[background-position:center_50%]",
   },
   {
     stepIndex: 6,
@@ -233,6 +240,7 @@ Search me, O God, and know my heart! Try me and know my thoughts! And see if the
     isInput: true,
     key: "pause",
     mobileAlignment: "[background-position:center_50%]",
+    desktopAlignment: "[background-position:center_50%]",
   },
   {
     stepIndex: 7,
@@ -246,6 +254,7 @@ Search me, O God, and know my heart! Try me and know my thoughts! And see if the
     isInput: true,
     key: "choices",
     mobileAlignment: "[background-position:center_50%]",
+    desktopAlignment: "[background-position:center_50%]",
   },
   {
     stepIndex: 8,
@@ -264,6 +273,7 @@ Search me, O God, and know my heart! Try me and know my thoughts! And see if the
     isSummary: true,
     key: "prayer",
     mobileAlignment: "[background-position:center_50%]",
+    desktopAlignment: "[background-position:center_50%]",
   },
 ];
 

@@ -267,14 +267,14 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       {/* Header */}
       <div className="text-center">
         <div className="flex justify-center mb-4">
-          <div className="p-4 bg-amber-100 rounded-full">
+          <div className="p-4 bg-black/25 backdrop-blur-md rounded-full border border-white/10">
             <CheckCircle className="w-8 h-8 text-brand-gold" />
           </div>
         </div>
-        <h2 className="text-3xl font-bold mb-2 text-brand-slate">
+        <h2 className="text-3xl font-bold mb-2 text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.65)]">
           {pathwayContent.summaryPage.title}
         </h2>
-        <p className="text-lg text-brand-slate/90">
+        <p className="text-lg text-white/90 [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]">
           {pathwayContent.summaryPage.subtitle}
         </p>
       </div>
@@ -354,7 +354,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
             disabled={downloading}
             variant="ghost"
             size="sm"
-            className="font-medium text-sm text-brand-slate/80 hover:text-brand-slate"
+            className="font-medium text-sm text-white bg-black/30 border border-white/20 backdrop-blur-sm hover:bg-black/40"
           >
             <Download className="w-4 h-4" />
             <span>
@@ -368,7 +368,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
             onClick={handleCopyToClipboard}
             variant="ghost"
             size="sm"
-            className="font-medium text-sm text-brand-slate/80 hover:text-brand-slate"
+            className="font-medium text-sm text-white bg-black/30 border border-white/20 backdrop-blur-sm hover:bg-black/40"
           >
             {copied ? (
               <CheckCircle className="w-4 h-4 text-brand-gold" />
@@ -386,10 +386,10 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
       {/* Support & Legal */}
       <div className={`w-full flex flex-col items-center space-y-3 ${isMobile ? "pt-10" : "pt-8"}`}>
-        <BuyMeCoffeeLink className="inline-flex items-center gap-2 text-sm text-brand-slate/60 hover:text-brand-slate transition-colors" />
+        <BuyMeCoffeeLink className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/80 transition-colors [text-shadow:0_1px_4px_rgba(0,0,0,0.8)]" />
 
         {/* Legal Links */}
-        <div className="flex items-center justify-center gap-3 text-xs text-brand-slate/40">
+        <div className="flex items-center justify-center gap-3 text-xs text-white/60 [text-shadow:0_1px_4px_rgba(0,0,0,0.8)]">
           <a
             href="https://themountainpathway.com/terms"
             target="_blank"
@@ -398,7 +398,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
               e.preventDefault();
               void openExternalUrl("https://themountainpathway.com/terms");
             }}
-            className="hover:text-brand-slate/70 transition-colors"
+            className="hover:text-white/80 transition-colors"
           >
             Terms
           </a>
@@ -411,7 +411,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
               e.preventDefault();
               void openExternalUrl("https://themountainpathway.com/privacy");
             }}
-            className="hover:text-brand-slate/70 transition-colors"
+            className="hover:text-white/80 transition-colors"
           >
             Privacy
           </a>
@@ -424,28 +424,31 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
               e.preventDefault();
               void openExternalUrl("https://themountainpathway.com/data-deletion");
             }}
-            className="hover:text-brand-slate/70 transition-colors"
+            className="hover:text-white/80 transition-colors"
           >
             Data Deletion
           </a>
           <span>·</span>
-          <button
-            type="button"
-            onClick={() => void openEmail("hello@themountainpathway.com")}
-            className="hover:text-brand-slate/70 transition-colors"
+          <a
+            href="mailto:hello@themountainpathway.com"
+            onClick={(e) => {
+              e.preventDefault();
+              void openEmail("hello@themountainpathway.com");
+            }}
+            className="hover:text-white/80 transition-colors"
           >
             Contact
-          </button>
+          </a>
         </div>
 
         {/* Creator Attribution */}
-        <p className="text-xs text-brand-slate/40">
+        <p className="text-xs text-white/60 [text-shadow:0_1px_4px_rgba(0,0,0,0.8)]">
           The Mountain Pathway created by{" "}
           <a
             href="https://www.webdevbyrau.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-brand-slate/70 transition-colors underline"
+            className="hover:text-white/80 transition-colors underline"
           >
             webdevbyrau
           </a>
