@@ -386,19 +386,21 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
       {/* Support & Legal */}
       <div className={`w-full flex flex-col items-center space-y-3 ${isMobile ? "pt-10" : "pt-8"}`}>
-        <BuyMeCoffeeLink className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/80 transition-colors [text-shadow:0_1px_4px_rgba(0,0,0,0.8)]" />
+        <BuyMeCoffeeLink className="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]" />
 
         {/* Legal Links */}
-        <div className="flex items-center justify-center gap-3 text-xs text-white/60 [text-shadow:0_1px_4px_rgba(0,0,0,0.8)]">
+        <div className="flex items-center justify-center gap-3 text-xs text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
           <a
             href="https://themountainpathway.com/terms"
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => {
-              e.preventDefault();
-              void openExternalUrl("https://themountainpathway.com/terms");
+              if (Capacitor.isNativePlatform()) {
+                e.preventDefault();
+                void openExternalUrl("https://themountainpathway.com/terms");
+              }
             }}
-            className="hover:text-white/80 transition-colors"
+            className="hover:text-white transition-colors"
           >
             Terms
           </a>
@@ -408,10 +410,12 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => {
-              e.preventDefault();
-              void openExternalUrl("https://themountainpathway.com/privacy");
+              if (Capacitor.isNativePlatform()) {
+                e.preventDefault();
+                void openExternalUrl("https://themountainpathway.com/privacy");
+              }
             }}
-            className="hover:text-white/80 transition-colors"
+            className="hover:text-white transition-colors"
           >
             Privacy
           </a>
@@ -421,10 +425,12 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => {
-              e.preventDefault();
-              void openExternalUrl("https://themountainpathway.com/data-deletion");
+              if (Capacitor.isNativePlatform()) {
+                e.preventDefault();
+                void openExternalUrl("https://themountainpathway.com/data-deletion");
+              }
             }}
-            className="hover:text-white/80 transition-colors"
+            className="hover:text-white transition-colors"
           >
             Data Deletion
           </a>
@@ -432,23 +438,25 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
           <a
             href="mailto:hello@themountainpathway.com"
             onClick={(e) => {
-              e.preventDefault();
-              void openEmail("hello@themountainpathway.com");
+              if (Capacitor.isNativePlatform()) {
+                e.preventDefault();
+                void openEmail("hello@themountainpathway.com");
+              }
             }}
-            className="hover:text-white/80 transition-colors"
+            className="hover:text-white transition-colors"
           >
             Contact
           </a>
         </div>
 
         {/* Creator Attribution */}
-        <p className="text-xs text-white/60 [text-shadow:0_1px_4px_rgba(0,0,0,0.8)]">
+        <p className="text-xs text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
           The Mountain Pathway created by{" "}
           <a
             href="https://www.webdevbyrau.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white/80 transition-colors underline"
+            className="hover:text-white transition-colors underline"
           >
             webdevbyrau
           </a>
