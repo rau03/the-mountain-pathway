@@ -174,7 +174,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         )}
 
         {/* Spacer - Visual Area Above Content (shrinkable so footer stays visible) */}
-        <div className="min-h-[5dvh] h-[8dvh]" />
+        <div className="min-h-[5dvh] h-[4dvh]" />
 
         {/* Bottom Sheet - Scrollable content region */}
         <div
@@ -182,7 +182,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
           className={`${bottomSheetClass} overflow-y-auto overscroll-y-contain px-6 ${
             isKeyboardOpen
               ? "pb-8"
-              : "pb-[calc(env(safe-area-inset-bottom,0px)+5rem)]"
+              : "pb-[calc(env(safe-area-inset-bottom,0px)+4rem)]"
           }`}
         >
           <JourneyScreen />
