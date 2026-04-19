@@ -42,6 +42,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
   const [saveLoading, setSaveLoading] = React.useState(false);
   const [showAuthModal, setShowAuthModal] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
+  const [contactCopied, setContactCopied] = React.useState(false);
 
   React.useEffect(() => {
     const checkMobile = () => {
@@ -435,18 +436,21 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
             Data Deletion
           </a>
           <span>·</span>
-          <a
-            href="mailto:hello@themountainpathway.com"
-            onClick={(e) => {
+          <button
+            onClick={() => {
               if (Capacitor.isNativePlatform()) {
-                e.preventDefault();
                 void openEmail("hello@themountainpathway.com");
+              } else {
+                void navigator.clipboard.writeText("hello@themountainpathway.com").then(() => {
+                  setContactCopied(true);
+                  setTimeout(() => setContactCopied(false), 2000);
+                });
               }
             }}
-            className="hover:text-white transition-colors"
+            className="hover:text-white transition-colors [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]"
           >
-            Contact
-          </a>
+            {contactCopied ? "Email copied!" : "Contact"}
+          </button>
         </div>
 
         {/* Creator Attribution */}
