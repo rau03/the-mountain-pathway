@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { getBackgroundForStep } from "@/lib/pathway-data";
+import { getBackgroundForStep, pathwayData } from "@/lib/pathway-data";
+
+const DEFAULT_DESKTOP_ALIGNMENT = "[background-position:center_50%]";
 
 export function useJourneyBackground(currentStep: number) {
   const [currentBackground, setCurrentBackground] = useState(
@@ -24,10 +26,15 @@ export function useJourneyBackground(currentStep: number) {
     }
   }, [currentStep, currentBackground]);
 
-  const backgroundPositionClass = currentStep === 0 ? "bg-bottom" : "bg-center";
+  const stepData =
+    currentStep >= 0 && currentStep < pathwayData.length
+      ? pathwayData[currentStep]
+      : null;
+  const desktopAlignment =
+    stepData?.desktopAlignment || DEFAULT_DESKTOP_ALIGNMENT;
 
   return {
     currentBackground,
-    backgroundPositionClass,
+    desktopAlignment,
   };
 }

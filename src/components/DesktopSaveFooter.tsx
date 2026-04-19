@@ -120,7 +120,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
         </div>
 
         <div className="flex flex-col items-center gap-2">
-          <p className="text-sm text-brand-slate/70">
+          <p className="text-sm text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
             {currentStep === 9 ? (
               "Complete"
             ) : (
@@ -129,7 +129,7 @@ export const DesktopSaveFooter = ({ session }: DesktopSaveFooterProps) => {
               </>
             )}
           </p>
-          <BuyMeCoffeeLink className="inline-flex items-center gap-2 text-sm text-brand-slate/50 hover:text-brand-slate/70 transition-colors" />
+          <BuyMeCoffeeLink className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white/80 transition-colors [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]" />
         </div>
 
         <div className="flex items-center justify-end gap-2">

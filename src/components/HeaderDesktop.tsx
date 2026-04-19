@@ -28,10 +28,10 @@ export const HeaderDesktop: React.FC = () => {
           </span>
         )}
         <div className="flex flex-col">
-          <h1 className="text-2xl font-bold text-brand-slate leading-tight">
+          <h1 className="text-2xl font-bold text-white leading-tight [text-shadow:0_1px_3px_rgba(0,0,0,0.6)]">
             The Mountain Pathway
           </h1>
-          <p className="text-base text-brand-slate/70 leading-tight">
+          <p className="text-base text-white/80 leading-tight [text-shadow:0_1px_3px_rgba(0,0,0,0.6)]">
             Climb inward. Look upward.
           </p>
         </div>

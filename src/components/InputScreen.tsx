@@ -75,13 +75,13 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
     step.stepIndex === 8;
 
   const titleClass = isImageFirstInputStep
-    ? "text-3xl font-bold mb-2 text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.65)] md:text-slate-900 md:[text-shadow:none]"
+    ? "text-3xl font-bold mb-2 text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.65)]"
     : "text-3xl font-bold mb-2 text-slate-900";
   const subtitleClass = isImageFirstInputStep
-    ? "text-lg text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] md:text-slate-800 md:[text-shadow:none]"
+    ? "text-lg text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
     : "text-lg text-slate-800";
   const promptClass = isImageFirstInputStep
-    ? "leading-relaxed text-center text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] pr-2 md:text-slate-800 md:[text-shadow:none]"
+    ? "leading-relaxed text-center text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] pr-2"
     : "leading-relaxed text-center text-slate-800 pr-2";
   const promptCalloutClass = isImageFirstInputStep
     ? "mx-auto mt-1 px-1 py-0"
@@ -93,13 +93,13 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
     ? "relative z-10 space-y-4 px-4 py-5"
     : "";
   const iconWrapClass = isImageFirstInputStep
-    ? "p-4 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden md:bg-amber-100 md:border-transparent md:backdrop-blur-none"
+    ? "p-4 bg-black/25 backdrop-blur-md rounded-full border border-white/10 overflow-hidden"
     : "p-4 bg-amber-100 rounded-full";
   const inputCardClass = isImageFirstInputStep
     ? "w-full h-48 bg-white/65 rounded-lg p-6 shadow-lg border border-white/40 text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed"
     : "w-full h-48 bg-white/50 rounded-lg p-6 shadow-md border border-slate-300 text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-gold focus:border-transparent resize-none leading-relaxed";
   const countTextClass = isImageFirstInputStep
-    ? "text-xs text-white/95 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)] md:text-slate-600 md:[text-shadow:none]"
+    ? "text-xs text-white/95 [text-shadow:0_1px_4px_rgba(0,0,0,0.5)]"
     : "text-xs text-slate-600";
   const prayerGuideCardClass = isImageFirstInputStep
     ? "relative rounded-2xl overflow-hidden"
@@ -108,23 +108,23 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
     ? "relative z-10 space-y-4 px-4 py-5"
     : "";
   const prayerGuideIntroClass = isImageFirstInputStep
-    ? "text-sm text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] mb-4 md:text-slate-800 md:[text-shadow:none]"
+    ? "text-sm text-white [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] mb-4"
     : "text-sm text-slate-800 mb-4";
   const prayerGuideTitleClass = isImageFirstInputStep
-    ? "font-semibold text-white text-sm mb-1 [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] md:text-slate-900 md:[text-shadow:none]"
+    ? "font-semibold text-white text-sm mb-1 [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
     : "font-semibold text-slate-900 text-sm mb-1";
   const prayerGuideContentClass = isImageFirstInputStep
-    ? "text-sm text-white leading-relaxed [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] md:text-slate-800 md:[text-shadow:none]"
+    ? "text-sm text-white leading-relaxed [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
     : "text-sm text-slate-800 leading-relaxed";
   const prayerGuideButtonClass = isImageFirstInputStep
-    ? "px-4 py-2 bg-black/25 hover:bg-black/30 backdrop-blur-md border border-white/10 rounded-lg text-sm text-white font-semibold transition-colors shadow-sm md:bg-white/50 md:hover:bg-white/60 md:border-slate-300 md:text-slate-800 md:backdrop-blur-none"
+    ? "px-4 py-2 bg-black/25 hover:bg-black/30 backdrop-blur-md border border-white/10 rounded-lg text-sm text-white font-semibold transition-colors shadow-sm"
     : "px-4 py-2 bg-white/50 hover:bg-white/60 border border-slate-300 rounded-lg text-sm text-slate-800 font-semibold transition-colors shadow-sm";
   const summaryCardClass = isImageFirstInputStep
     ? "relative rounded-2xl overflow-hidden"
     : "bg-white/50 border border-slate-300 rounded-lg p-4 shadow-sm";
   const summaryInnerClass = isImageFirstInputStep ? "relative z-10 px-4 py-5" : "";
   const summaryTextClass = isImageFirstInputStep
-    ? "text-white text-sm text-center [text-shadow:0_2px_7px_rgba(0,0,0,0.6)] md:text-brand-slate md:[text-shadow:none]"
+    ? "text-white text-sm text-center [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
     : "text-brand-slate text-sm text-center";
 
   // Prayer guidance points for Step 9
@@ -164,7 +164,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
     >
       <div className={textCardClass}>
         {isImageFirstInputStep && (
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20 md:bg-none md:bg-brand-stone/85" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
         )}
         <div className={textCardInnerClass}>
           {/* Step Icon */}
@@ -198,7 +198,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
             <AccordionContent className="pt-2">
               <div className={prayerGuideCardClass}>
                 {isImageFirstInputStep && (
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20 md:bg-none md:bg-brand-stone/85" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
                 )}
                 <div className={prayerGuideInnerClass}>
                   <p className={prayerGuideIntroClass}>
@@ -249,7 +249,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
         <div className="pr-2">
           <div className={summaryCardClass}>
             {isImageFirstInputStep && (
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20 md:bg-none md:bg-brand-stone/85" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/20" />
             )}
             <div className={summaryInnerClass}>
               <p className={summaryTextClass}>
