@@ -33,6 +33,7 @@ This is more than writing in a journal. It is a pathway for discipleship — one
 - Move through discipleship-focused steps that build trust, surrender, and obedience
 - Develop a consistent rhythm of prayer and spiritual reflection
 - Save your journey and return to it as God continues your story
+- Contact the team directly through the in-app contact form
 
 ---
 
@@ -62,10 +63,11 @@ This is more than writing in a journal. It is a pathway for discipleship — one
 | UI | React, Framer Motion |
 | Database | Supabase (PostgreSQL + RLS) |
 | Auth | Supabase Auth |
-| State | Zustand (with persist) |
+| State | Zustand (with persist, version 4) |
 | Native iOS | Capacitor iOS |
+| Email | Resend |
 | PDF Generation | jsPDF |
-| Testing | Vitest (41 tests, 13 test files) |
+| Testing | Vitest (56 tests, 16 test files) |
 
 ---
 
@@ -74,26 +76,32 @@ This is more than writing in a journal. It is a pathway for discipleship — one
 ```
 src/
 ├── app/                        # Next.js App Router pages and API routes
-│   ├── api/                    # Server-side API routes
-│   └── (pages)/                # Page components
+│   └── api/
+│       ├── auth/               # Account deletion route
+│       └── contact/            # Contact form email route (Resend)
 ├── components/                 # React components
 │   ├── HomeClient.tsx          # Desktop full-bleed layout with crossfade
 │   ├── MobileJourneyLayout.tsx # Mobile layout with background crossfade
 │   ├── MobileSaveFooter.tsx    # Mobile journey footer
 │   ├── DesktopSaveFooter.tsx   # Desktop journey footer
 │   ├── HeaderDesktop.tsx       # Desktop header
-│   ├── TimerScreen.tsx         # Step 1 — silence timer
+│   ├── TimerScreen.tsx         # Step 1 — silence timer with chime
 │   ├── InputScreen.tsx         # Steps 2–9 — text input
 │   ├── ReflectionScreen.tsx    # Reflection steps
 │   ├── SummaryScreen.tsx       # Step 9 summary, PDF, Journey Complete
 │   ├── LandingPage.tsx         # Landing page
+│   ├── ContactFormModal.tsx    # In-app contact form modal
+│   ├── OfflineBanner.tsx       # Global offline detection banner
 │   └── SavedJourneysView.tsx   # Saved journeys modal
 ├── hooks/
 │   ├── useJourneyBackground.ts # Per-step background image + alignment
-│   └── useHomeSessionSync.ts   # Auth session sync
+│   ├── useHomeSessionSync.ts   # Auth session sync
+│   ├── useOnlineStatus.ts      # Online/offline detection
+│   └── useReconnectEffect.ts   # Auto-reconnect callback hook
 ├── lib/
-│   ├── journeyApi.ts           # Supabase journey API calls
+│   ├── journeyApi.ts           # Supabase journey API calls (timeout-wrapped)
 │   ├── pathway-data.ts         # 9-step content + image alignment data
+│   ├── withTimeout.ts          # Promise.race timeout utility
 │   └── capacitorUtils.ts       # isNativeApp, openExternalUrl, openEmail
 └── store/
     └── useStore.ts             # Zustand store with persist (version 4)
@@ -103,6 +111,10 @@ ios/
     ├── Podfile                 # CocoaPods — core Capacitor + Filesystem
     └── CapApp-SPM/
         └── Package.swift       # Swift Package Manager plugin registration
+
+public/
+├── singlechime.wav             # Timer completion chime audio
+└── audio/                      # Background ambient audio tracks
 ```
 
 ---
@@ -120,6 +132,18 @@ Desktop web uses a two-layer CSS crossfade (800ms) that mirrors the mobile `Mobi
 
 **PDF Share (iOS)**
 PDFs are written to `Directory.Cache` via `@capacitor/filesystem`, then shared via `Share.share({ files: [uri] })`. This produces a proper file attachment rather than dumping base64 into an email body.
+
+**Supabase Request Timeouts**
+All Supabase API calls are wrapped with `withTimeout()` (15s default via `Promise.race`). Calls fail gracefully with a clear error message instead of hanging indefinitely on slow or lost connections.
+
+**Offline Detection**
+A global `OfflineBanner` component mounted in the root layout detects connectivity via `navigator.onLine` and window `online`/`offline` events. Shows an amber banner when offline, a green confirmation on reconnect. The `useReconnectEffect` hook automatically refreshes stale data when the connection restores.
+
+**In-App Contact Form**
+A modal contact form (matching app styling exactly) sends messages via Resend to `hello@themountainpathway.com`. Works on web and iOS WebView. Available from the landing page and the Journey Complete screen.
+
+**Timer Completion Chime**
+A gentle meditation chime (`singlechime.wav`) plays when the Step 1 silence timer reaches zero. The Audio element is primed during the "Begin Silence" tap to satisfy iOS audio unlock requirements. Plays independently of the background music toggle.
 
 **Auto-Save**
 Auto-save fires on every step advance via `handleNextStep`. There are no manual save buttons mid-journey. The only explicit save is the journey title flow at the Summary screen (Step 9) via `SaveJourneyModal`.
@@ -163,6 +187,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 NEXT_PUBLIC_IS_IOS_BUILD=false
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+RESEND_API_KEY=your_resend_api_key
 ```
 
 ---
@@ -188,21 +213,21 @@ open ios/App/App.xcworkspace
 
 In Xcode: **Product → Archive → Distribute → App Store Connect → Submit for Review**
 
-> **Note:** Use `npm run build:capacitor` (not `npm run build`) for all Capacitor builds. After adding any new Capacitor native plugin, always run `pod install` in `ios/App` in addition to `cap sync ios`.
+> **Important:** Use `npm run build:capacitor` (not `npm run build`) for all Capacitor builds. After adding any new Capacitor native plugin, always run `pod install` in `ios/App` in addition to `cap sync ios`.
 
 ---
 
 ## Testing
 
 ```bash
-# Run full test suite (41 tests across 13 test files)
+# Run full test suite (56 tests across 16 test files)
 npx vitest run
 
 # Watch mode
 npx vitest
 ```
 
-All 41 tests must pass before any PR is merged.
+All 56 tests must pass before any PR is merged.
 
 ---
 
@@ -214,7 +239,7 @@ All 41 tests must pass before any PR is merged.
 | 1.0.1 | April 11, 2026 | Footer safe area fix, category → Lifestyle + Reference |
 | 1.0.2 | April 12, 2026 | Deleted journeys race condition fix, redundant save buttons removed |
 | 1.0.3 | April 18, 2026 | Guest entry persistence privacy fix, PDF email attachment fix |
-| 1.0.4 | April 18, 2026 | Full-bleed desktop background redesign, mobile web viewport fix, contact link improvements |
+| 1.0.4 | June 2026 | Hydration fix, in-app contact form, offline banner, Supabase timeouts, auto-reconnect, timer chime |
 
 ---
 
@@ -226,7 +251,7 @@ This project uses a structured Cursor-assisted development workflow:
 2. **Report back** — findings with file names and line numbers
 3. **Approve before acting** — no code changes without explicit approval
 4. **One fix per branch** — never combine multiple fixes
-5. **Tests must pass** — all 41 tests green before any commit
+5. **Tests must pass** — all 56 tests green before any commit
 6. **Verify on device** — Vercel preview and iPhone testing before merging to main
 
 ---
