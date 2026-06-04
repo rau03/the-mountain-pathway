@@ -18,11 +18,11 @@ import SaveJourneyModal from "@/components/SaveJourneyModal";
 import AuthModal from "@/components/AuthModal";
 import { saveJourney, updateJourney } from "@/lib/journeyApi";
 import {
-  openEmail,
   openExternalUrl,
   triggerSuccessHaptic,
 } from "@/lib/capacitorUtils";
 import BuyMeCoffeeLink from "@/components/BuyMeCoffeeLink";
+import ContactFormModal from "@/components/ContactFormModal";
 
 export const SummaryScreen: React.FC<{ session: Session | null }> = ({
   session,
@@ -42,7 +42,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
   const [saveLoading, setSaveLoading] = React.useState(false);
   const [showAuthModal, setShowAuthModal] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
-  const [contactCopied, setContactCopied] = React.useState(false);
+  const [contactOpen, setContactOpen] = React.useState(false);
 
   React.useEffect(() => {
     const checkMobile = () => {
@@ -437,19 +437,10 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
           </a>
           <span>·</span>
           <button
-            onClick={() => {
-              if (Capacitor.isNativePlatform()) {
-                void openEmail("hello@themountainpathway.com");
-              } else {
-                void navigator.clipboard.writeText("hello@themountainpathway.com").then(() => {
-                  setContactCopied(true);
-                  setTimeout(() => setContactCopied(false), 2000);
-                });
-              }
-            }}
+            onClick={() => setContactOpen(true)}
             className="hover:text-white transition-colors [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]"
           >
-            {contactCopied ? "Email copied!" : "Contact"}
+            Contact
           </button>
         </div>
 
@@ -487,6 +478,9 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         onOpenChange={setShowAuthModal}
         session={session}
       />
+
+      {/* Contact Form Modal */}
+      <ContactFormModal open={contactOpen} onOpenChange={setContactOpen} />
     </motion.div>
   );
 };
