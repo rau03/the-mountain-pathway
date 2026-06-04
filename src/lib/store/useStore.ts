@@ -33,8 +33,8 @@ const isFreshWebVisit = (): boolean => {
 };
 
 const createNewEntry = (): JournalEntry => ({
-  id: Date.now().toString(),
-  createdAt: new Date().toISOString(),
+  id: "",
+  createdAt: "",
   responses: {},
   completed: false,
 });
