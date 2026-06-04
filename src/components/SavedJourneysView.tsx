@@ -58,26 +58,14 @@ export default function SavedJourneysView({
     setLoading(true);
     setError(null);
 
-    // Add timeout to prevent infinite loading
-    const timeoutId = setTimeout(() => {
-      if (requestId !== loadRequestIdRef.current) {
-        return;
-      }
-      setLoading(false);
-      setError(
-        "Loading timed out. Please check your connection and try again."
-      );
-    }, 15000); // 15 second timeout
-
     try {
+      // fetchUserJourneys is now internally timeout-protected via withTimeout
       const userJourneys = await fetchUserJourneys();
-      clearTimeout(timeoutId);
       if (requestId !== loadRequestIdRef.current) {
         return;
       }
       setJourneys(userJourneys);
     } catch (err) {
-      clearTimeout(timeoutId);
       if (requestId !== loadRequestIdRef.current) {
         return;
       }
