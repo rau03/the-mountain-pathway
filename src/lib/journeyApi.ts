@@ -1,5 +1,6 @@
 import supabase from "@/lib/supabaseClient";
 import type { JournalEntry } from "@/types";
+import { withTimeout } from "@/lib/withTimeout";
 
 export interface SavedJourney {
   id: string;
@@ -54,61 +55,67 @@ function getPromptForStepKey(stepKey: string): string {
 export async function saveJourney(
   data: SaveJourneyData
 ): Promise<SavedJourney> {
-  if (!supabase) {
-    throw new Error("Supabase is not configured");
-  }
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  return withTimeout(
+    (async (): Promise<SavedJourney> => {
+      if (!supabase) {
+        throw new Error("Supabase is not configured");
+      }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  if (!user) {
-    throw new Error("User must be authenticated to save journeys");
-  }
+      if (!user) {
+        throw new Error("User must be authenticated to save journeys");
+      }
 
-  // Save journey metadata to journeys table
-  const { data: savedJourney, error: journeyError } = await supabase
-    .from("journeys")
-    .insert({
-      user_id: user.id,
-      title: data.title,
-      current_step: data.currentStep,
-      is_completed: data.isCompleted,
-    })
-    .select(
-      "id, user_id, title, current_step, is_completed, created_at, updated_at"
-    )
-    .single();
+      // Save journey metadata to journeys table
+      const { data: savedJourney, error: journeyError } = await supabase
+        .from("journeys")
+        .insert({
+          user_id: user.id,
+          title: data.title,
+          current_step: data.currentStep,
+          is_completed: data.isCompleted,
+        })
+        .select(
+          "id, user_id, title, current_step, is_completed, created_at, updated_at"
+        )
+        .single();
 
-  if (journeyError) {
-    console.error("Error saving journey:", journeyError);
-    throw new Error(`Failed to save journey: ${journeyError.message}`);
-  }
+      if (journeyError) {
+        console.error("Error saving journey:", journeyError);
+        throw new Error(`Failed to save journey: ${journeyError.message}`);
+      }
 
-  // Save individual steps to journey_steps table
-  const stepsToInsert = Object.entries(data.currentEntry.responses)
-    .filter(([, response]) => response && response.trim())
-    .map(([stepKey, response], index) => ({
-      journey_id: savedJourney.id,
-      step_number: index,
-      step_key: stepKey,
-      prompt_text: getPromptForStepKey(stepKey),
-      user_response: response,
-    }));
+      // Save individual steps to journey_steps table
+      const stepsToInsert = Object.entries(data.currentEntry.responses)
+        .filter(([, response]) => response && response.trim())
+        .map(([stepKey, response], index) => ({
+          journey_id: savedJourney.id,
+          step_number: index,
+          step_key: stepKey,
+          prompt_text: getPromptForStepKey(stepKey),
+          user_response: response,
+        }));
 
-  if (stepsToInsert.length > 0) {
-    const { error: stepsError } = await supabase
-      .from("journey_steps")
-      .insert(stepsToInsert);
+      if (stepsToInsert.length > 0) {
+        const { error: stepsError } = await supabase
+          .from("journey_steps")
+          .insert(stepsToInsert);
 
-    if (stepsError) {
-      console.error("Error saving journey steps:", stepsError);
-      // Clean up the journey if steps failed to save
-      await supabase.from("journeys").delete().eq("id", savedJourney.id);
-      throw new Error(`Failed to save journey steps: ${stepsError.message}`);
-    }
-  }
+        if (stepsError) {
+          console.error("Error saving journey steps:", stepsError);
+          // Clean up the journey if steps failed to save
+          await supabase.from("journeys").delete().eq("id", savedJourney.id);
+          throw new Error(`Failed to save journey steps: ${stepsError.message}`);
+        }
+      }
 
-  return savedJourney;
+      return savedJourney;
+    })(),
+    15000,
+    "Save journey"
+  );
 }
 
 /**
@@ -118,210 +125,240 @@ export async function updateJourney(
   id: string,
   data: Partial<SaveJourneyData>
 ): Promise<SavedJourney> {
-  if (!supabase) {
-    throw new Error("Supabase is not configured");
-  }
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    throw new Error("User must be authenticated to update journeys");
-  }
-
-  // Update journey metadata
-  const updateData: Record<string, unknown> = {};
-  if (data.title) updateData.title = data.title;
-  if (data.currentStep !== undefined)
-    updateData.current_step = data.currentStep;
-  if (data.isCompleted !== undefined)
-    updateData.is_completed = data.isCompleted;
-
-  const { data: updatedJourney, error: journeyError } = await supabase
-    .from("journeys")
-    .update(updateData)
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .select(
-      "id, user_id, title, current_step, is_completed, created_at, updated_at"
-    )
-    .single();
-
-  if (journeyError) {
-    console.error("Error updating journey:", journeyError);
-    throw new Error(`Failed to update journey: ${journeyError.message}`);
-  }
-
-  // Update steps if currentEntry is provided
-  if (data.currentEntry) {
-    // Delete existing steps for this journey
-    await supabase.from("journey_steps").delete().eq("journey_id", id);
-
-    // Insert updated steps
-    const stepsToInsert = Object.entries(data.currentEntry.responses)
-      .filter(([, response]) => response && response.trim())
-      .map(([stepKey, response], index) => ({
-        journey_id: id,
-        step_number: index,
-        step_key: stepKey,
-        prompt_text: getPromptForStepKey(stepKey),
-        user_response: response,
-      }));
-
-    if (stepsToInsert.length > 0) {
-      const { error: stepsError } = await supabase
-        .from("journey_steps")
-        .insert(stepsToInsert);
-
-      if (stepsError) {
-        console.error("Error updating journey steps:", stepsError);
-        throw new Error(
-          `Failed to update journey steps: ${stepsError.message}`
-        );
+  return withTimeout(
+    (async (): Promise<SavedJourney> => {
+      if (!supabase) {
+        throw new Error("Supabase is not configured");
       }
-    }
-  }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  return updatedJourney;
+      if (!user) {
+        throw new Error("User must be authenticated to update journeys");
+      }
+
+      // Update journey metadata
+      const updateData: Record<string, unknown> = {};
+      if (data.title) updateData.title = data.title;
+      if (data.currentStep !== undefined)
+        updateData.current_step = data.currentStep;
+      if (data.isCompleted !== undefined)
+        updateData.is_completed = data.isCompleted;
+
+      const { data: updatedJourney, error: journeyError } = await supabase
+        .from("journeys")
+        .update(updateData)
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .select(
+          "id, user_id, title, current_step, is_completed, created_at, updated_at"
+        )
+        .single();
+
+      if (journeyError) {
+        console.error("Error updating journey:", journeyError);
+        throw new Error(`Failed to update journey: ${journeyError.message}`);
+      }
+
+      // Update steps if currentEntry is provided
+      if (data.currentEntry) {
+        // Delete existing steps for this journey
+        await supabase.from("journey_steps").delete().eq("journey_id", id);
+
+        // Insert updated steps
+        const stepsToInsert = Object.entries(data.currentEntry.responses)
+          .filter(([, response]) => response && response.trim())
+          .map(([stepKey, response], index) => ({
+            journey_id: id,
+            step_number: index,
+            step_key: stepKey,
+            prompt_text: getPromptForStepKey(stepKey),
+            user_response: response,
+          }));
+
+        if (stepsToInsert.length > 0) {
+          const { error: stepsError } = await supabase
+            .from("journey_steps")
+            .insert(stepsToInsert);
+
+          if (stepsError) {
+            console.error("Error updating journey steps:", stepsError);
+            throw new Error(
+              `Failed to update journey steps: ${stepsError.message}`
+            );
+          }
+        }
+      }
+
+      return updatedJourney;
+    })(),
+    15000,
+    "Update journey"
+  );
 }
 
 /**
  * Fetch all user's saved journeys
  */
 export async function fetchUserJourneys(): Promise<SavedJourney[]> {
-  if (!supabase) {
-    throw new Error("Supabase is not configured");
-  }
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  return withTimeout(
+    (async (): Promise<SavedJourney[]> => {
+      if (!supabase) {
+        throw new Error("Supabase is not configured");
+      }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  if (!user) {
-    throw new Error("User must be authenticated to fetch journeys");
-  }
+      if (!user) {
+        throw new Error("User must be authenticated to fetch journeys");
+      }
 
-  const { data: journeys, error } = await supabase
-    .from("journeys")
-    .select(
-      "id, user_id, title, current_step, is_completed, created_at, updated_at"
-    )
-    .eq("user_id", user.id)
-    .order("created_at", { ascending: false });
+      const { data: journeys, error } = await supabase
+        .from("journeys")
+        .select(
+          "id, user_id, title, current_step, is_completed, created_at, updated_at"
+        )
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("Error fetching journeys:", error);
-    throw new Error(`Failed to fetch journeys: ${error.message}`);
-  }
+      if (error) {
+        console.error("Error fetching journeys:", error);
+        throw new Error(`Failed to fetch journeys: ${error.message}`);
+      }
 
-  return journeys || [];
+      return journeys || [];
+    })(),
+    15000,
+    "Load journeys"
+  );
 }
 
 /**
  * Fetch a specific journey by ID with its steps
  */
 export async function fetchJourney(id: string): Promise<SavedJourney> {
-  if (!supabase) {
-    throw new Error("Supabase is not configured");
-  }
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  return withTimeout(
+    (async (): Promise<SavedJourney> => {
+      if (!supabase) {
+        throw new Error("Supabase is not configured");
+      }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  if (!user) {
-    throw new Error("User must be authenticated to fetch journey");
-  }
+      if (!user) {
+        throw new Error("User must be authenticated to fetch journey");
+      }
 
-  // Fetch journey metadata
-  const { data: journey, error: journeyError } = await supabase
-    .from("journeys")
-    .select(
-      "id, user_id, title, current_step, is_completed, created_at, updated_at"
-    )
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .single();
+      // Fetch journey metadata
+      const { data: journey, error: journeyError } = await supabase
+        .from("journeys")
+        .select(
+          "id, user_id, title, current_step, is_completed, created_at, updated_at"
+        )
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .single();
 
-  if (journeyError) {
-    console.error("Error fetching journey:", journeyError);
-    throw new Error(`Failed to fetch journey: ${journeyError.message}`);
-  }
+      if (journeyError) {
+        console.error("Error fetching journey:", journeyError);
+        throw new Error(`Failed to fetch journey: ${journeyError.message}`);
+      }
 
-  // Fetch journey steps
-  const { data: steps, error: stepsError } = await supabase
-    .from("journey_steps")
-    .select(
-      "id, journey_id, step_number, step_key, prompt_text, user_response, created_at, updated_at"
-    )
-    .eq("journey_id", id)
-    .order("step_number", { ascending: true });
+      // Fetch journey steps
+      const { data: steps, error: stepsError } = await supabase
+        .from("journey_steps")
+        .select(
+          "id, journey_id, step_number, step_key, prompt_text, user_response, created_at, updated_at"
+        )
+        .eq("journey_id", id)
+        .order("step_number", { ascending: true });
 
-  if (stepsError) {
-    console.error("Error fetching journey steps:", stepsError);
-    throw new Error(`Failed to fetch journey steps: ${stepsError.message}`);
-  }
+      if (stepsError) {
+        console.error("Error fetching journey steps:", stepsError);
+        throw new Error(`Failed to fetch journey steps: ${stepsError.message}`);
+      }
 
-  return {
-    ...journey,
-    steps: steps || [],
-  };
+      return {
+        ...journey,
+        steps: steps || [],
+      };
+    })(),
+    15000,
+    "Load journey"
+  );
 }
 
 /**
  * Delete a saved journey and all its steps
  */
 export async function deleteJourney(id: string): Promise<void> {
-  if (!supabase) {
-    throw new Error("Supabase is not configured");
-  }
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  return withTimeout(
+    (async (): Promise<void> => {
+      if (!supabase) {
+        throw new Error("Supabase is not configured");
+      }
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  if (!user) {
-    throw new Error("User must be authenticated to delete journeys");
-  }
+      if (!user) {
+        throw new Error("User must be authenticated to delete journeys");
+      }
 
-  // Delete the journey (CASCADE will automatically delete related steps)
-  const { data, error } = await supabase
-    .from("journeys")
-    .delete()
-    .eq("id", id)
-    .eq("user_id", user.id)
-    .select("id");
+      // Delete the journey (CASCADE will automatically delete related steps)
+      const { data, error } = await supabase
+        .from("journeys")
+        .delete()
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .select("id");
 
-  if (error) {
-    console.error("Error deleting journey:", error);
-    throw new Error(`Failed to delete journey: ${error.message}`);
-  }
+      if (error) {
+        console.error("Error deleting journey:", error);
+        throw new Error(`Failed to delete journey: ${error.message}`);
+      }
 
-  if (!data || data.length === 0) {
-    throw new Error(
-      "No journey was deleted. It may be missing or you may not have permission."
-    );
-  }
+      if (!data || data.length === 0) {
+        throw new Error(
+          "No journey was deleted. It may be missing or you may not have permission."
+        );
+      }
+    })(),
+    15000,
+    "Delete journey"
+  );
 }
 
 /**
  * Check if user has any saved journeys
  */
 export async function hasUserJourneys(): Promise<boolean> {
-  if (!supabase) return false;
+  return withTimeout(
+    (async (): Promise<boolean> => {
+      if (!supabase) return false;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-  if (!user) return false;
+      if (!user) return false;
 
-  const { count, error } = await supabase
-    .from("journeys")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", user.id);
+      const { count, error } = await supabase
+        .from("journeys")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
 
-  if (error) {
-    console.error("Error checking user journeys:", error);
-    return false;
-  }
+      if (error) {
+        console.error("Error checking user journeys:", error);
+        return false;
+      }
 
-  return (count || 0) > 0;
+      return (count || 0) > 0;
+    })(),
+    15000,
+    "Check journeys"
+  );
 }
