@@ -26,6 +26,7 @@ import {
 } from "@/lib/journeyApi";
 import { useStore } from "@/lib/store/useStore";
 import { pathwayData } from "@/lib/pathway-data";
+import { useReconnectEffect } from "@/hooks/useReconnectEffect";
 import type { JournalEntry } from "@/types";
 
 type SavedJourneysViewProps = {
@@ -52,6 +53,13 @@ export default function SavedJourneysView({
       loadJourneys();
     }
   }, [open]);
+
+  // Refresh the list when the device comes back online (modal still open)
+  useReconnectEffect(() => {
+    if (open) {
+      void loadJourneys();
+    }
+  });
 
   const loadJourneys = async () => {
     const requestId = ++loadRequestIdRef.current;
