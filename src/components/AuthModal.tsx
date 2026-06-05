@@ -20,6 +20,7 @@ import supabase from "@/lib/supabaseClient";
 import SavedJourneysView from "@/components/SavedJourneysView";
 import { useStore } from "@/lib/store/useStore";
 import { getPublicSiteUrl, getEmailRedirectTo } from "@/lib/authRedirect";
+import { isNativeApp } from "@/lib/capacitorUtils";
 
 type AuthModalProps = {
   open: boolean;
@@ -224,7 +225,7 @@ export default function AuthModal({
     setAccountSuccess(null);
 
     try {
-      const response = await fetch("/api/auth/delete-account", {
+      const response = await fetch(`${isNativeApp() ? "https://www.themountainpathway.com" : ""}/api/auth/delete-account`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${currentSession.access_token}`,
