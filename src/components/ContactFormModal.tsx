@@ -104,7 +104,7 @@ export default function ContactFormModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full max-w-md">
+      <DialogContent className="w-full max-w-md" style={{ marginTop: "max(env(safe-area-inset-top, 0px), 44px)" }}>
         <DialogHeader>
           <DialogTitle>Get in Touch</DialogTitle>
           {!success && (

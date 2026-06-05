@@ -214,7 +214,7 @@ else
     exit 1
 fi
 
-NEXT_PUBLIC_SITE_URL=https://themountainpathway.com npx next build
+NEXT_PUBLIC_SITE_URL=https://www.themountainpathway.com npx next build
 
 # Check if build succeeded
 if [ -d "out" ] && [ -f "out/index.html" ]; then
