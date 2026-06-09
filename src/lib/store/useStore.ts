@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { AppState, JournalEntry } from "../../types";
 import { isNativeApp } from "@/lib/capacitorUtils";
+import { DEFAULT_TRANSLATION } from "@/lib/psalm139";
 
 const WEB_SESSION_FLAG = "mountain-pathway-web-session-active";
 
@@ -55,6 +56,10 @@ export const useStore = create<AppState>()(
       savedJourneyId: null,
       savedJourneyTitle: null,
       isDirty: false,
+      bibleTranslation: DEFAULT_TRANSLATION,
+
+      setBibleTranslation: (translation) =>
+        set({ bibleTranslation: translation }),
 
       setCurrentStep: (step: number) => set({ currentStep: step }),
 
@@ -173,7 +178,7 @@ export const useStore = create<AppState>()(
     }),
     {
       name: "mountain-pathway-storage",
-      version: 4,
+      version: 5,
       merge: (persistedState, currentState) => {
         const merged = { ...currentState, ...(persistedState as object) } as AppState;
         // On native app, always open at landing page (don't restore step position).
@@ -205,6 +210,7 @@ export const useStore = create<AppState>()(
             currentAudioTrack: state.currentAudioTrack,
             silenceTimer: state.silenceTimer,
             isAnonymous: state.isAnonymous,
+            bibleTranslation: state.bibleTranslation,
           };
         }
         return {
@@ -219,6 +225,7 @@ export const useStore = create<AppState>()(
           savedJourneyId: state.savedJourneyId,
           savedJourneyTitle: state.savedJourneyTitle,
           isDirty: state.isDirty,
+          bibleTranslation: state.bibleTranslation,
         };
       },
       migrate: (persistedState: unknown, version: number) => {
@@ -231,12 +238,17 @@ export const useStore = create<AppState>()(
             savedJourneyId: null,
             savedJourneyTitle: null,
             isDirty: false,
+            bibleTranslation: DEFAULT_TRANSLATION,
           };
         }
         // Migrate from version 2 to version 3 - add savedJourneyTitle
         let state = persistedState as Record<string, unknown>;
         if (!("savedJourneyTitle" in state)) {
           state = { ...state, savedJourneyTitle: null };
+        }
+        // Migrate from version 4 to version 5 - add bibleTranslation default
+        if (version < 5 && !("bibleTranslation" in state)) {
+          state = { ...state, bibleTranslation: DEFAULT_TRANSLATION };
         }
         // Migrate from version 3 to version 4 - strip guest entry data
         if (version < 4 && state.isAnonymous === true) {

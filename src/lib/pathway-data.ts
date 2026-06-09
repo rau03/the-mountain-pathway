@@ -9,7 +9,6 @@ export interface PathwayStep {
   prompt: string;
   icon: string;
   content?: {
-    scripture?: string;
     instructions?: string;
     specialMessage?: string;
   };
@@ -67,64 +66,6 @@ export interface PathwayContent {
   };
 }
 
-const psalm139Nlt =
-  "For the choir director: A psalm of David.\n\n" +
-  "O Lord, you have examined my heart\n" +
-  "and know everything about me.\n" +
-  "You know when I sit down or stand up.\n" +
-  "You know my thoughts even when I'm far away.\n" +
-  "You see me when I travel\n" +
-  "and when I rest at home.\n" +
-  "You know everything I do.\n" +
-  "You know what I am going to say\n" +
-  "even before I say it, Lord.\n" +
-  "You go before me and follow me.\n" +
-  "You place your hand of blessing on my head.\n" +
-  "Such knowledge is too wonderful for me,\n" +
-  "too great for me to understand!\n\n" +
-  "I can never escape from your Spirit!\n" +
-  "I can never get away from your presence!\n" +
-  "If I go up to heaven, you are there;\n" +
-  "if I go down to the grave, you are there.\n" +
-  "If I ride the wings of the morning,\n" +
-  "if I dwell by the farthest oceans,\n" +
-  "even there your hand will guide me,\n" +
-  "and your strength will support me.\n" +
-  "I could ask the darkness to hide me\n" +
-  "and the light around me to become night--\n" +
-  "but even in darkness I cannot hide from you.\n" +
-  "To you the night shines as bright as day.\n" +
-  "Darkness and light are the same to you.\n\n" +
-  "You made all the delicate, inner parts of my body\n" +
-  "and knit me together in my mother's womb.\n" +
-  "Thank you for making me so wonderfully complex!\n" +
-  "Your workmanship is marvelous--how well I know it.\n" +
-  "You watched me as I was being formed in utter seclusion,\n" +
-  "as I was woven together in the dark of the womb.\n" +
-  "You saw me before I was born.\n" +
-  "Every day of my life was recorded in your book.\n" +
-  "Every moment was laid out\n" +
-  "before a single day had passed.\n\n" +
-  "How precious are your thoughts about me, O God.\n" +
-  "They cannot be numbered!\n" +
-  "I can't even count them;\n" +
-  "they outnumber the grains of sand!\n" +
-  "And when I wake up,\n" +
-  "you are still with me!\n\n" +
-  "O God, if only you would destroy the wicked!\n" +
-  "Get out of my life, you murderers!\n" +
-  "They blaspheme you;\n" +
-  "your enemies misuse your name.\n" +
-  "O Lord, shouldn't I hate those who hate you?\n" +
-  "Shouldn't I despise those who oppose you?\n" +
-  "Yes, I hate them with total hatred,\n" +
-  "for your enemies are my enemies.\n\n" +
-  "Search me, O God, and know my heart;\n" +
-  "test me and know my anxious thoughts.\n" +
-  "Point out anything in me that offends you,\n" +
-  "and lead me along the path of everlasting life.\n\n" +
-  "-- Psalm 139 (New Living Translation)";
-
 export const pathwayData: PathwayStep[] = [
   {
     stepIndex: 0,
@@ -151,20 +92,6 @@ export const pathwayData: PathwayStep[] = [
       "Let's ground this time in His Word. As you slowly read through Psalm 139, listen for any word or phrase that resonates with your heart today.",
     icon: "BookOpen",
     content: {
-      scripture: psalm139Nlt,
-      /*
-      scripture: `O Lord, you have searched me and known me! You know when I sit down and when I rise up; you discern my thoughts from afar. You search out my path and my lying down and are acquainted with all my ways. Even before a word is on my tongue, behold, O Lord, you know it altogether. You hem me in, behind and before, and lay your hand upon me. Such knowledge is too wonderful for me; it is high; I cannot attain it.
-
-Where shall I go from your Spirit? Or where shall I flee from your presence? If I ascend to heaven, you are there! If I make my bed in Sheol, you are there! If I take the wings of the morning and dwell in the uttermost parts of the sea, even there your hand shall lead me, and your right hand shall hold me. If I say, "Surely the darkness shall cover me, and the light about me be night," even the darkness is not dark to you; the night is bright as the day, for darkness is as light with you.
-
-For you formed my inward parts; you knitted me together in my mother's womb. I praise you, for I am fearfully and wonderfully made. Wonderful are your works; my soul knows it very well. My frame was not hidden from you, when I was being made in secret, intricately woven in the depths of the earth. Your eyes saw my unformed substance; in your book were written, every one of them, the days that were formed for me, when as yet there was none of them.
-
-How precious to me are your thoughts, O God! How vast is the sum of them! If I would count them, they are more than the sand. I awake, and I am still with you.
-
-Search me, O God, and know my heart! Try me and know my thoughts! And see if there be any grievous way in me, and lead me in the way everlasting!
-
-— Psalm 139 (ESV)`,
-      */
       instructions: "Take your time. Let the words settle in your heart.",
     },
     isInput: false,

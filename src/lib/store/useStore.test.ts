@@ -22,6 +22,7 @@ const resetStoreState = () => {
     savedJourneyId: null,
     savedJourneyTitle: null,
     isDirty: false,
+    bibleTranslation: "ESV",
   });
 };
 
@@ -91,5 +92,24 @@ describe("useStore core journey transitions", () => {
     expect(state.savedJourneyId).toBeNull();
     expect(state.savedJourneyTitle).toBeNull();
     expect(state.isDirty).toBe(true);
+  });
+});
+
+describe("useStore bible translation preference", () => {
+  beforeEach(() => {
+    localStorage.clear();
+    resetStoreState();
+  });
+
+  it("defaults the bible translation to ESV", () => {
+    expect(useStore.getState().bibleTranslation).toBe("ESV");
+  });
+
+  it("updates the selected bible translation", () => {
+    useStore.getState().setBibleTranslation("NLT");
+    expect(useStore.getState().bibleTranslation).toBe("NLT");
+
+    useStore.getState().setBibleTranslation("KJV");
+    expect(useStore.getState().bibleTranslation).toBe("KJV");
   });
 });
