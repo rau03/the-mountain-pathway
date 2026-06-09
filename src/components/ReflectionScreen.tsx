@@ -12,6 +12,9 @@ import {
   LucideIcon,
 } from "lucide-react";
 import { PathwayStep } from "@/lib/pathway-data";
+import { useStore } from "@/lib/store/useStore";
+import { BIBLE_TRANSLATIONS } from "@/lib/psalm139";
+import { TranslationSelector } from "./TranslationSelector";
 
 // Icon mapping for dynamic icon rendering
 const iconMap: Record<string, LucideIcon> = {
@@ -33,6 +36,8 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
   // Get the icon component for this step
   const IconComponent = iconMap[step.icon];
   const isScriptureStep = step.stepIndex === 1;
+  const bibleTranslation = useStore((state) => state.bibleTranslation);
+  const scriptureText = BIBLE_TRANSLATIONS[bibleTranslation];
 
   const titleClass = isScriptureStep
     ? "text-3xl font-bold mb-2 text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.65)]"
@@ -89,36 +94,39 @@ export const ReflectionScreen: React.FC<ReflectionScreenProps> = ({ step }) => {
         </div>
       </div>
 
-      {/* Scripture Text - Integrated Scrolling Card */}
-      {step.content?.scripture && (
-        <div className="pr-2">
-          <div className={scriptureCardClass}>
-            <h3 className="text-xl font-semibold text-slate-900 mb-4">
-              Psalm 139
-            </h3>
-            <div className="text-slate-900 leading-relaxed">
-              {step.content.scripture.split("\n").map((line, i) => {
-                const trimmedLine = line.trim();
-                const isAttribution =
-                  trimmedLine.startsWith("—") || trimmedLine.startsWith("--");
+      {/* Translation Selector + Scripture Text - Integrated Scrolling Card */}
+      {isScriptureStep && (
+        <div className="flex flex-col gap-4">
+          <TranslationSelector />
+          <div className="pr-2">
+            <div className={scriptureCardClass}>
+              <h3 className="text-xl font-semibold text-slate-900 mb-4">
+                Psalm 139
+              </h3>
+              <div className="text-slate-900 leading-relaxed">
+                {scriptureText.split("\n").map((line, i) => {
+                  const trimmedLine = line.trim();
+                  const isAttribution =
+                    trimmedLine.startsWith("—") || trimmedLine.startsWith("--");
 
-                if (!trimmedLine) {
-                  return <div key={i} className="h-3" aria-hidden="true" />;
-                }
+                  if (!trimmedLine) {
+                    return <div key={i} className="h-3" aria-hidden="true" />;
+                  }
 
-                return (
-                  <p
-                    key={i}
-                    className={
-                      isAttribution
-                        ? "mt-6 text-sm italic text-slate-700 text-right whitespace-pre-line"
-                        : "psalm-verse whitespace-pre-line"
-                    }
-                  >
-                    {line}
-                  </p>
-                );
-              })}
+                  return (
+                    <p
+                      key={i}
+                      className={
+                        isAttribution
+                          ? "mt-6 text-sm italic text-slate-700 text-right whitespace-pre-line"
+                          : "psalm-verse whitespace-pre-line"
+                      }
+                    >
+                      {line}
+                    </p>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>

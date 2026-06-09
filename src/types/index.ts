@@ -1,3 +1,7 @@
+import type { BibleTranslation } from "@/lib/psalm139";
+
+export type { BibleTranslation };
+
 export interface JournalEntry {
   id: string;
   createdAt: string;
@@ -28,6 +32,8 @@ export interface AppState {
   savedJourneyId: string | null;
   savedJourneyTitle: string | null;
   isDirty: boolean;
+  bibleTranslation: BibleTranslation;
+  setBibleTranslation: (translation: BibleTranslation) => void;
   setCurrentStep: (step: number) => void;
   nextStep: () => void;
   prevStep: () => void;

@@ -15,8 +15,7 @@ describe("ReflectionScreen psalm formatting", () => {
       prompt: "Prompt",
       icon: "BookOpen",
       content: {
-        scripture:
-          "You know when I sit down or stand up.\nYou know my thoughts even when I am far away.\n\n-- Psalm 139 (NLT)",
+        instructions: "Take your time. Let the words settle in your heart.",
       },
       isInput: false,
       key: "reflect",
@@ -24,8 +23,9 @@ describe("ReflectionScreen psalm formatting", () => {
 
     render(<ReflectionScreen step={step} />);
 
-    const verse = screen.getByText("You know when I sit down or stand up.");
-    const attribution = screen.getByText("-- Psalm 139 (NLT)");
+    // Defaults to the ESV translation sourced from the store.
+    const verse = screen.getByText("You know when I sit down and when I rise up;");
+    const attribution = screen.getByText("— Psalm 139 (ESV)");
 
     expect(verse.className).toContain("psalm-verse");
     expect(verse.className).toContain("whitespace-pre-line");
