@@ -47,6 +47,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
 
   // Use ref to track interval for immediate cleanup on completion
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const chimeRef = useRef<HTMLAudioElement | null>(null);
 
   // Get the icon component for this step
   const IconComponent = iconMap[step.icon];
@@ -129,13 +130,35 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
   // Separate effect to handle timer completion - prevents race condition
   useEffect(() => {
     if (timeLeft === 0 && isTimerActive) {
+      if (chimeRef.current) {
+        chimeRef.current.currentTime = 0;
+        chimeRef.current.play().catch((err) => {
+          console.warn("[chime] Playback blocked:", err);
+        });
+      }
       stopTimer();
     }
   }, [timeLeft, isTimerActive, stopTimer]);
 
+  // Cleanup chime audio element on unmount
+  useEffect(() => {
+    return () => {
+      if (chimeRef.current) {
+        chimeRef.current.pause();
+        chimeRef.current.currentTime = 0;
+        chimeRef.current = null;
+      }
+    };
+  }, []);
+
   const handleStart = () => {
     setHasStarted(true);
     startTimer();
+    if (!chimeRef.current) {
+      chimeRef.current = new Audio("/chime.wav");
+      chimeRef.current.volume = 0.5;
+      chimeRef.current.load();
+    }
   };
 
   const handlePause = () => {
