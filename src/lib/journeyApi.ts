@@ -154,11 +154,15 @@ export async function updateJourney(
         .select(
           "id, user_id, title, current_step, is_completed, created_at, updated_at"
         )
-        .single();
+        .maybeSingle();
 
       if (journeyError) {
         console.error("Error updating journey:", journeyError);
         throw new Error(`Failed to update journey: ${journeyError.message}`);
+      }
+
+      if (!updatedJourney) {
+        throw new Error("Journey not found. It may have been deleted.");
       }
 
       // Update steps if currentEntry is provided
