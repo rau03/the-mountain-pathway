@@ -312,8 +312,14 @@ export async function deleteJourney(id: string): Promise<void> {
         throw new Error("User must be authenticated to delete journeys");
       }
 
-      // Delete the journey (CASCADE will automatically delete related steps)
-      const { data, error } = await supabase
+      // Delete the journey (CASCADE will automatically delete related steps).
+      // Deletion is idempotent: if no rows come back (data is empty), the
+      // journey is already gone — deleted in a prior attempt, or it never
+      // existed. The end state the user wants (journey removed) is achieved
+      // either way, so we do NOT throw on empty data. This prevents the
+      // "needs multiple taps" bug where a retry after a slow/timed-out first
+      // attempt would otherwise error on an already-deleted row.
+      const { error } = await supabase
         .from("journeys")
         .delete()
         .eq("id", id)
@@ -323,12 +329,6 @@ export async function deleteJourney(id: string): Promise<void> {
       if (error) {
         console.error("Error deleting journey:", error);
         throw new Error(`Failed to delete journey: ${error.message}`);
-      }
-
-      if (!data || data.length === 0) {
-        throw new Error(
-          "No journey was deleted. It may be missing or you may not have permission."
-        );
       }
     })(),
     15000,

@@ -46,6 +46,7 @@ export default function SavedJourneysView({
   const { restoreJourneyEntry } = useStore();
   const [viewLoading, setViewLoading] = useState<string | null>(null);
   const loadRequestIdRef = useRef(0);
+  const recentlyDeletedIdsRef = useRef<Set<string>>(new Set());
 
   // Load journeys when modal opens
   useEffect(() => {
@@ -72,7 +73,12 @@ export default function SavedJourneysView({
       if (requestId !== loadRequestIdRef.current) {
         return;
       }
-      setJourneys(userJourneys);
+      // Filter out journeys deleted within the grace window so a reconnect-
+      // triggered reload that races a delete can't resurrect a ghost journey.
+      const filtered = userJourneys.filter(
+        (j) => !recentlyDeletedIdsRef.current.has(j.id)
+      );
+      setJourneys(filtered);
     } catch (err) {
       if (requestId !== loadRequestIdRef.current) {
         return;
@@ -98,7 +104,13 @@ export default function SavedJourneysView({
     try {
       await deleteJourney(id);
       loadRequestIdRef.current += 1;
+      // Track the id so any in-flight/near-future reconnect reload filters it
+      // out, then release it after the server is reliably consistent.
+      recentlyDeletedIdsRef.current.add(id);
       setJourneys((prev) => prev.filter((j) => j.id !== id));
+      setTimeout(() => {
+        recentlyDeletedIdsRef.current.delete(id);
+      }, 5000);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to delete journey");
     } finally {
