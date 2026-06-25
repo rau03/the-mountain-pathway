@@ -24,7 +24,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     if (didHideSplashRef.current) {
       return;
     }
-    if (!Capacitor.isNativePlatform() || Capacitor.getPlatform() !== "ios") {
+    if (!Capacitor.isNativePlatform()) {
       return;
     }
 
