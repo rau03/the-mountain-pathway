@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MtnPathway</string>
+    <string name="title_activity_main">MtnPathway</string>
+    <string name="package_name">com.themountainpathway.app</string>
+    <string name="custom_url_scheme">com.themountainpathway.app</string>
+</resources>
