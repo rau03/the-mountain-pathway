@@ -122,18 +122,15 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
     ? "flex-grow flex flex-col bg-transparent pt-8 min-h-0"
     : "flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 min-h-0";
 
-  // Summary screen has its own rendering
-  if (isSummaryScreen) {
-    return (
-      <div className="relative min-h-screen w-full min-w-full bg-brand-stone">
-        {/* Dark gradient overlay at top for better logo contrast */}
-        <div className="absolute inset-0 z-5 bg-gradient-to-b from-brand-slate/40 via-brand-slate/20 to-transparent h-32" />
-        <div className="relative z-10 px-6 pt-[calc(env(safe-area-inset-top,0px)+3.25rem)] pb-10">
-          <SummaryScreen session={session} />
-        </div>
-      </div>
-    );
-  }
+  const scrollSheetClass = isSummaryScreen
+    ? "flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent min-h-0 pt-[calc(env(safe-area-inset-top,0px)+1rem)]"
+    : bottomSheetClass;
+
+  const scrollPaddingBottom = isKeyboardOpen
+    ? "pb-8"
+    : isSummaryScreen
+      ? "pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)]"
+      : "pb-[calc(env(safe-area-inset-bottom,0px)+4rem)]";
 
   return (
     <div className="relative h-[100dvh] w-full min-w-full bg-brand-stone flex flex-col overflow-hidden overscroll-none">
@@ -158,6 +155,10 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
       {/* Screen overlay - Journey steps use clear image view */}
       <div className={screenOverlayClass} />
 
+      {isSummaryScreen && (
+        <div className="absolute inset-x-0 top-0 z-5 bg-gradient-to-b from-brand-slate/40 via-brand-slate/20 to-transparent h-32" />
+      )}
+
       {/* Mobile Content Layout - Full Height Flex Container */}
       <div className="relative z-10 h-full flex flex-col min-h-0">
         {/* Mobile Header at Top - with iOS safe area */}
@@ -174,18 +175,18 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         )}
 
         {/* Spacer - Visual Area Above Content (shrinkable so footer stays visible) */}
-        <div className="min-h-[5dvh] h-[4dvh]" />
+        {!isSummaryScreen && <div className="min-h-[5dvh] h-[4dvh]" />}
 
         {/* Bottom Sheet - Scrollable content region */}
         <div
           ref={scrollContainerRef}
-          className={`${bottomSheetClass} overflow-y-auto overscroll-y-contain px-6 ${
-            isKeyboardOpen
-              ? "pb-8"
-              : "pb-[calc(env(safe-area-inset-bottom,0px)+4rem)]"
-          }`}
+          className={`${scrollSheetClass} overflow-y-auto overscroll-y-contain px-6 ${scrollPaddingBottom}`}
         >
-          <JourneyScreen />
+          {isSummaryScreen ? (
+            <SummaryScreen session={session} />
+          ) : (
+            <JourneyScreen />
+          )}
         </div>
 
         {/* Mobile Save Footer - Fixed to device viewport bottom */}
