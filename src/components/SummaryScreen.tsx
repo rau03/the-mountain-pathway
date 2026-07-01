@@ -1,4 +1,5 @@
 import React from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import {
   Download,
@@ -17,10 +18,7 @@ import { Button } from "@/components/ui/button";
 import SaveJourneyModal from "@/components/SaveJourneyModal";
 import AuthModal from "@/components/AuthModal";
 import { saveJourney, updateJourney } from "@/lib/journeyApi";
-import {
-  openExternalUrl,
-  triggerSuccessHaptic,
-} from "@/lib/capacitorUtils";
+import { triggerSuccessHaptic } from "@/lib/capacitorUtils";
 import BuyMeCoffeeLink from "@/components/BuyMeCoffeeLink";
 import ContactFormModal from "@/components/ContactFormModal";
 
@@ -391,50 +389,26 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
 
         {/* Legal Links */}
         <div className="flex items-center justify-center gap-3 text-xs text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
-          <a
-            href="https://themountainpathway.com/terms"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-              if (Capacitor.isNativePlatform()) {
-                e.preventDefault();
-                void openExternalUrl("https://themountainpathway.com/terms");
-              }
-            }}
+          <Link
+            href="/terms"
             className="hover:text-white transition-colors"
           >
             Terms
-          </a>
+          </Link>
           <span>·</span>
-          <a
-            href="https://themountainpathway.com/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-              if (Capacitor.isNativePlatform()) {
-                e.preventDefault();
-                void openExternalUrl("https://themountainpathway.com/privacy");
-              }
-            }}
+          <Link
+            href="/privacy"
             className="hover:text-white transition-colors"
           >
             Privacy
-          </a>
+          </Link>
           <span>·</span>
-          <a
-            href="https://themountainpathway.com/data-deletion"
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => {
-              if (Capacitor.isNativePlatform()) {
-                e.preventDefault();
-                void openExternalUrl("https://themountainpathway.com/data-deletion");
-              }
-            }}
+          <Link
+            href="/data-deletion"
             className="hover:text-white transition-colors"
           >
             Data Deletion
-          </a>
+          </Link>
           <span>·</span>
           <button
             onClick={() => setContactOpen(true)}
