@@ -283,7 +283,7 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
       {/* Summary Content */}
       <div
         id="summary-content"
-        className="bg-white/50 rounded-lg p-8 shadow-md border border-slate-300 h-full overflow-y-auto scrollbar-thin"
+        className="bg-white/50 rounded-lg p-8 shadow-md border border-slate-300"
       >
         <div className="space-y-4">
           <div className="text-center border-b border-slate-300 pb-4">
