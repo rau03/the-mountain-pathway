@@ -3,5 +3,5 @@
     <string name="app_name">MtnPathway</string>
     <string name="title_activity_main">MtnPathway</string>
     <string name="package_name">com.themountainpathway.app</string>
-    <string name="custom_url_scheme">com.themountainpathway.app</string>
+    <string name="custom_url_scheme">themountainpathway</string>
 </resources>
