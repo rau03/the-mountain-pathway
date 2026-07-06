@@ -58,11 +58,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   }, []);
 
   return (
-    <div className="min-h-[100dvh] flex flex-col items-center justify-between md:justify-center px-6 pt-[calc(env(safe-area-inset-top,0px)+6.25rem)] md:pt-10 pb-[calc(env(safe-area-inset-bottom,0px)+4rem)] md:pb-16 md:gap-8 overflow-y-auto">
+    <div className="min-h-[100dvh] flex flex-col items-center justify-center md:justify-center px-6 pt-[calc(env(safe-area-inset-top,0px)+6.25rem)] md:pt-10 pb-[calc(env(safe-area-inset-bottom,0px)+4rem)] md:pb-16 gap-8 md:gap-8 overflow-y-auto">
       {/* Top Section: Hero Content (Mobile: Top-Weighted, Desktop: Centered) */}
       <div className="flex flex-col items-center gap-4 md:gap-8">
         {/* Hero Icon - aligned with iOS dark translucent chip */}
-        <div className="p-4 bg-black/35 backdrop-blur-md rounded-full border border-white/10 shadow-lg overflow-hidden">
+        <div className="-mt-4 p-4 bg-black/35 backdrop-blur-md rounded-full border border-white/10 shadow-lg overflow-hidden">
           <Image
             src="/gold_lines_no_background_mp.png"
             alt="Mountain Pathway"
