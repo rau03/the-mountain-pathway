@@ -43,6 +43,12 @@ vi.mock("@/lib/store/useStore", () => ({
   }),
 }));
 
+const isNativeAppMock = vi.fn(() => false);
+
+vi.mock("@/lib/capacitorUtils", () => ({
+  isNativeApp: () => isNativeAppMock(),
+}));
+
 const authenticatedSession = {
   access_token: "test-access-token",
   user: {
@@ -63,6 +69,8 @@ describe("AuthModal auth parity updates", () => {
     signOutMock.mockReset();
     clearLocalProgressMock.mockReset();
     resetJourneyMock.mockReset();
+    isNativeAppMock.mockReset();
+    isNativeAppMock.mockReturnValue(false);
 
     getSessionMock.mockResolvedValue({ data: { session: null } });
     onAuthStateChangeMock.mockReturnValue({
@@ -73,6 +81,7 @@ describe("AuthModal auth parity updates", () => {
 
   afterEach(() => {
     vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
   });
 
   it("applies 8-char validation, duplicate email message mapping, and autocomplete attrs", async () => {
@@ -313,5 +322,39 @@ describe("AuthModal auth parity updates", () => {
       await screen.findByText("Failed to delete account")
     ).toBeInTheDocument();
     expect(clearLocalProgressMock).not.toHaveBeenCalled();
+  });
+
+  it("uses NEXT_PUBLIC_SITE_URL for delete-account fetch on native", async () => {
+    isNativeAppMock.mockReturnValue(true);
+    vi.stubEnv("NEXT_PUBLIC_SITE_URL", "https://www.themountainpathway.com");
+    getSessionMock.mockResolvedValue({ data: { session: authenticatedSession } });
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ success: true }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    render(
+      <AuthModal
+        open={true}
+        onOpenChange={() => {}}
+        session={authenticatedSession}
+      />
+    );
+
+    fireEvent.click(await screen.findByRole("button", { name: "Delete Account" }));
+    fireEvent.click(screen.getByRole("button", { name: "Yes, Delete Account" }));
+
+    await waitFor(() => {
+      expect(fetchMock).toHaveBeenCalledWith(
+        "https://www.themountainpathway.com/api/auth/delete-account",
+        expect.objectContaining({
+          method: "POST",
+          headers: expect.objectContaining({
+            Authorization: "Bearer test-access-token",
+          }),
+        })
+      );
+    });
   });
 });
