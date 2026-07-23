@@ -8,12 +8,6 @@ function isSafeNextPath(next: string | null): next is string {
   return !!next && next.startsWith("/") && !next.startsWith("//");
 }
 
-function isMobileUserAgent(userAgent: string | null): boolean {
-  if (!userAgent) return false;
-  // iOS Safari / iOS in-app browsers often include iPhone/iPad; Android includes Android.
-  return /iPhone|iPad|iPod|Android/i.test(userAgent);
-}
-
 function htmlEscape(s: string): string {
   return s
     .replaceAll("&", "&amp;")
@@ -30,20 +24,22 @@ export async function GET(request: NextRequest) {
   const next = requestUrl.searchParams.get("next");
   const native = requestUrl.searchParams.get("native") === "1";
 
-  const shouldServeOpenAppPage =
-    native || isMobileUserAgent(request.headers.get("user-agent"));
-
   // Native app flow:
-  // Supabase sends the user here (HTTPS allowlisted), then we immediately deep-link back
-  // into the app *without* consuming the PKCE code on the server.
+  // Only serve the deep-link handoff page when the request explicitly signals it came
+  // from the app (native=1) — the app sets this itself when it navigates here. A plain
+  // mobile-browser hit (e.g. tapping the link straight from an email) has no such signal
+  // and falls through to the normal browser redirect below, since automatically bouncing
+  // an unattended browser tab to a custom URL scheme is unreliable (many mobile browsers
+  // block/ignore script-triggered navigations to non-http(s) schemes without a direct
+  // user gesture) and there is no fallback if it silently fails.
   //
   // NOTE: Supabase may return either:
   // - PKCE: ?code=...
   // - Implicit: #access_token=...&refresh_token=...&type=...
   //
-  // The URL fragment/hash is not sent to the server, so on mobile we always serve an
-  // HTML handoff page that can read window.location.hash and deep-link accordingly.
-  if (shouldServeOpenAppPage) {
+  // The URL fragment/hash is not sent to the server, so when we do serve the handoff
+  // page it reads window.location.hash client-side and deep-links accordingly.
+  if (native) {
     const deepLink = new URL("themountainpathway://auth/callback");
     if (code) deepLink.searchParams.set("code", code);
     if (type) deepLink.searchParams.set("type", type);

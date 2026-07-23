@@ -8,11 +8,6 @@ function isSafeNextPath(next: string | null): next is string {
   return !!next && next.startsWith("/") && !next.startsWith("//");
 }
 
-function isMobileUserAgent(userAgent: string | null): boolean {
-  if (!userAgent) return false;
-  return /iPhone|iPad|iPod|Android/i.test(userAgent);
-}
-
 function htmlEscape(s: string): string {
   return s
     .replaceAll("&", "&amp;")
@@ -46,7 +41,11 @@ export async function GET(request: NextRequest) {
     requestUrl.searchParams.get("redirectTo") ||
     null;
 
-  const isMobile = isMobileUserAgent(request.headers.get("user-agent"));
+  // Only serve the deep-link handoff page when the request explicitly signals it came
+  // from the app (native=1). A plain browser hit (e.g. tapping the link straight from
+  // an email) falls through to the normal redirect below — see the comment in
+  // src/app/auth/callback/route.ts for why UA-sniffing isn't a reliable signal here.
+  const native = requestUrl.searchParams.get("native") === "1";
 
   // Determine where we should go after verification.
   // Prefer Supabase's `redirect_to` (if allowlisted), else safe `next`, else home.
@@ -87,10 +86,9 @@ export async function GET(request: NextRequest) {
       // ignore
     }
 
-    // Mobile flow: many email clients open links inside an in-app webview that
-    // blocks custom-scheme 302 redirects. Serve an HTML page with a user-tappable
-    // "Open the app" button and a best-effort auto-open attempt.
-    if (isMobile) {
+    // Native app flow: serve an HTML page with a user-tappable "Open the app" button
+    // and a best-effort auto-open attempt.
+    if (native) {
       const deepLink = new URL("themountainpathway://auth/callback");
       const { access_token, refresh_token } = data.session;
       const hashParams = new URLSearchParams({
