@@ -48,4 +48,39 @@ describe("DataDeletion page", () => {
       screen.getByRole("link", { name: /buy me a coffee/i })
     ).toBeInTheDocument();
   });
+
+  it("uses AA/AAA-compliant brand-navy (not brand-slate/brand-gold) for the heading, key text, and section icons against bg-brand-stone", () => {
+    const { container } = render(<DataDeletion />);
+
+    const heading = screen.getByRole("heading", {
+      name: "Data Deletion Policy",
+    });
+    expect(heading.className).toContain("text-brand-navy");
+    expect(heading.className).not.toContain("text-brand-slate");
+
+    const backLink = screen.getByRole("link", { name: /back to home/i });
+    expect(backLink.className).toContain("text-brand-navy/85");
+    expect(backLink.className).toContain("hover:text-brand-navy");
+    expect(backLink.className).not.toContain("text-brand-slate");
+
+    const coffeeLink = screen.getByRole("link", { name: /buy me a coffee/i });
+    expect(coffeeLink.className).toContain("text-brand-navy/85");
+    expect(coffeeLink.className).not.toContain("text-brand-slate");
+
+    // The Shield/Trash2/Mail/Clock section icons previously used
+    // text-brand-gold (1.12:1 against bg-brand-stone, failing badly) and
+    // now use text-brand-navy (10.72:1, AAA).
+    const icons = container.querySelectorAll("svg");
+    expect(icons.length).toBeGreaterThan(0);
+    const iconClasses = Array.from(icons).map((icon) => icon.getAttribute("class") ?? "");
+    expect(iconClasses.some((cls) => cls.includes("text-brand-navy"))).toBe(true);
+    expect(iconClasses.some((cls) => cls.includes("text-brand-gold"))).toBe(false);
+
+    // The "Important Considerations" AlertTriangle icon previously used
+    // text-amber-600 (3.07:1 against its actual bg-amber-50 box background,
+    // failing AA) and now uses text-amber-700 (4.84:1, AA) to preserve the
+    // conventional amber "warning" semantic while clearing contrast.
+    expect(iconClasses.some((cls) => cls.includes("text-amber-700"))).toBe(true);
+    expect(iconClasses.some((cls) => cls.includes("text-amber-600"))).toBe(false);
+  });
 });
