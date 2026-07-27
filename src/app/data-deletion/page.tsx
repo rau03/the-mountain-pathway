@@ -152,7 +152,7 @@ export default function DataDeletion() {
         {/* Important Notes */}
         <section className="space-y-4 bg-amber-50 rounded-lg p-6 border border-amber-200">
           <h2 className="text-xl font-semibold text-brand-slate flex items-center gap-2">
-            <AlertTriangle className="w-5 h-5 text-amber-600" />
+            <AlertTriangle className="w-5 h-5 text-amber-700" />
             Important Considerations
           </h2>
           <ul className="list-disc list-inside text-brand-navy/85 space-y-2">

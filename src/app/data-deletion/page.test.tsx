@@ -75,5 +75,12 @@ describe("DataDeletion page", () => {
     const iconClasses = Array.from(icons).map((icon) => icon.getAttribute("class") ?? "");
     expect(iconClasses.some((cls) => cls.includes("text-brand-navy"))).toBe(true);
     expect(iconClasses.some((cls) => cls.includes("text-brand-gold"))).toBe(false);
+
+    // The "Important Considerations" AlertTriangle icon previously used
+    // text-amber-600 (3.07:1 against its actual bg-amber-50 box background,
+    // failing AA) and now uses text-amber-700 (4.84:1, AA) to preserve the
+    // conventional amber "warning" semantic while clearing contrast.
+    expect(iconClasses.some((cls) => cls.includes("text-amber-700"))).toBe(true);
+    expect(iconClasses.some((cls) => cls.includes("text-amber-600"))).toBe(false);
   });
 });
