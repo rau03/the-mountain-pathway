@@ -19,6 +19,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useIsAndroid } from "@/hooks/useIsAndroid";
 
 // Icon mapping for dynamic icon rendering
 const iconMap: Record<string, LucideIcon> = {
@@ -65,6 +66,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
 
   // Get the icon component for this step
   const IconComponent = iconMap[step.icon];
+  const isAndroid = useIsAndroid();
   const isImageFirstInputStep =
     step.stepIndex === 2 ||
     step.stepIndex === 3 ||
@@ -73,6 +75,16 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
     step.stepIndex === 6 ||
     step.stepIndex === 7 ||
     step.stepIndex === 8;
+
+  // Android-only: nudge Steps 3-8's card (and input box) down slightly for
+  // better vertical balance against the background photo. Excludes Step 9
+  // (isSummary, the final "Commit in Prayer" step) which should not move.
+  // Gated on isAndroid so iOS and web render unchanged; md:mt-0 also keeps
+  // desktop-width layouts unaffected even when running on an Android device.
+  const cardWrapperClass =
+    isImageFirstInputStep && !step.isSummary && isAndroid
+      ? "flex flex-col gap-6 w-full mt-6 md:mt-0"
+      : "flex flex-col gap-6 w-full";
 
   const titleClass = isImageFirstInputStep
     ? "text-3xl font-bold mb-2 text-white [text-shadow:0_2px_8px_rgba(0,0,0,0.65)]"
@@ -160,7 +172,7 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col gap-6 w-full"
+      className={cardWrapperClass}
     >
       <div className={textCardClass}>
         {isImageFirstInputStep && (
