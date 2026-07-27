@@ -17,6 +17,7 @@ import {
 import { useStore } from "@/lib/store/useStore";
 import { PathwayStep, pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
+import { useIsAndroid } from "@/hooks/useIsAndroid";
 
 // Icon mapping for dynamic icon rendering
 const iconMap: Record<string, LucideIcon> = {
@@ -52,6 +53,7 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
   // Get the icon component for this step
   const IconComponent = iconMap[step.icon];
   const isTrailheadStep = step.stepIndex === 0;
+  const isAndroid = useIsAndroid();
 
   const textBlockClass = isTrailheadStep
     ? "relative text-center rounded-2xl overflow-hidden"
@@ -65,12 +67,42 @@ export const TimerScreen: React.FC<TimerScreenProps> = ({ step }) => {
   const promptClass = isTrailheadStep
     ? "text-white leading-relaxed max-w-md mx-auto [text-shadow:0_2px_7px_rgba(0,0,0,0.6)]"
     : "text-slate-800 leading-relaxed max-w-md mx-auto";
-  const containerClass = "flex flex-col items-center space-y-4 w-full";
-  const preStartControlsClass = "space-y-4 -mt-3";
+  // Android-only: nudge Step 1's card down slightly for better vertical
+  // balance against the background photo. Gated on isAndroid so iOS and
+  // web render unchanged; md:mt-0 also keeps desktop-width layouts
+  // unaffected even when running on an Android device.
+  const containerClass =
+    isTrailheadStep && isAndroid
+      ? "flex flex-col items-center space-y-4 w-full mt-6 md:mt-0"
+      : "flex flex-col items-center space-y-4 w-full";
+  // Android-only: widen the gap between Step 1's card and the duration
+  // selector. This element is a non-last child of containerClass's
+  // space-y-4, which forces margin-top to 0 on every non-last child
+  // (Tailwind v4 compiles space-y-4's child selector with :where(), so it
+  // ties on specificity with a plain mt-*/-mt-3 utility and wins the tie by
+  // appearing later in the generated stylesheet — a plain mt-6 here would
+  // silently be discarded, same as the original -mt-3 always was). The `!`
+  // modifier forces this margin-top with !important so it isn't overridden.
+  // Card (child 1) already gets an uncontested 16px margin-bottom from
+  // space-y-4, so !mt-4 (16px) here stacks to a total ~32px visible gap.
+  // md:!mt-0 explicitly pins desktop/tablet-width layouts to the previous
+  // inert value (space-y-4 already forced -mt-3 to compute as 0 here, so
+  // this reproduces that effective 0px rather than genuinely applying
+  // -mt-3 for the first time on an untested Android-tablet edge case).
+  const preStartControlsClass =
+    isTrailheadStep && isAndroid
+      ? "space-y-4 !mt-4 md:!mt-0"
+      : "space-y-4 -mt-3";
   const durationLabelClass = isTrailheadStep
     ? "block text-sm !text-white [text-shadow:0_1px_4px_rgba(0,0,0,0.45)] mb-4 font-semibold text-center tracking-wide"
     : "block text-sm text-slate-900 mb-4 font-semibold text-center tracking-wide";
-  const beginButtonWrapClass = "flex justify-center w-full mt-2 mb-40";
+  // Android-only: trim the bottom clearance below "Begin Silence" to
+  // balance out the extra gap added above (redistribute space rather than
+  // add more overall). md:mb-40 keeps desktop-width layouts unchanged.
+  const beginButtonWrapClass =
+    isTrailheadStep && isAndroid
+      ? "flex justify-center w-full mt-2 mb-28 md:mb-40"
+      : "flex justify-center w-full mt-2 mb-40";
   const getDurationButtonClass = (isSelected: boolean) =>
     isTrailheadStep
       ? isSelected
