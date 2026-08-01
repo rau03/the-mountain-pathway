@@ -15,6 +15,9 @@ import { useJourneyBackground } from "@/hooks/useJourneyBackground";
 import { useViewportFlags } from "@/hooks/useViewportFlags";
 import { useDesktopStepScrollReset } from "@/hooks/useDesktopStepScrollReset";
 import { useUnsavedJourneyUnloadGuard } from "@/hooks/useUnsavedJourneyUnloadGuard";
+import { useJourneyAutoSave } from "@/hooks/useJourneyAutoSave";
+
+type AuthModalIntent = "save" | "account" | null;
 
 const JourneyScreen = dynamic(
   () => import("@/components/JourneyScreen").then((mod) => mod.JourneyScreen)
@@ -66,7 +69,15 @@ export default function HomeClient({ session }: { session: Session | null }) {
   const { currentBackground, desktopAlignment } =
     useJourneyBackground(currentStep);
   const { isMobile } = useViewportFlags();
+  // Shared auth modal state — used both by the mobile-landing "Account"
+  // button and the desktop journey footer's Save button (DesktopSaveFooter).
+  // `authModalIntent` records which entry point opened it so that a
+  // successful sign in/sign up only triggers an auto-save when the modal
+  // was opened via Save specifically.
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalIntent, setAuthModalIntent] = useState<AuthModalIntent>(null);
+  const { autoSaveLoading, autoSaveError, triggerAutoSave, handleRetryAutoSave } =
+    useJourneyAutoSave(liveSession);
   const [showSoftGateModal, setShowSoftGateModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const desktopScrollRef = useRef<HTMLDivElement>(null);
@@ -112,6 +123,35 @@ export default function HomeClient({ session }: { session: Session | null }) {
   }, [currentStep]);
 
   useDesktopStepScrollReset(currentStep, desktopScrollRef);
+
+  const handleAuthModalOpenChange = useCallback((next: boolean) => {
+    setShowAuthModal(next);
+    if (!next) {
+      setAuthModalIntent(null);
+    }
+  }, []);
+
+  // Desktop journey footer "Save" button (signed out)
+  const handleDesktopSaveClick = useCallback(() => {
+    setAuthModalIntent("save");
+    setShowAuthModal(true);
+  }, []);
+
+  // Mobile landing page "Account" button (signed in)
+  const handleMobileAccountClick = useCallback(() => {
+    setAuthModalIntent("account");
+    setShowAuthModal(true);
+  }, []);
+
+  // Only auto-save immediately after a successful sign in/sign up when the
+  // modal was opened via the Save button specifically — not when opened via
+  // the Account button (or any other entry point).
+  const handleAuthSuccess = useCallback(
+    (authedSession: Session) => {
+      triggerAutoSave(currentStep, authedSession);
+    },
+    [triggerAutoSave, currentStep]
+  );
 
   // Handle "Begin your pathway" button click - opens soft gate modal
   const handleBeginClick = useCallback(() => {
@@ -193,7 +233,7 @@ export default function HomeClient({ session }: { session: Session | null }) {
               {/* Non-authenticated users will use the soft gate modal */}
               {liveSession && (
                 <Button
-                  onClick={() => setShowAuthModal(true)}
+                  onClick={handleMobileAccountClick}
                   variant="ghost"
                   size="sm"
                   className="bg-black/10 backdrop-blur-sm text-white hover:bg-black/20 px-3 py-2 rounded-full border border-brand-slate/20 text-sm font-medium"
@@ -260,7 +300,14 @@ export default function HomeClient({ session }: { session: Session | null }) {
               {/* Footer */}
               {isJourneyScreen && (
                 <div className="flex-shrink-0 pt-5 pb-1">
-                  <DesktopSaveFooter session={liveSession} />
+                  <DesktopSaveFooter
+                    session={liveSession}
+                    onSaveClick={handleDesktopSaveClick}
+                    autoSaveLoading={autoSaveLoading}
+                    autoSaveError={autoSaveError}
+                    onRetryAutoSave={handleRetryAutoSave}
+                    onNextStepSave={triggerAutoSave}
+                  />
                 </div>
               )}
             </div>
@@ -273,11 +320,13 @@ export default function HomeClient({ session }: { session: Session | null }) {
         </>
       )}
 
-      {/* Auth Modal for mobile homepage login (account access) */}
+      {/* Auth Modal — shared by the mobile homepage "Account" button and the
+          desktop journey footer's "Save" button (DesktopSaveFooter). */}
       <AuthModal
         open={showAuthModal}
-        onOpenChange={setShowAuthModal}
+        onOpenChange={handleAuthModalOpenChange}
         session={liveSession}
+        onAuthSuccess={authModalIntent === "save" ? handleAuthSuccess : undefined}
       />
 
       {/* Soft Gate Modal for journey start */}

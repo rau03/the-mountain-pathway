@@ -26,6 +26,21 @@ type AuthModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   session?: Session | null;
+  /**
+   * Optional callback fired when a previously-unauthenticated user
+   * successfully signs in or creates an account while this modal is open.
+   * Used by entry points (e.g. the Save button) that need to react to
+   * "auth just completed" — such as immediately auto-saving in-progress
+   * work — without affecting other entry points (e.g. the Account button)
+   * that open the same modal for unrelated reasons.
+   *
+   * Receives the newly-authenticated session directly (rather than relying
+   * on the caller's own `session` prop) because other independent
+   * `onAuthStateChange` subscribers elsewhere in the app (e.g. session sync
+   * hooks) may not have updated the caller's `session` prop yet by the time
+   * this fires — subscriber callback ordering isn't guaranteed.
+   */
+  onAuthSuccess?: (session: Session) => void;
 };
 
 type AuthView = "login" | "signup" | "forgot";
@@ -41,12 +56,18 @@ export default function AuthModal({
   open,
   onOpenChange,
   session,
+  onAuthSuccess,
 }: AuthModalProps) {
   const [showSavedJourneys, setShowSavedJourneys] = useState(false);
   const [currentSession, setCurrentSession] = useState<Session | null>(
     session || null
   );
   const [signingOut, setSigningOut] = useState(false);
+  // Keep the latest onAuthSuccess in a ref so the auth-state-change effect
+  // below doesn't need to resubscribe every time the parent passes a new
+  // callback identity (e.g. when the parent recomputes it based on intent).
+  const onAuthSuccessRef = useRef(onAuthSuccess);
+  onAuthSuccessRef.current = onAuthSuccess;
   const [deletingAccount, setDeletingAccount] = useState(false);
   const [showUnsavedWarning, setShowUnsavedWarning] = useState(false);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -165,6 +186,7 @@ export default function AuthModal({
         // Close modal only when user successfully authenticates (new session after being unauthenticated)
         if (newSession && wasUnauthenticatedRef.current && open) {
           onOpenChange(false);
+          onAuthSuccessRef.current?.(newSession);
         }
         wasUnauthenticatedRef.current = !newSession;
       }
