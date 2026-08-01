@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useCallback, useRef, useEffect, useState } from "react";
 import { Session } from "@supabase/supabase-js";
 import { useStore } from "@/lib/store/useStore";
 import { HeaderMobile } from "./HeaderMobile";
@@ -6,7 +6,11 @@ import { FooterMobile } from "./FooterMobile";
 import { MobileSaveFooter } from "./MobileSaveFooter";
 import { JourneyScreen } from "./JourneyScreen";
 import { SummaryScreen } from "./SummaryScreen";
+import AuthModal from "./AuthModal";
 import { getBackgroundForStep, pathwayData } from "@/lib/pathway-data";
+import { useJourneyAutoSave } from "@/hooks/useJourneyAutoSave";
+
+type AuthModalIntent = "save" | "account" | null;
 
 interface MobileJourneyLayoutProps {
   session: Session | null;
@@ -18,6 +22,45 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
   const { currentStep } = useStore();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+
+  // Auth modal state lives here (rather than inside MobileSaveFooter) so the
+  // modal survives the footer being hidden while the on-screen keyboard is
+  // open — previously the modal was mounted as a child of the footer, and
+  // opening it (via the Save button) would auto-focus a text input, which
+  // popped the keyboard, which unmounted the footer + modal together,
+  // making the modal appear to flash and close immediately.
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalIntent, setAuthModalIntent] = useState<AuthModalIntent>(null);
+  const { autoSaveLoading, autoSaveError, triggerAutoSave, handleRetryAutoSave } =
+    useJourneyAutoSave(session);
+
+  const handleAuthModalOpenChange = useCallback((next: boolean) => {
+    setShowAuthModal(next);
+    if (!next) {
+      setAuthModalIntent(null);
+    }
+  }, []);
+
+  const handleSaveClick = useCallback(() => {
+    setAuthModalIntent("save");
+    setShowAuthModal(true);
+  }, []);
+
+  const handleAccountClick = useCallback(() => {
+    setAuthModalIntent("account");
+    setShowAuthModal(true);
+  }, []);
+
+  // Only auto-save immediately after a successful sign in/sign up when the
+  // modal was opened via the Save button specifically — not when opened via
+  // the Account button (or any other entry point), which relies on the
+  // existing step-to-step auto-save instead.
+  const handleAuthSuccess = useCallback(
+    (authedSession: Session) => {
+      triggerAutoSave(currentStep, authedSession);
+    },
+    [triggerAutoSave, currentStep]
+  );
 
   const currentBackground = getBackgroundForStep(currentStep);
 
@@ -192,7 +235,15 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         {/* Mobile Save Footer - Fixed to device viewport bottom */}
         {isJourneyScreen && !isKeyboardOpen && (
           <div className="fixed inset-x-0 bottom-0 z-40">
-            <MobileSaveFooter session={session} />
+            <MobileSaveFooter
+              session={session}
+              onSaveClick={handleSaveClick}
+              onAccountClick={handleAccountClick}
+              autoSaveLoading={autoSaveLoading}
+              autoSaveError={autoSaveError}
+              onRetryAutoSave={handleRetryAutoSave}
+              onNextStepSave={triggerAutoSave}
+            />
           </div>
         )}
 
@@ -203,6 +254,17 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
           </div>
         )}
       </div>
+
+      {/* Auth Modal - deliberately rendered here (outside the footer, and
+          outside the `!isKeyboardOpen` block above) so it stays mounted and
+          open regardless of keyboard visibility changes triggered by its own
+          form inputs. */}
+      <AuthModal
+        open={showAuthModal}
+        onOpenChange={handleAuthModalOpenChange}
+        session={session}
+        onAuthSuccess={authModalIntent === "save" ? handleAuthSuccess : undefined}
+      />
     </div>
   );
 };
