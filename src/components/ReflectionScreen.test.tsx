@@ -33,3 +33,25 @@ describe("ReflectionScreen psalm formatting", () => {
     expect(attribution.className).not.toContain("psalm-verse");
   });
 });
+
+describe("ReflectionScreen prompt card sizing (Step 2)", () => {
+  it("applies the mobile min-height (reset on desktop) to the prompt card", () => {
+    const step: PathwayStep = {
+      stepIndex: 1,
+      stageName: "Ascent",
+      title: "Ground Yourself In Scripture",
+      subtitle: "Listen to His Word",
+      type: "reflection",
+      prompt: "Prompt",
+      icon: "BookOpen",
+      isInput: false,
+      key: "reflect",
+    };
+
+    const { container } = render(<ReflectionScreen step={step} />);
+    const card = container.firstElementChild?.firstElementChild;
+
+    expect(card?.className).toContain("min-h-[390px]");
+    expect(card?.className).toContain("md:min-h-0");
+  });
+});
