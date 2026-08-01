@@ -98,9 +98,17 @@ export const InputScreen: React.FC<InputScreenProps> = ({ step }) => {
   const promptCalloutClass = isImageFirstInputStep
     ? "mx-auto mt-1 px-1 py-0"
     : "mx-auto mt-1 px-1 py-0";
+  // Mobile-only min-height: keeps the prompt card (icon + title + subtitle +
+  // prompt) from shrinking to fit shorter prompt text, which otherwise
+  // shifts the textarea below it up or down depending on the step. Sized to
+  // comfortably fit the tallest measured card across Steps 2-9 (~376px on a
+  // 390px-wide viewport) with a small buffer. md:min-h-0 resets this on
+  // desktop-width layouts, where the wider 672px-max container already
+  // wraps prompts to fewer lines. Applies uniformly to every step here
+  // (including Step 9/isSummary) — deliberately no special-casing.
   const textCardClass = isImageFirstInputStep
-    ? "relative text-center rounded-2xl overflow-hidden"
-    : "text-center";
+    ? "relative text-center rounded-2xl overflow-hidden min-h-[390px] md:min-h-0"
+    : "text-center min-h-[390px] md:min-h-0";
   const textCardInnerClass = isImageFirstInputStep
     ? "relative z-10 space-y-4 px-4 py-5"
     : "";
