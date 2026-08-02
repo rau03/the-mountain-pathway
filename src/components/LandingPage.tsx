@@ -7,6 +7,7 @@ import { pathwayContent } from "@/lib/pathway-data";
 import { Button } from "@/components/ui/button";
 import BuyMeCoffeeLink from "@/components/BuyMeCoffeeLink";
 import ContactFormModal from "@/components/ContactFormModal";
+import { useIsAndroid } from "@/hooks/useIsAndroid";
 
 type LandingPageProps = {
   onBeginClick: () => void;
@@ -19,6 +20,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   const didHideSplashRef = useRef(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const isAndroid = useIsAndroid();
+
+  // Android-only: nudge the "Begin Your Pathway" button (and everything
+  // below it) down slightly for better vertical balance — confirmed via
+  // screenshot comparison that Android renders noticeably less spacing
+  // above the button than iOS does, with identical JSX/CSS (same
+  // env(safe-area-inset-*) discrepancy pattern as the Step 1 fix). Gated
+  // on isAndroid so iOS and web render unchanged; md:pt-8 already resets
+  // desktop-width layouts to their existing value regardless of platform.
+  const bottomSectionClass = isAndroid
+    ? "flex flex-col items-center gap-3 pt-4 md:gap-6 md:pt-8"
+    : "flex flex-col items-center gap-3 md:gap-6 md:pt-8";
 
   useEffect(() => {
     if (didHideSplashRef.current) {
@@ -97,7 +110,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </div>
 
       {/* Bottom Section: CTA & Footer (Mobile: Anchored at Bottom, Desktop: Centered) */}
-      <div className="flex flex-col items-center gap-3 md:gap-6 md:pt-8">
+      <div className={bottomSectionClass}>
         {/* Call to Action */}
         <Button
           onClick={onBeginClick}
