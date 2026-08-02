@@ -11,7 +11,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { Mountain, ArrowLeft, Loader2 } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
+import PasswordInput from "@/components/PasswordInput";
+import PasswordRequirements from "@/components/PasswordRequirements";
 import { getPublicSiteUrl, getEmailRedirectTo } from "@/lib/authRedirect";
+import {
+  isPasswordValid,
+  PASSWORD_POLICY_ERROR_MESSAGE,
+} from "@/lib/passwordRequirements";
 
 type SoftGateModalProps = {
   open: boolean;
@@ -285,8 +291,8 @@ export default function SoftGateModal({
       return;
     }
 
-    if (password.length < 8) {
-      setSignupError("Password must be at least 8 characters");
+    if (!isPasswordValid(password)) {
+      setSignupError(PASSWORD_POLICY_ERROR_MESSAGE);
       return;
     }
 
@@ -488,19 +494,16 @@ export default function SoftGateModal({
                   >
                     Password
                   </label>
-                  <input
+                  <PasswordInput
                     id="signup-password"
-                    type="password"
                     name="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="at least 8 characters."
-                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                     disabled={signupLoading}
                     autoComplete="new-password"
-                    autoCapitalize="none"
-                    autoCorrect="off"
                   />
+                  <PasswordRequirements password={password} />
                 </div>
 
                 {signupError && (
@@ -683,18 +686,14 @@ export default function SoftGateModal({
                     >
                       Password
                     </label>
-                    <input
+                    <PasswordInput
                       id="login-password"
-                      type="password"
                       name="password"
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       placeholder="Your password"
-                      className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
                       disabled={loginLoading}
                       autoComplete="current-password"
-                      autoCapitalize="none"
-                      autoCorrect="off"
                     />
                   </div>
 

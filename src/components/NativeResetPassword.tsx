@@ -1,9 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Mountain, Loader2, CheckCircle } from "lucide-react";
 import supabase from "@/lib/supabaseClient";
+import PasswordInput from "@/components/PasswordInput";
+import PasswordRequirements from "@/components/PasswordRequirements";
+import {
+  isPasswordValid,
+  PASSWORD_POLICY_ERROR_MESSAGE,
+} from "@/lib/passwordRequirements";
 
 type Props = {
   onDone: () => void;
@@ -25,8 +31,8 @@ export default function NativeResetPassword({ onDone }: Props) {
       return;
     }
 
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters");
+    if (!isPasswordValid(password)) {
+      setError(PASSWORD_POLICY_ERROR_MESSAGE);
       return;
     }
 
@@ -98,20 +104,17 @@ export default function NativeResetPassword({ onDone }: Props) {
             >
               New Password
             </label>
-            <input
+            <PasswordInput
               id="np-password"
-              type="password"
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="at least 8 characters."
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
               autoFocus
               disabled={loading}
               autoComplete="new-password"
-              autoCapitalize="none"
-              autoCorrect="off"
             />
+            <PasswordRequirements password={password} />
           </div>
 
           <div>
@@ -121,18 +124,14 @@ export default function NativeResetPassword({ onDone }: Props) {
             >
               Confirm Password
             </label>
-            <input
+            <PasswordInput
               id="np-confirm"
-              type="password"
               name="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               placeholder="Re-enter your password"
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-gold/50 focus:border-brand-gold"
               disabled={loading}
               autoComplete="new-password"
-              autoCapitalize="none"
-              autoCorrect="off"
             />
           </div>
 
