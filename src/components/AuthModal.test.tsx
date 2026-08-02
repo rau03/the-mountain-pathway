@@ -1,6 +1,6 @@
 import React from "react";
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { Session } from "@supabase/supabase-js";
 import AuthModal from "./AuthModal";
 
@@ -157,7 +157,7 @@ describe("AuthModal auth parity updates", () => {
       target: { value: "test@example.com" },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "12345678" },
+      target: { value: "Abcdefg1!" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
@@ -174,7 +174,7 @@ describe("AuthModal auth parity updates", () => {
     expect(screen.getByLabelText("Email")).toHaveAttribute("name", "email");
   });
 
-  it("enforces 8-character minimum for signup", async () => {
+  it("enforces the full password policy for signup", async () => {
     render(<AuthModal open={true} onOpenChange={() => {}} session={null} />);
     fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
 
@@ -184,15 +184,65 @@ describe("AuthModal auth parity updates", () => {
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "short@example.com" },
     });
+    // Meets length but is missing uppercase/symbol requirements.
     fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "1234567" },
+      target: { value: "lowercase1" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
     expect(
-      await screen.findByText("Password must be at least 8 characters")
+      await screen.findByText(
+        "Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number, and a symbol."
+      )
     ).toBeInTheDocument();
     expect(signUpMock).not.toHaveBeenCalled();
+  });
+
+  it("shows a live requirements checklist that updates as the signup password is typed", () => {
+    render(<AuthModal open={true} onOpenChange={() => {}} session={null} />);
+    fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
+
+    expect(screen.getByText("At least 8 characters")).toBeInTheDocument();
+    expect(screen.getByText("One uppercase letter (A-Z)")).toBeInTheDocument();
+    expect(screen.getByText("One lowercase letter (a-z)")).toBeInTheDocument();
+    expect(screen.getByText("One number (0-9)")).toBeInTheDocument();
+    expect(screen.getByText("One symbol (e.g. !@#$%)")).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "Abcdefg1!" },
+    });
+
+    // All five requirements should now render as satisfied.
+    const checklist = screen.getByRole("list", { name: "Password requirements" });
+    within(checklist)
+      .getAllByRole("listitem")
+      .forEach((item) => {
+        expect(item.className).toContain("text-green-600");
+      });
+  });
+
+  it("does not render a password requirements checklist on the login form", () => {
+    render(<AuthModal open={true} onOpenChange={() => {}} session={null} />);
+    expect(
+      screen.queryByRole("list", { name: "Password requirements" })
+    ).not.toBeInTheDocument();
+  });
+
+  it("toggles password visibility via the show/hide button on login and signup", () => {
+    render(<AuthModal open={true} onOpenChange={() => {}} session={null} />);
+
+    const loginPasswordInput = screen.getByLabelText("Password");
+    expect(loginPasswordInput).toHaveAttribute("type", "password");
+    fireEvent.click(screen.getByRole("button", { name: "Show password" }));
+    expect(loginPasswordInput).toHaveAttribute("type", "text");
+    fireEvent.click(screen.getByRole("button", { name: "Hide password" }));
+    expect(loginPasswordInput).toHaveAttribute("type", "password");
+
+    fireEvent.click(screen.getByRole("button", { name: "Sign up" }));
+    const signupPasswordInput = screen.getByLabelText("Password");
+    expect(signupPasswordInput).toHaveAttribute("type", "password");
+    fireEvent.click(screen.getByRole("button", { name: "Show password" }));
+    expect(signupPasswordInput).toHaveAttribute("type", "text");
   });
 
   it("handles existing-account signup responses with no explicit error", async () => {
@@ -210,7 +260,7 @@ describe("AuthModal auth parity updates", () => {
       target: { value: "existing@example.com" },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "12345678" },
+      target: { value: "Abcdefg1!" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
@@ -242,7 +292,7 @@ describe("AuthModal auth parity updates", () => {
       target: { value: "existing2@example.com" },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "12345678" },
+      target: { value: "Abcdefg1!" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 

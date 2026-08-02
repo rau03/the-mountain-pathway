@@ -6,7 +6,13 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@supabase/auth-helpers-react";
 import { useEffect } from "react";
 import BuyMeCoffeeLink from "@/components/BuyMeCoffeeLink";
+import PasswordInput from "@/components/PasswordInput";
+import PasswordRequirements from "@/components/PasswordRequirements";
 import { getEmailRedirectTo, getPublicSiteUrl } from "@/lib/authRedirect";
+import {
+  isPasswordValid,
+  PASSWORD_POLICY_ERROR_MESSAGE,
+} from "@/lib/passwordRequirements";
 
 // Prevent static generation of this page
 export const dynamic = "force-dynamic";
@@ -114,8 +120,8 @@ export default function LoginPage() {
       setError("Please enter your first name");
       return;
     }
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters");
+    if (!isPasswordValid(password)) {
+      setError(PASSWORD_POLICY_ERROR_MESSAGE);
       return;
     }
     setLoading(true);
@@ -250,16 +256,13 @@ export default function LoginPage() {
               autoCorrect="off"
               disabled={loading}
             />
-            <input
-              type="password"
+            <PasswordInput
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Your password"
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               autoComplete="current-password"
-              autoCapitalize="none"
-              autoCorrect="off"
               disabled={loading}
             />
             <button
@@ -321,18 +324,16 @@ export default function LoginPage() {
               autoCorrect="off"
               disabled={loading}
             />
-            <input
-              type="password"
+            <PasswordInput
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="at least 8 characters."
               className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               autoComplete="new-password"
-              autoCapitalize="none"
-              autoCorrect="off"
               disabled={loading}
             />
+            <PasswordRequirements password={password} />
             <button
               type="submit"
               disabled={loading}

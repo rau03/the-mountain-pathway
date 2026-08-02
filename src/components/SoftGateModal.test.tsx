@@ -1,6 +1,6 @@
 import React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import SoftGateModal from "./SoftGateModal";
 
 const signUpMock = vi.fn();
@@ -68,7 +68,7 @@ describe("SoftGateModal duplicate signup handling", () => {
       target: { value: "existing@example.com" },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "12345678" },
+      target: { value: "Abcdefg1!" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
@@ -122,7 +122,7 @@ describe("SoftGateModal duplicate signup handling", () => {
       target: { value: "existing2@example.com" },
     });
     fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "12345678" },
+      target: { value: "Abcdefg1!" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Create Account" }));
 
@@ -133,5 +133,68 @@ describe("SoftGateModal duplicate signup handling", () => {
     ).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Welcome Back" })).toBeInTheDocument();
     expect(screen.getByLabelText("Email")).toHaveValue("existing2@example.com");
+  });
+});
+
+describe("SoftGateModal password requirements checklist and visibility toggle", () => {
+  beforeEach(() => {
+    signUpMock.mockReset();
+  });
+
+  it("shows a live checklist on signup that updates as the password is typed, but not on login", () => {
+    render(
+      <SoftGateModal
+        open={true}
+        onOpenChange={() => {}}
+        onContinueAsGuest={() => {}}
+        onAuthComplete={() => {}}
+      />
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: /I already have an account/i }));
+    expect(
+      screen.queryByRole("list", { name: "Password requirements" })
+    ).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: /Yes, create my free account/i })
+    );
+
+    const checklist = screen.getByRole("list", { name: "Password requirements" });
+    expect(within(checklist).getByText("At least 8 characters")).toBeInTheDocument();
+    expect(
+      within(checklist).getByText("One uppercase letter (A-Z)")
+    ).toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Password"), {
+      target: { value: "Abcdefg1!" },
+    });
+
+    within(checklist)
+      .getAllByRole("listitem")
+      .forEach((item) => {
+        expect(item.className).toContain("text-green-600");
+      });
+  });
+
+  it("toggles password visibility on the signup form", () => {
+    render(
+      <SoftGateModal
+        open={true}
+        onOpenChange={() => {}}
+        onContinueAsGuest={() => {}}
+        onAuthComplete={() => {}}
+      />
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: /Yes, create my free account/i })
+    );
+
+    const passwordInput = screen.getByLabelText("Password");
+    expect(passwordInput).toHaveAttribute("type", "password");
+    fireEvent.click(screen.getByRole("button", { name: "Show password" }));
+    expect(passwordInput).toHaveAttribute("type", "text");
   });
 });
