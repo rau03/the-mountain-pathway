@@ -8,7 +8,7 @@ vi.mock("./JourneyScreen", () => ({
   JourneyScreen: () => <div data-testid="journey-screen" />,
 }));
 vi.mock("./SummaryScreen", () => ({
-  SummaryScreen: () => null,
+  SummaryScreen: () => <div data-testid="summary-screen" />,
 }));
 vi.mock("./HeaderMobile", () => ({
   HeaderMobile: () => null,
@@ -187,5 +187,51 @@ describe("MobileJourneyLayout — Save button sign-in modal", () => {
 
     // The modal should have closed as part of the normal auth-success flow.
     expect(screen.queryByText("Welcome Back")).not.toBeInTheDocument();
+  });
+});
+
+describe("MobileJourneyLayout — Journey Complete photo visibility", () => {
+  beforeEach(() => {
+    storeState.currentStep = 9;
+    storeState.isSaved = false;
+    storeState.savedJourneyId = null;
+    storeState.savedJourneyTitle = null;
+
+    getSessionMock.mockResolvedValue({ data: { session: null } });
+    onAuthStateChangeMock.mockImplementation(() => ({
+      data: { subscription: { unsubscribe: vi.fn() } },
+    }));
+
+    fakeViewport = new FakeVisualViewport(800);
+    Object.defineProperty(window, "innerHeight", {
+      configurable: true,
+      value: 800,
+    });
+    Object.defineProperty(window, "visualViewport", {
+      configurable: true,
+      value: fakeViewport,
+    });
+  });
+
+  it("keeps the summit photo visible through transparent overlays on step 9", () => {
+    const { container } = render(<MobileJourneyLayout session={null} />);
+
+    expect(screen.getByTestId("summary-screen")).toBeInTheDocument();
+
+    const scrollSheet = screen.getByTestId("summary-screen").parentElement;
+    expect(scrollSheet?.className).toContain("bg-transparent");
+    expect(scrollSheet?.className).not.toContain("from-brand-stone");
+
+    const overlays = container.querySelectorAll(".z-5");
+    expect(overlays.length).toBe(1);
+    expect(overlays[0].className).toContain("bg-transparent");
+    expect(overlays[0].className).not.toContain("from-brand-stone/40");
+    expect(overlays[0].className).not.toContain("from-brand-slate");
+
+    const bgLayer = container.querySelector(
+      "[style*='stage-5-summit.jpg']"
+    ) as HTMLElement | null;
+    expect(bgLayer).not.toBeNull();
+    expect(bgLayer?.style.backgroundImage).toContain("stage-5-summit.jpg");
   });
 });
