@@ -139,6 +139,9 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
   const isDiscernStep = currentStep === 7;
   const isPrayerStep = currentStep === 8;
 
+  // Steps 0–8 and the Journey Complete summary (step 9) keep a clear view of
+  // the stage photo. The stone gradient branch below is unused while every
+  // journey step is listed here; left intact so we don't change steps 0–8.
   const screenOverlayClass =
     isTrailheadStep ||
     isScriptureStep ||
@@ -148,7 +151,8 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
     isHopeStep ||
     isPauseStep ||
     isDiscernStep ||
-    isPrayerStep
+    isPrayerStep ||
+    isSummaryScreen
       ? "absolute inset-0 z-5 bg-transparent"
       : "absolute inset-0 z-5 bg-gradient-to-t from-brand-stone/40 to-transparent";
 
@@ -165,8 +169,11 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
     ? "flex-grow flex flex-col bg-transparent pt-8 min-h-0"
     : "flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 min-h-0";
 
+  // Summary uses the same transparent sheet as steps 0–8 so the summit photo
+  // shows through (matches desktop HomeClient). Keep summary-only safe-area
+  // top padding — there is no mobile header on step 9.
   const scrollSheetClass = isSummaryScreen
-    ? "flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent min-h-0 pt-[calc(env(safe-area-inset-top,0px)+1rem)]"
+    ? "flex-grow flex flex-col bg-transparent min-h-0 pt-[calc(env(safe-area-inset-top,0px)+1rem)]"
     : bottomSheetClass;
 
   const scrollPaddingBottom = isKeyboardOpen
@@ -195,12 +202,8 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         )}
       </div>
 
-      {/* Screen overlay - Journey steps use clear image view */}
+      {/* Screen overlay - Journey steps + summary use clear image view */}
       <div className={screenOverlayClass} />
-
-      {isSummaryScreen && (
-        <div className="absolute inset-x-0 top-0 z-5 bg-gradient-to-b from-brand-slate/40 via-brand-slate/20 to-transparent h-32" />
-      )}
 
       {/* Mobile Content Layout - Full Height Flex Container */}
       <div className="relative z-10 h-full flex flex-col min-h-0">
