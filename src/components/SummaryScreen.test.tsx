@@ -66,3 +66,23 @@ describe("SummaryScreen CTA hierarchy", () => {
     ).toBeTruthy();
   });
 });
+
+describe("SummaryScreen Support & Legal footer scrim", () => {
+  it("renders a mobile-only soft bottom scrim behind the footer without changing link text classes", () => {
+    render(<SummaryScreen session={null} />);
+
+    const scrim = screen.getByTestId("summary-footer-scrim");
+    expect(scrim).toHaveAttribute("aria-hidden", "true");
+    expect(scrim.className).toContain("bg-gradient-to-t");
+    expect(scrim.className).toContain("from-black/55");
+    expect(scrim.className).toContain("via-black/25");
+    expect(scrim.className).toContain("to-transparent");
+    // Scoped to MobileJourneyLayout viewports (<768px); desktop HomeClient
+    // also mounts SummaryScreen and must not show this scrim.
+    expect(scrim.className).toContain("md:hidden");
+
+    const legalRow = screen.getByText("Terms").closest("div");
+    expect(legalRow?.className).toContain("text-white/80");
+    expect(legalRow?.className).toContain("text-xs");
+  });
+});
