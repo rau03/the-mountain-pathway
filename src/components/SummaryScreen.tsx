@@ -383,53 +383,65 @@ export const SummaryScreen: React.FC<{ session: Session | null }> = ({
         </div>
       </div>
 
-      {/* Support & Legal */}
-      <div className={`w-full flex flex-col items-center space-y-3 ${isMobile ? "pt-10" : "pt-8"}`}>
-        <BuyMeCoffeeLink className="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]" />
+      {/* Support & Legal — mobile-only soft scrim behind footer text so
+          text-white/80 stays readable on the mottled summit photo bottom
+          band. md:hidden matches MobileJourneyLayout (<768px); desktop
+          HomeClient also renders SummaryScreen and must not get this. */}
+      <div
+        className={`relative w-full flex flex-col items-center space-y-3 ${isMobile ? "pt-10" : "pt-8"}`}
+      >
+        <div
+          aria-hidden="true"
+          data-testid="summary-footer-scrim"
+          className="pointer-events-none absolute -inset-x-6 -bottom-6 top-0 z-0 bg-gradient-to-t from-black/55 via-black/25 to-transparent md:hidden"
+        />
+        <div className="relative z-10 flex w-full flex-col items-center space-y-3">
+          <BuyMeCoffeeLink className="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white transition-colors [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]" />
 
-        {/* Legal Links */}
-        <div className="flex items-center justify-center gap-3 text-xs text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
-          <Link
-            href="/terms"
-            className="hover:text-white transition-colors"
-          >
-            Terms
-          </Link>
-          <span>·</span>
-          <Link
-            href="/privacy"
-            className="hover:text-white transition-colors"
-          >
-            Privacy
-          </Link>
-          <span>·</span>
-          <Link
-            href="/data-deletion"
-            className="hover:text-white transition-colors"
-          >
-            Data Deletion
-          </Link>
-          <span>·</span>
-          <button
-            onClick={() => setContactOpen(true)}
-            className="hover:text-white transition-colors [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]"
-          >
-            Contact
-          </button>
+          {/* Legal Links */}
+          <div className="flex items-center justify-center gap-3 text-xs text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
+            <Link
+              href="/terms"
+              className="hover:text-white transition-colors"
+            >
+              Terms
+            </Link>
+            <span>·</span>
+            <Link
+              href="/privacy"
+              className="hover:text-white transition-colors"
+            >
+              Privacy
+            </Link>
+            <span>·</span>
+            <Link
+              href="/data-deletion"
+              className="hover:text-white transition-colors"
+            >
+              Data Deletion
+            </Link>
+            <span>·</span>
+            <button
+              onClick={() => setContactOpen(true)}
+              className="hover:text-white transition-colors [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]"
+            >
+              Contact
+            </button>
+          </div>
+
+          {/* Creator Attribution */}
+          <p className="text-xs text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
+            The Mountain Pathway created by{" "}
+            <a
+              href="https://www.webdevbyrau.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:text-white transition-colors underline"
+            >
+              webdevbyrau
+            </a>
+          </p>
         </div>
-
-        {/* Creator Attribution */}
-        <p className="text-xs text-white/80 [text-shadow:0_1px_6px_rgba(0,0,0,0.9)]">
-          The Mountain Pathway created by{" "}
-          <a
-            href="https://www.webdevbyrau.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition-colors underline"
-          >
-            webdevbyrau
-          </a>
-        </p>
       </div>
 
       {/* Save Journey Modal */}
