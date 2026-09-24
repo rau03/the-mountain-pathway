@@ -31,8 +31,12 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
   // making the modal appear to flash and close immediately.
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authModalIntent, setAuthModalIntent] = useState<AuthModalIntent>(null);
-  const { autoSaveLoading, autoSaveError, triggerAutoSave, handleRetryAutoSave } =
-    useJourneyAutoSave(session);
+  const {
+    autoSaveLoading,
+    autoSaveError,
+    triggerAutoSave,
+    handleRetryAutoSave,
+  } = useJourneyAutoSave(session);
 
   const handleAuthModalOpenChange = useCallback((next: boolean) => {
     setShowAuthModal(next);
@@ -59,7 +63,7 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
     (authedSession: Session) => {
       triggerAutoSave(currentStep, authedSession);
     },
-    [triggerAutoSave, currentStep]
+    [triggerAutoSave, currentStep],
   );
 
   const currentBackground = getBackgroundForStep(currentStep);
@@ -166,21 +170,21 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
     isPauseStep ||
     isDiscernStep ||
     isPrayerStep
-    ? "flex-grow flex flex-col bg-transparent pt-8 min-h-0"
-    : "flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 min-h-0";
+      ? "flex-grow flex flex-col bg-transparent pt-8 min-h-0"
+      : "flex-grow flex flex-col bg-gradient-to-t from-brand-stone from-50% via-brand-stone/80 via-75% to-transparent pt-8 min-h-0";
 
   // Summary uses the same transparent sheet as steps 0–8 so the summit photo
   // shows through (matches desktop HomeClient). Keep summary-only safe-area
   // top padding — there is no mobile header on step 9.
   const scrollSheetClass = isSummaryScreen
-    ? "flex-grow flex flex-col bg-transparent min-h-0 pt-[calc(env(safe-area-inset-top,0px)+1rem)]"
+    ? "flex-grow flex flex-col bg-transparent min-h-0    pt-[max(calc(env(safe-area-inset-top,0px)+1rem),3.25rem)]"
     : bottomSheetClass;
 
   const scrollPaddingBottom = isKeyboardOpen
     ? "pb-8"
     : isSummaryScreen
-      ? "pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)]"
-      : "pb-[calc(env(safe-area-inset-bottom,0px)+4rem)]";
+    ? "pb-[calc(env(safe-area-inset-bottom,0px)+1.5rem)]"
+    : "pb-[calc(env(safe-area-inset-bottom,0px)+4rem)]";
 
   return (
     <div className="relative h-[100dvh] w-full min-w-full bg-brand-stone flex flex-col overflow-hidden overscroll-none">
@@ -266,7 +270,9 @@ export const MobileJourneyLayout: React.FC<MobileJourneyLayoutProps> = ({
         open={showAuthModal}
         onOpenChange={handleAuthModalOpenChange}
         session={session}
-        onAuthSuccess={authModalIntent === "save" ? handleAuthSuccess : undefined}
+        onAuthSuccess={
+          authModalIntent === "save" ? handleAuthSuccess : undefined
+        }
       />
     </div>
   );
