@@ -1,11 +1,11 @@
 PODS:
-  - Capacitor (8.0.2):
+  - Capacitor (8.5.3):
     - CapacitorCordova
   - CapacitorApp (8.0.0):
     - Capacitor
   - CapacitorBrowser (8.0.0):
     - Capacitor
-  - CapacitorCordova (8.0.2)
+  - CapacitorCordova (8.5.3)
   - CapacitorFilesystem (8.1.2):
     - Capacitor
     - IONFilesystemLib (~> 1.1.1)
@@ -40,10 +40,10 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/share"
 
 SPEC CHECKSUMS:
-  Capacitor: 2b79172ad27f3be2d103cce88b8eb9803fdcc744
+  Capacitor: 2f67eaeb8ed79909cd35b5e7439a5c2a9ca58e0f
   CapacitorApp: 3963a84197280757b84f126afd1520a85ae3b092
   CapacitorBrowser: b7d7f05f840fe042e46f6528bb8db853e3058fb2
-  CapacitorCordova: 921bdb690ebe82421b24fce45552fd3dea2ae43a
+  CapacitorCordova: 0b7326439c7a09fc5d20eced5e0dab986327a493
   CapacitorFilesystem: 2db285a1ac6e475cc27cae2e1bea999000f9e2be
   CapacitorShare: 12f1d192170cbcf9f108fd675ac8e343761a4638
   IONFilesystemLib: 21a63377696b2d8fab5632ecfb7d2ac67bddb68a
